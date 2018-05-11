@@ -59,16 +59,6 @@ public class App extends Application {
     this.mainController = mainController;
   }
   
-  public void closeApplication() {
-    System.exit(0);
-  }
-  
-  public void userLogin() throws Exception {
-    mainController.mainContainer.setCenter(FXMLLoader.load(getClass().getResource("Login.fxml")));
-    loginController.processLogin();
-  }
-  
   public void userLogout() {
-    
   }
 }
