@@ -26,7 +26,9 @@ package myschedule;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -44,6 +46,17 @@ public class MainController implements Initializable {
   // FXML Components
   @FXML protected BorderPane mainContainer;
 
+  // Private variables
+  protected MenuItem miFileNew;     
+  protected MenuItem miFileOpen;
+  protected MenuItem miFileSave;
+  protected MenuItem miFileSaveAs;
+  protected MenuItem miFileExit;
+  protected MenuItem miEditDelete;
+  protected MenuItem miUserLogin;
+  protected MenuItem miUserLogout;
+  protected MenuItem miHelpAbout;
+  
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     app.injectMainController(this);
@@ -51,49 +64,55 @@ public class MainController implements Initializable {
     
     // File menu
     Menu menuFile = new Menu("File");
-    MenuItem miFileNew = new MenuItem("New");
-    MenuItem miFileOpen = new MenuItem("Open");
-    MenuItem miFileSave = new MenuItem("Save");
-    MenuItem miFileSaveAs = new MenuItem("Save As...");
-    MenuItem miFileExit = new MenuItem("Exit");
+    miFileNew = new MenuItem("New");
+    miFileOpen = new MenuItem("Open");
+    miFileSave = new MenuItem("Save");
+    miFileSaveAs = new MenuItem("Save As...");
+    miFileExit = new MenuItem("Exit");
     menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
     
     // Edit menu
     Menu menuEdit = new Menu("Edit");
-    MenuItem miEditDelete = new MenuItem("Delete");
+    miEditDelete = new MenuItem("Delete");
     menuEdit.getItems().addAll(miEditDelete);
     
     // User menu
     Menu menuUser = new Menu("User");
-    MenuItem miUserLogin = new MenuItem("Login");
-    MenuItem miUserLogout = new MenuItem("Logout");
+    miUserLogin = new MenuItem("Login");
+    miUserLogout = new MenuItem("Logout");
     menuUser.getItems().addAll(miUserLogin, miUserLogout);
     
     // Help menu
     Menu menuHelp = new Menu("Help");
-    MenuItem miHelpAbout = new MenuItem("About");
+    miHelpAbout = new MenuItem("About");
     menuHelp.getItems().addAll(miHelpAbout);
     
+    setupActions();
+
+    menuBar.getMenus().addAll(menuFile, menuEdit, menuUser, menuHelp);
+    
+    mainContainer.setTop(menuBar);
+  }
+  
+  private void setupActions() {
     // Define Action Event Handlers
     miFileExit.setOnAction((e) -> {
-      app.closeApplication();
+      System.exit(0);
     });
-    
+
     miUserLogin.setOnAction((e) -> {
       try {
-        app.userLogin();
+        this.mainContainer.setCenter(loadFXML("Login.fxml"));
+//        app.userLogin();
       }
       catch (Exception ex) {
         
       }
     });
-
-    // Add menus to menu bar
-    menuBar.getMenus().addAll(menuFile, menuEdit, menuUser, menuHelp);
-    
-    mainContainer.setTop(menuBar);
-    
-//    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+  
+  private Node loadFXML(String fxml) throws Exception {
+    return FXMLLoader.load(getClass().getResource(fxml));
   }
 }
 
