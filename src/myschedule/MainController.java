@@ -40,87 +40,77 @@ import javafx.scene.layout.BorderPane;
  */
 public class MainController implements Initializable {
 
-  // Controllers
-  @FXML private final App app = new App();
-  
-  // FXML Components
-  @FXML protected BorderPane mainContainer;
+    // Controllers
+    @FXML private final App app = new App();
 
-  // Private variables
-  protected MenuItem miFileNew;     
-  protected MenuItem miFileOpen;
-  protected MenuItem miFileSave;
-  protected MenuItem miFileSaveAs;
-  protected MenuItem miFileExit;
-  protected MenuItem miEditDelete;
-  protected MenuItem miUserLogin;
-  protected MenuItem miUserLogout;
-  protected MenuItem miHelpAbout;
-  
-  @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    app.injectMainController(this);
-    MenuBar menuBar = new MenuBar();
-    
-    // File menu
-    Menu menuFile = new Menu("File");
-    miFileNew = new MenuItem("New");
-    miFileOpen = new MenuItem("Open");
-    miFileSave = new MenuItem("Save");
-    miFileSaveAs = new MenuItem("Save As...");
-    miFileExit = new MenuItem("Exit");
-    menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
-    
-    // Edit menu
-    Menu menuEdit = new Menu("Edit");
-    miEditDelete = new MenuItem("Delete");
-    menuEdit.getItems().addAll(miEditDelete);
-    
-    // User menu
-    Menu menuUser = new Menu("User");
-    miUserLogin = new MenuItem("Login");
-    miUserLogout = new MenuItem("Logout");
-    menuUser.getItems().addAll(miUserLogin, miUserLogout);
-    
-    // Help menu
-    Menu menuHelp = new Menu("Help");
-    miHelpAbout = new MenuItem("About");
-    menuHelp.getItems().addAll(miHelpAbout);
-    
-    setupActions();
+    // FXML Components
+    @FXML protected BorderPane mainContainer;
 
-    menuBar.getMenus().addAll(menuFile, menuEdit, menuUser, menuHelp);
-    
-    mainContainer.setTop(menuBar);
-  }
+    // Private variables
+    protected MenuItem miFileNew;     
+    protected MenuItem miFileOpen;
+    protected MenuItem miFileSave;
+    protected MenuItem miFileSaveAs;
+    protected MenuItem miFileExit;
+    protected MenuItem miEditDelete;
+    protected MenuItem miUserLogin;
+    protected MenuItem miUserLogout;
+    protected MenuItem miHelpAbout;
   
-  private void setupActions() {
-    // Define Action Event Handlers
-    miFileExit.setOnAction((e) -> {
-      System.exit(0);
-    });
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        app.injectMainController(this);
+        MenuBar menuBar = new MenuBar();
 
-    miUserLogin.setOnAction((e) -> {
-      try {
-        this.mainContainer.setCenter(loadFXML("Login.fxml"));
-//        app.userLogin();
-      }
-      catch (Exception ex) {
-        
-      }
-    });
-  }
+        // File menu
+        Menu menuFile = new Menu("File");
+        miFileNew = new MenuItem("New");
+        miFileOpen = new MenuItem("Open");
+        miFileSave = new MenuItem("Save");
+        miFileSaveAs = new MenuItem("Save As...");
+        miFileExit = new MenuItem("Exit");
+        menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
+
+        // Edit menu
+        Menu menuEdit = new Menu("Edit");
+        miEditDelete = new MenuItem("Delete");
+        menuEdit.getItems().addAll(miEditDelete);
+
+        // User menu
+        Menu menuUser = new Menu("User");
+        miUserLogin = new MenuItem("Login");
+        miUserLogout = new MenuItem("Logout");
+        menuUser.getItems().addAll(miUserLogin, miUserLogout);
+
+        // Help menu
+        Menu menuHelp = new Menu("Help");
+        miHelpAbout = new MenuItem("About");
+        menuHelp.getItems().addAll(miHelpAbout);
+
+        setupActions();
+        menuBar.getMenus().addAll(menuFile, menuEdit, menuUser, menuHelp);
+        mainContainer.setTop(menuBar);
+    }
   
-  private Node loadFXML(String fxml) throws Exception {
-    return FXMLLoader.load(getClass().getResource(fxml));
-  }
+    private void setupActions() {
+        // Define Action Event Handlers
+        miFileExit.setOnAction((e) -> {
+          System.exit(0);
+        });
+
+        miUserLogin.setOnAction((e) -> {
+            try {
+              loadFXML("Login.fxml");
+            }
+            catch (Exception ex) {
+
+            }
+        });
+    }
+  
+    private void loadFXML(String fxml) throws Exception {
+        Node node = FXMLLoader.load(getClass().getResource(fxml));
+        this.mainContainer.setCenter(node);
+    }
 }
 
-/*
-  LoginController will have the following
-  private MainController mainController;
-
-  public void injectMainController(MainController mainController) {
-    this.mainController = mainController;
-  }
-*/

@@ -34,31 +34,25 @@ import javafx.stage.Stage;
  * @author bradd
  */
 public class App extends Application {
-  
-  private MainController mainController;
-  private LoginController loginController;
+    private MainController mainController;
+    private LoginController loginController;
   
   @Override
-  public void start(Stage stage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("MainContainer.fxml"));
-    
-    Scene scene = new Scene(root);
-    
-    stage.setScene(scene);
-    stage.show();
-  }
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("MainContainer.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
-  /**
-   * @param args the command line arguments
-   */
-  public static void main(String[] args) {
-    launch(args);
-  }
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-  public void injectMainController(MainController mainController) {
-    this.mainController = mainController;
-  }
-  
-  public void userLogout() {
-  }
+    public void injectMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 }
