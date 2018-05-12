@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -41,49 +42,54 @@ import javafx.scene.layout.AnchorPane;
  * @author bradd
  */
 public class LoginController extends AnchorPane implements Initializable {
-  private final static Logger LOGGER = Logger.getLogger(LoginController.class.getName() );
+    private final static Logger LOGGER = Logger.getLogger(LoginController.class.getName() );
 
-  @FXML AnchorPane frmLogin;
-  @FXML Button btnCancel;
-  @FXML Button btnLogin;
-  @FXML Label lblFeedback;
-  @FXML Label lblPassword;
-  @FXML Label lblUsername;
-  @FXML TextField txtPassword;
-  @FXML TextField txtUsername;
+    @FXML AnchorPane frmLogin;
+    @FXML Button btnCancel;
+    @FXML Button btnLogin;
+    @FXML Label lblFeedback;
+    @FXML Label lblPassword;
+    @FXML Label lblUsername;
+    @FXML TextField txtPassword;
+    @FXML TextField txtUsername;
 
-  private MainController mainController;
+    private MainController mainController;
   
-  /**
-   * Initializes the controller class.
-   * @param event
-   */
-  public void cancelLogin( ActionEvent event ) {
-//    Main.getRoot().setCenter(null);
-//    Common.enableMenuItem(2, 0);
-//    LOGGER.log( Level.INFO, "Closing login window without logging in");
-  }
     
-  @Override
-  public void initialize(URL location, ResourceBundle resources) {
-//    lblFeedback.setText("");
-//    txtUsername.setPromptText("username");
-//    txtPassword.setPromptText("password");
-//    Common.USERS.clear();
-//    Common.loadUsers();
-  }
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        createActionListeners();
+  //    lblFeedback.setText("");
+  //    txtUsername.setPromptText("username");
+  //    txtPassword.setPromptText("password");
+  //    Common.USERS.clear();
+  //    Common.loadUsers();
+    }
+
+    private void cancelLogin() {
+        Node node = this.mainController.mainContainer.getCenter();
+        this.mainController.mainContainer.getChildren().removeAll(node);
+    }
     
-  public void processLogin() {
-//    if (! Authenticate.validate( txtUsername.getText(), txtPassword.getText() )) {
-//      lblFeedback.setText("Invalid Username / Password combination");
-//      LOGGER.log(Level.INFO, "Invalid username: ({0}) / password: ({1}) combination", new Object[]{ txtUsername.getText(), txtPassword.getText() } );
-//    }
-//    else {
-//      lblFeedback.setText("Looks good!!! Congrats!");
-//    }
-  }
+    public void processLogin() {
+  //    if (! Authenticate.validate( txtUsername.getText(), txtPassword.getText() )) {
+  //      lblFeedback.setText("Invalid Username / Password combination");
+  //      LOGGER.log(Level.INFO, "Invalid username: ({0}) / password: ({1}) combination", new Object[]{ txtUsername.getText(), txtPassword.getText() } );
+  //    }
+  //    else {
+  //      lblFeedback.setText("Looks good!!! Congrats!");
+  //    }
+    }
   
-  public void injectMainController(MainController controller) {
-    System.out.println("Hi there!");
-  }
+    public void injectMainController(MainController controller) {
+      this.mainController = controller;
+      System.out.println("MainController: " + this.mainController);
+    }
+  
+    private void createActionListeners() {
+        // Define Action Event Handlers
+        btnCancel.setOnAction((ea) -> {
+            cancelLogin();
+        });
+    }
 }
