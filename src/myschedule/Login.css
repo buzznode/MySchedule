@@ -26,9 +26,6 @@ THE SOFTWARE.
     Author     : bradd
 */
 
-/*
- * Empty Stylesheet file.
- */
 .frmLogin {
     -fx-border-color: #19205c;
     -fx-border-style: solid;
@@ -78,7 +75,6 @@ THE SOFTWARE.
 .feedback {
     -fx-text-fill: #b80000;
 }
-
 
 .mainFxmlClass {
     -fx-background-color: #cccccc;

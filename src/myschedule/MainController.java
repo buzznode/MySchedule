@@ -35,7 +35,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 
 /**
- *
  * @author bradd
  */
 public class MainController implements Initializable {
@@ -46,7 +45,7 @@ public class MainController implements Initializable {
     // FXML Components
     @FXML protected BorderPane mainContainer;
 
-    // Private variables
+    // Protected MenuItem variables
     protected MenuItem miFileNew;     
     protected MenuItem miFileOpen;
     protected MenuItem miFileSave;
@@ -56,10 +55,17 @@ public class MainController implements Initializable {
     protected MenuItem miUserLogin;
     protected MenuItem miUserLogout;
     protected MenuItem miHelpAbout;
+    
+    // Protected general variables
+    protected boolean loggedIn;
+    protected String userName;
   
+    /**
+     * @param location
+     * @param resources 
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        app.injectMainController(this);
         MenuBar menuBar = new MenuBar();
 
         // File menu
@@ -87,30 +93,48 @@ public class MainController implements Initializable {
         miHelpAbout = new MenuItem("About");
         menuHelp.getItems().addAll(miHelpAbout);
 
-        setupActions();
+        createActions();
         menuBar.getMenus().addAll(menuFile, menuEdit, menuUser, menuHelp);
         mainContainer.setTop(menuBar);
     }
   
-    private void setupActions() {
+    /**
+     * 
+     */
+    private void createActions() {
         // Define Action Event Handlers
-        miFileExit.setOnAction((e) -> {
+        miFileExit.setOnAction((ea) -> {
           System.exit(0);
         });
 
-        miUserLogin.setOnAction((e) -> {
+        miUserLogin.setOnAction((ea) -> {
             try {
-              loadFXML("Login.fxml");
+              FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+              Node node = loader.load();
+              LoginController controller = loader.getController();
+              controller.injectMainController(this);
+              mainContainer.setCenter(node);
             }
             catch (Exception ex) {
 
             }
         });
     }
-  
-    private void loadFXML(String fxml) throws Exception {
-        Node node = FXMLLoader.load(getClass().getResource(fxml));
-        this.mainContainer.setCenter(node);
+    
+    // Getters and Setters
+
+    /**
+     * @return String userName 
+     */
+    protected String getUserName() {
+        return userName;
+    }
+
+    /**
+     * @param user 
+     */
+    protected void setUserName(String user) {
+        userName = user;
     }
 }
 
