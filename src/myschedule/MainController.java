@@ -25,6 +25,7 @@ package myschedule;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -33,15 +34,18 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
 
 /**
  * @author bradd
  */
 public class MainController implements Initializable {
 
-    // Controllers
-    @FXML private final App app = new App();
-
+    private App _app;
+    
     // FXML Components
     @FXML protected BorderPane mainContainer;
 
@@ -57,9 +61,11 @@ public class MainController implements Initializable {
     protected MenuItem miHelpAbout;
     
     // Protected general variables
-    protected boolean loggedIn;
-    protected String userName;
-  
+    protected boolean _loggedIn;
+    protected String _userName;
+
+    private static final Logger LOGGER = Logger.getLogger("myschedule.log");
+    
     /**
      * @param location
      * @param resources 
@@ -101,40 +107,78 @@ public class MainController implements Initializable {
     /**
      * 
      */
-    private void createActions() {
-        // Define Action Event Handlers
+    private void createActionListeners() {
         miFileExit.setOnAction((ea) -> {
-          System.exit(0);
+            System.exit(0);
         });
-
-        miUserLogin.setOnAction((ea) -> {
-            try {
-              FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
-              Node node = loader.load();
-              LoginController controller = loader.getController();
-              controller.injectMainController(this);
-              mainContainer.setCenter(node);
-            }
-            catch (Exception ex) {
-
-            }
+        
+        miUserLogin.setOnAction((ae) -> {
+            startLogin();
         });
     }
     
-    // Getters and Setters
-
     /**
-     * @return String userName 
+     * 
      */
-    protected String getUserName() {
-        return userName;
+    protected void endProcess() {
+        Node node = mainContainer.getCenter();
+        mainContainer.getChildren().removeAll(node);
+    }
+
+    protected void injectApp(App app) {
+        _app = app;
+        this.writeLog(Level.INFO, "app has been injected");
+    }
+    
+    /**
+     * 
+     */
+    private void startLogin() throws Exception {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Login.fxml"));
+            Node node = loader.load();
+            LoginController controller = loader.getController();
+            controller.injectMainController(this);
+            mainContainer.setCenter(node);
+    }
+    
+    /**
+     * @param level
+     * @param msg 
+     */
+    protected void writeLog(Level level, String msg) {
+        LOGGER.log(level, msg);
+    }
+    
+    /* Getters & Setters */
+    
+    /**
+     * @return  _loggedIn as boolean
+     */
+    protected boolean loggedIn() {
+        return _loggedIn;
+    }
+    
+    /**
+     * @param value
+     * @return  _loggedIn as boolean
+     */
+    protected boolean loggedIn(boolean value) {
+        return _loggedIn = value;
+    }
+    
+    /**
+     * @return _userName as String
+     */
+    protected String userName() {
+        return _userName;
     }
 
     /**
-     * @param user 
+     * @param user
+     * @return _userName as String
      */
-    protected void setUserName(String user) {
-        userName = user;
+    protected String userName(String user) {
+        return _userName = user;
     }
 }
 

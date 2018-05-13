@@ -3,7 +3,7 @@
  *
  * Copyright 2018 bradd.
  *
- * Permission is hereby , free of charge, to any person obtaining a copy
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -17,39 +17,19 @@
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRgrantedACT, TORT OR OTHERWISE, ARISING FROM,
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package myschedule;
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+package myschedule.security;
 
 /**
  * @author bradd
  * @version 0.5.0
  */
-public class App extends Application {
-  
-  @Override
-    public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainContainer.fxml"));
-        Parent node = loader.load();
-        MainController controller = loader.getController();
-        controller.injectApp(this);
-        Scene scene = new Scene(node);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
+public class Authenticate {
+    public static  boolean validate(String user, String password) {
+        String validUserPassword = Common.USERS.get(user);
+        return validUserPassword != null && validUserPassword.equals(password);
     }
 }

@@ -25,11 +25,10 @@ package myschedule;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -42,7 +41,6 @@ import javafx.scene.layout.AnchorPane;
  * @author bradd
  */
 public class LoginController extends AnchorPane implements Initializable {
-    private final static Logger LOGGER = Logger.getLogger(LoginController.class.getName() );
 
     @FXML AnchorPane frmLogin;
     @FXML Button btnCancel;
@@ -67,8 +65,17 @@ public class LoginController extends AnchorPane implements Initializable {
     }
 
     private void cancelLogin() {
-        Node node = this.mainController.mainContainer.getCenter();
-        this.mainController.mainContainer.getChildren().removeAll(node);
+        this.mainController.writeLog(Level.INFO, "User cancelled login attempt");
+        this.mainController.endProcess();
+    }
+    
+    private void userLogin() {
+        if (!mainController.loggedIn()) {
+            mainController.writeLog(Level.INFO, "not already logged in");
+        }
+        else {
+            mainController.writeLog(Level.INFO, "already logged in");
+        }
     }
     
     public void processLogin() {
@@ -82,14 +89,20 @@ public class LoginController extends AnchorPane implements Initializable {
     }
   
     public void injectMainController(MainController controller) {
-      this.mainController = controller;
-      System.out.println("MainController: " + this.mainController);
+        this.mainController = controller;
+        System.out.println("MainController: " + this.mainController);
     }
-  
+
+    /**
+     *  Define action event listeners
+     */
     private void createActionListeners() {
-        // Define Action Event Handlers
         btnCancel.setOnAction((ea) -> {
             cancelLogin();
+        });
+        
+        btnLogin.setOnAction((ea) -> {
+            userLogin();
         });
     }
 }
