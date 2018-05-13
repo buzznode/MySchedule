@@ -33,12 +33,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-//import jschedule.security.Authenticate;
 
 /**
- * FXML Controller class
- *
  * @author bradd
+ * @version 0.5.0
  */
 public class LoginController extends AnchorPane implements Initializable {
 
@@ -53,7 +51,6 @@ public class LoginController extends AnchorPane implements Initializable {
 
     private MainController mainController;
   
-    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         createActionListeners();

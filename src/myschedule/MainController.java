@@ -41,6 +41,7 @@ import javafx.event.EventHandler;
 
 /**
  * @author bradd
+ * @version 0.5.0
  */
 public class MainController implements Initializable {
 
@@ -99,7 +100,7 @@ public class MainController implements Initializable {
         miHelpAbout = new MenuItem("About");
         menuHelp.getItems().addAll(miHelpAbout);
 
-        createActions();
+        createActionListeners();
         menuBar.getMenus().addAll(menuFile, menuEdit, menuUser, menuHelp);
         mainContainer.setTop(menuBar);
     }
@@ -113,7 +114,11 @@ public class MainController implements Initializable {
         });
         
         miUserLogin.setOnAction((ae) -> {
-            startLogin();
+            try {
+                startLogin();
+            }
+            catch(Exception ex) {
+            }
         });
     }
     
