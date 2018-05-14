@@ -34,10 +34,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
-import java.util.logging.Logger;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-
 
 /**
  * @author bradd
@@ -45,7 +41,7 @@ import javafx.event.EventHandler;
  */
 public class MainController implements Initializable {
 
-    private App _app;
+    private App app;
     
     // FXML Components
     @FXML protected BorderPane mainContainer;
@@ -60,12 +56,6 @@ public class MainController implements Initializable {
     protected MenuItem miUserLogin;
     protected MenuItem miUserLogout;
     protected MenuItem miHelpAbout;
-    
-    // Protected general variables
-    protected boolean _loggedIn;
-    protected String _userName;
-
-    private static final Logger LOGGER = Logger.getLogger("myschedule.log");
     
     /**
      * @param location
@@ -130,9 +120,9 @@ public class MainController implements Initializable {
         mainContainer.getChildren().removeAll(node);
     }
 
-    protected void injectApp(App app) {
-        _app = app;
-        this.writeLog(Level.INFO, "app has been injected");
+    protected void injectApp(App _app) {
+        app = _app;
+        app.writeLog(Level.INFO, "app has been injected");
     }
     
     /**
@@ -144,46 +134,6 @@ public class MainController implements Initializable {
             LoginController controller = loader.getController();
             controller.injectMainController(this);
             mainContainer.setCenter(node);
-    }
-    
-    /**
-     * @param level
-     * @param msg 
-     */
-    protected void writeLog(Level level, String msg) {
-        LOGGER.log(level, msg);
-    }
-    
-    /* Getters & Setters */
-    
-    /**
-     * @return  _loggedIn as boolean
-     */
-    protected boolean loggedIn() {
-        return _loggedIn;
-    }
-    
-    /**
-     * @param value
-     * @return  _loggedIn as boolean
-     */
-    protected boolean loggedIn(boolean value) {
-        return _loggedIn = value;
-    }
-    
-    /**
-     * @return _userName as String
-     */
-    protected String userName() {
-        return _userName;
-    }
-
-    /**
-     * @param user
-     * @return _userName as String
-     */
-    protected String userName(String user) {
-        return _userName = user;
     }
 }
 

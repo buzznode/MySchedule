@@ -5,9 +5,7 @@
         <group>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/App.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/MainController.java</file>
-            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/model/Address.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/LoginController.java</file>
-            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/model/City.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/security/Authenticate.java</file>
         </group>
     </open-files>

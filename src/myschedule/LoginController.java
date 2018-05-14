@@ -26,7 +26,6 @@ package myschedule;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -49,6 +48,7 @@ public class LoginController extends AnchorPane implements Initializable {
     @FXML TextField txtPassword;
     @FXML TextField txtUsername;
 
+    private App app;
     private MainController mainController;
   
     @Override
@@ -62,16 +62,16 @@ public class LoginController extends AnchorPane implements Initializable {
     }
 
     private void cancelLogin() {
-        this.mainController.writeLog(Level.INFO, "User cancelled login attempt");
+        app.writeLog(Level.INFO, "User cancelled login attemp");
         this.mainController.endProcess();
     }
     
     private void userLogin() {
-        if (!mainController.loggedIn()) {
-            mainController.writeLog(Level.INFO, "not already logged in");
+        if (!app.loggedIn()) {
+            app.writeLog(Level.INFO, "not already logged in");
         }
         else {
-            mainController.writeLog(Level.INFO, "already logged in");
+            app.writeLog(Level.INFO, "already logged in");
         }
     }
     
@@ -85,9 +85,13 @@ public class LoginController extends AnchorPane implements Initializable {
   //    }
     }
   
-    public void injectMainController(MainController controller) {
-        this.mainController = controller;
-        System.out.println("MainController: " + this.mainController);
+    public void injectApp(App _app) {
+        this.app = _app;
+    }
+    
+    public void injectMainController(MainController _mainController) {
+        this.mainController = _mainController;
+        System.out.println("MainController: " + mainController);
     }
 
     /**

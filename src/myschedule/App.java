@@ -23,6 +23,8 @@
  */
 package myschedule;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -34,8 +36,21 @@ import javafx.stage.Stage;
  * @version 0.5.0
  */
 public class App extends Application {
-  
-  @Override
+    
+    // Private general variables
+    private boolean loggedIn;
+    private String userName;
+
+    private static final Logger LOGGER = Logger.getLogger("myschedule.log");
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainContainer.fxml"));
         Parent node = loader.load();
@@ -47,9 +62,42 @@ public class App extends Application {
     }
 
     /**
-     * @param args the command line arguments
+     * @param level
+     * @param msg 
      */
-    public static void main(String[] args) {
-        launch(args);
+    public void writeLog(Level level, String msg) {
+        LOGGER.log(level, msg);
+    }
+    
+    /* Getters & Setters */
+    
+    /**
+     * @return loggedIn as boolean
+     */
+    protected boolean loggedIn() {
+        return loggedIn;
+    }
+    
+    /**
+     * @param _loggedIn
+     * @return  _loggedIn as boolean
+     */
+    protected boolean loggedIn(boolean _loggedIn) {
+        return loggedIn = _loggedIn;
+    }
+    
+    /**
+     * @return userName
+     */
+    protected String userName() {
+        return userName;
+    }
+
+    /**
+     * @param _userName
+     * @return userName
+     */
+    protected String userName(String _userName) {
+        return userName = _userName;
     }
 }
