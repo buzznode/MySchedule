@@ -56,6 +56,39 @@ public class MainController implements Initializable {
     protected MenuItem miUserLogin;
     protected MenuItem miUserLogout;
     protected MenuItem miHelpAbout;
+
+    /**
+     * 
+     */
+    private void createActionListeners() {
+        miFileExit.setOnAction((ea) -> {
+            System.exit(0);
+        });
+        
+        miUserLogin.setOnAction((ae) -> {
+            try {
+                startLogin();
+            }
+            catch(Exception ex) {
+            }
+        });
+    }
+    
+    /**
+     * 
+     */
+    protected void endProcess() {
+        Node node = mainContainer.getCenter();
+        mainContainer.getChildren().removeAll(node);
+    }
+
+    /**
+     * @param _app 
+     */
+    protected void injectApp(App _app) {
+        app = _app;
+        app.writeLog(Level.INFO, "app has been injected");
+    }
     
     /**
      * @param location
@@ -63,6 +96,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        
         MenuBar menuBar = new MenuBar();
 
         // File menu
@@ -98,41 +132,12 @@ public class MainController implements Initializable {
     /**
      * 
      */
-    private void createActionListeners() {
-        miFileExit.setOnAction((ea) -> {
-            System.exit(0);
-        });
-        
-        miUserLogin.setOnAction((ae) -> {
-            try {
-                startLogin();
-            }
-            catch(Exception ex) {
-            }
-        });
-    }
-    
-    /**
-     * 
-     */
-    protected void endProcess() {
-        Node node = mainContainer.getCenter();
-        mainContainer.getChildren().removeAll(node);
-    }
-
-    protected void injectApp(App _app) {
-        app = _app;
-        app.writeLog(Level.INFO, "app has been injected");
-    }
-    
-    /**
-     * 
-     */
     private void startLogin() throws Exception {
             FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Login.fxml"));
             Node node = loader.load();
-            LoginController controller = loader.getController();
-            controller.injectMainController(this);
+            LoginController login = loader.getController();
+            login.injectMainController(this);
+            login.injectApp(app);
             mainContainer.setCenter(node);
     }
 }

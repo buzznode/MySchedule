@@ -30,6 +30,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import myschedule.service.DB;
 
 /**
  * @author bradd
@@ -42,6 +43,22 @@ public class App extends Application {
     private String userName;
 
     private static final Logger LOGGER = Logger.getLogger("myschedule.log");
+    protected DB db = new DB();
+
+    /**
+     * @return loggedIn as boolean
+     */
+    protected boolean loggedIn() {
+        return loggedIn;
+    }
+    
+    /**
+     * @param _loggedIn
+     * @return  _loggedIn as boolean
+     */
+    protected boolean loggedIn(boolean _loggedIn) {
+        return loggedIn = _loggedIn;
+    }
     
     /**
      * @param args the command line arguments
@@ -60,31 +77,6 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
-    /**
-     * @param level
-     * @param msg 
-     */
-    public void writeLog(Level level, String msg) {
-        LOGGER.log(level, msg);
-    }
-    
-    /* Getters & Setters */
-    
-    /**
-     * @return loggedIn as boolean
-     */
-    protected boolean loggedIn() {
-        return loggedIn;
-    }
-    
-    /**
-     * @param _loggedIn
-     * @return  _loggedIn as boolean
-     */
-    protected boolean loggedIn(boolean _loggedIn) {
-        return loggedIn = _loggedIn;
-    }
     
     /**
      * @return userName
@@ -95,9 +87,17 @@ public class App extends Application {
 
     /**
      * @param _userName
-     * @return userName
+     * @return userName 
      */
     protected String userName(String _userName) {
         return userName = _userName;
+    }
+    
+    /**
+     * @param level
+     * @param msg 
+     */
+    protected void writeLog(Level level, String msg) {
+        LOGGER.log(level, msg);
     }
 }
