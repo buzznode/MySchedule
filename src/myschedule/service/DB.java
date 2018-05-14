@@ -24,15 +24,15 @@
 package myschedule.service;
 
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 
 /**
  * @author bradd
  * @version 0.5.0
  */
 public class DB {
-    private static final Logger LOGGER = Logger.getLogger( DB.class.getName() );
+//    private static final Logger LOGGER = Logger.getLogger( DB.class.getName() );
     Connection conn;
     String db;
     String driver;
@@ -56,17 +56,17 @@ public class DB {
                 Class.forName(driver);
             }
             catch (ClassNotFoundException e) {
-                LOGGER.log(Level.SEVERE, e.toString(), e );
+//                LOGGER.log(Level.SEVERE, e.toString(), e );
             }
         
             conn = DriverManager.getConnection(url, dbUser, dbPwd);
             stmt = conn.createStatement();
         }
         catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
-            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
-            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
+//            LOGGER.log(Level.SEVERE, e.toString(), e);
+//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
+//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
+//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
     }
     
@@ -77,10 +77,10 @@ public class DB {
             }
         }
         catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
-            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
-            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
+//            LOGGER.log(Level.SEVERE, e.toString(), e);
+//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
+//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
+//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
         stmt.execute(sql);
     }
@@ -94,13 +94,34 @@ public class DB {
             rset =  stmt.executeQuery(sql);
         }
         catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
-            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
-            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
+//            LOGGER.log(Level.SEVERE, e.toString(), e);
+//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
+//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
+//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
         return rset;
     }
+
+    public void testConnection() {
+        try {
+            try {
+                Class.forName(driver);
+            }
+            catch (ClassNotFoundException e) {
+//                LOGGER.log(Level.SEVERE, e.toString(), e );
+            }
+        
+            conn = DriverManager.getConnection(url, dbUser, dbPwd);
+            stmt = conn.createStatement();
+        }
+        catch (SQLException e) {
+//            LOGGER.log(Level.SEVERE, e.toString(), e);
+//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
+//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
+//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
+        }
+    }
+    
     
     @Override
     protected void finalize() throws Throwable {

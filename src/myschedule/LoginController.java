@@ -50,50 +50,12 @@ public class LoginController extends AnchorPane implements Initializable {
 
     private App app;
     private MainController mainController;
-  
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        createActionListeners();
-  //    lblFeedback.setText("");
-  //    txtUsername.setPromptText("username");
-  //    txtPassword.setPromptText("password");
-  //    Common.USERS.clear();
-  //    Common.loadUsers();
-    }
 
     private void cancelLogin() {
         app.writeLog(Level.INFO, "User cancelled login attemp");
         this.mainController.endProcess();
     }
     
-    private void userLogin() {
-        if (!app.loggedIn()) {
-            app.writeLog(Level.INFO, "not already logged in");
-        }
-        else {
-            app.writeLog(Level.INFO, "already logged in");
-        }
-    }
-    
-    public void processLogin() {
-  //    if (! Authenticate.validate( txtUsername.getText(), txtPassword.getText() )) {
-  //      lblFeedback.setText("Invalid Username / Password combination");
-  //      LOGGER.log(Level.INFO, "Invalid username: ({0}) / password: ({1}) combination", new Object[]{ txtUsername.getText(), txtPassword.getText() } );
-  //    }
-  //    else {
-  //      lblFeedback.setText("Looks good!!! Congrats!");
-  //    }
-    }
-  
-    public void injectApp(App _app) {
-        this.app = _app;
-    }
-    
-    public void injectMainController(MainController _mainController) {
-        this.mainController = _mainController;
-        System.out.println("MainController: " + mainController);
-    }
-
     /**
      *  Define action event listeners
      */
@@ -106,4 +68,48 @@ public class LoginController extends AnchorPane implements Initializable {
             userLogin();
         });
     }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        createActionListeners();
+  //    lblFeedback.setText("");
+  //    txtUsername.setPromptText("username");
+  //    txtPassword.setPromptText("password");
+  //    Common.USERS.clear();
+  //    Common.loadUsers();
+    }
+
+    /**
+     * @param _app 
+     */
+    public void injectApp(App _app) {
+        this.app = _app;
+    }
+
+    /**
+     * @param _mainController 
+     */
+    public void injectMainController(MainController _mainController) {
+        this.mainController = _mainController;
+        System.out.println("MainController: " + mainController);
+    }
+    
+    private void userLogin() {
+        if (!app.loggedIn()) {
+            app.writeLog(Level.INFO, "not already logged in");
+        }
+        else {
+            app.writeLog(Level.INFO, "already logged in");
+        }
+    }
+    
+//    public void processLogin() {
+//        if (! Authenticate.validate( txtUsername.getText(), txtPassword.getText() )) {
+//            lblFeedback.setText("Invalid Username / Password combination");
+//            LOGGER.log(Level.INFO, "Invalid username: ({0}) / password: ({1}) combination", new Object[]{ txtUsername.getText(), txtPassword.getText() } );
+//        }
+//        else {
+//            lblFeedback.setText("Looks good!!! Congrats!");
+//        }
+//    }
 }
