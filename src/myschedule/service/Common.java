@@ -37,6 +37,8 @@ import javafx.application.Platform;
  */
 public class Common  {
 //    private final static Logger LOGGER = Logger.getLogger( Common.class.getName() );
+    public enum Authenticate { SUCCESS, INVALID_USER, INVALID_PASSWORD };
+    
     public static HashMap<String, String> MENU = new HashMap<String, String>();
     public HashMap<String, String> USERS = new HashMap<>();
     public static String currentUser;
@@ -118,4 +120,6 @@ public class Common  {
             }
         });
     }
+    
+    public 
 }
