@@ -28,6 +28,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import myschedule.service.Common;
 import myschedule.service.DB;
 import myschedule.service.Logging;
 
@@ -42,8 +43,9 @@ public class App extends Application {
     private String userName;
 
     // Classes
-    protected final Logging log = new Logging();
+    protected final Common common = new Common();
     protected final DB db = new DB();
+    protected final Logging log = new Logging();
 
     /**
      * @return loggedIn as boolean

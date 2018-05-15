@@ -51,12 +51,13 @@ public class DB {
     }
     
     protected void connect() {
+        System.out.println("DB.connect");
         try {
             try {
                 Class.forName(driver);
             }
             catch (ClassNotFoundException e) {
-//                LOGGER.log(Level.SEVERE, e.toString(), e );
+                System.out.println("DB driver error: " + e.toString());
             }
         
             conn = DriverManager.getConnection(url, dbUser, dbPwd);
@@ -116,9 +117,7 @@ public class DB {
 //                LOGGER.log(Level.SEVERE, e.toString(), e );
             }
         
-            System.out.println("Connecting to database...");
             conn = DriverManager.getConnection(url, dbUser, dbPwd);
-            System.out.println("Creating statement...");
             stmt = conn.createStatement();
             retval = true;
         }
