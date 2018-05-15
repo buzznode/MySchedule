@@ -70,6 +70,7 @@ public class LoginController extends AnchorPane {
         createActionListeners();
         txtUsername.setPromptText("username");
         txtPassword.setPromptText("password");
+        lblFeedback.setText("");
         app.common.USERS.clear();
         app.common.loadUsers();
         
