@@ -23,14 +23,13 @@
  */
 package myschedule;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import myschedule.service.DB;
+import myschedule.service.Logging;
 
 /**
  * @author bradd
@@ -38,12 +37,13 @@ import myschedule.service.DB;
  */
 public class App extends Application {
     
-    // Private general variables
+    // Private general variables   
     private boolean loggedIn;
     private String userName;
 
-    private static final Logger LOGGER = Logger.getLogger("myschedule.log");
-    protected DB db = new DB();
+    // Classes
+    protected final Logging log = new Logging();
+    protected final DB db = new DB();
 
     /**
      * @return loggedIn as boolean
@@ -91,13 +91,5 @@ public class App extends Application {
      */
     protected String userName(String _userName) {
         return userName = _userName;
-    }
-    
-    /**
-     * @param level
-     * @param msg 
-     */
-    protected void writeLog(Level level, String msg) {
-        LOGGER.log(level, msg);
     }
 }

@@ -87,7 +87,7 @@ public class MainController implements Initializable {
      */
     protected void injectApp(App _app) {
         app = _app;
-        app.writeLog(Level.INFO, "app has been injected");
+        app.log.write(Level.INFO, "App has been injected into MainController");
     }
     
     /**
@@ -133,12 +133,14 @@ public class MainController implements Initializable {
      * 
      */
     private void startLogin() throws Exception {
-            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Login.fxml"));
-            Node node = loader.load();
-            LoginController login = loader.getController();
-            login.injectMainController(this);
-            login.injectApp(app);
-            mainContainer.setCenter(node);
+        app.db.testConnection();
+        
+        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Login.fxml"));
+        Node node = loader.load();
+        LoginController login = loader.getController();
+        login.injectMainController(this);
+        login.injectApp(app);
+        mainContainer.setCenter(node);
     }
 }
 

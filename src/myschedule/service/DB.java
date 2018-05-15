@@ -50,7 +50,7 @@ public class DB {
         url = "jdbc:mysql://52.206.157.109/" + db;
     }
     
-    public void connect() {
+    protected void connect() {
         try {
             try {
                 Class.forName(driver);
@@ -70,7 +70,7 @@ public class DB {
         }
     }
     
-    public void run(String sql) throws SQLException {
+    protected void run(String sql) throws SQLException {
         try {
             if (conn == null || conn.isClosed()) {
                 connect();
@@ -85,7 +85,7 @@ public class DB {
         stmt.execute(sql);
     }
     
-    public ResultSet exec(String sql) throws SQLException {
+    protected ResultSet exec(String sql) throws SQLException {
         ResultSet rset = null;
         try {
             if (conn == null || conn.isClosed()) {
@@ -102,7 +102,12 @@ public class DB {
         return rset;
     }
 
-    public void testConnection() {
+    /**
+     * @return return value
+     */
+    public boolean testConnection() {
+        boolean retval;
+        
         try {
             try {
                 Class.forName(driver);
@@ -111,15 +116,21 @@ public class DB {
 //                LOGGER.log(Level.SEVERE, e.toString(), e );
             }
         
+            System.out.println("Connecting to database...");
             conn = DriverManager.getConnection(url, dbUser, dbPwd);
+            System.out.println("Creating statement...");
             stmt = conn.createStatement();
+            retval = true;
         }
         catch (SQLException e) {
 //            LOGGER.log(Level.SEVERE, e.toString(), e);
 //            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
 //            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
 //            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
+            retval = false;
         }
+        
+        return retval;
     }
     
     
