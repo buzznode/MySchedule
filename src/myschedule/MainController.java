@@ -133,14 +133,13 @@ public class MainController implements Initializable {
      * 
      */
     private void startLogin() throws Exception {
-        app.db.testConnection();
-        
         FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Login.fxml"));
         Node node = loader.load();
         LoginController login = loader.getController();
         login.injectMainController(this);
         login.injectApp(app);
         mainContainer.setCenter(node);
+        login.go();
     }
 }
 

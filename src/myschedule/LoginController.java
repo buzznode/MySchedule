@@ -23,11 +23,8 @@
  */
 package myschedule;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -37,7 +34,7 @@ import javafx.scene.layout.AnchorPane;
  * @author bradd
  * @version 0.5.0
  */
-public class LoginController extends AnchorPane implements Initializable {
+public class LoginController extends AnchorPane {
 
     @FXML AnchorPane frmLogin;
     @FXML Button btnCancel;
@@ -69,14 +66,13 @@ public class LoginController extends AnchorPane implements Initializable {
         });
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void go() {
         createActionListeners();
-  //    lblFeedback.setText("");
-  //    txtUsername.setPromptText("username");
-  //    txtPassword.setPromptText("password");
-  //    Common.USERS.clear();
-  //    Common.loadUsers();
+        txtUsername.setPromptText("username");
+        txtPassword.setPromptText("password");
+        app.common.USERS.clear();
+        app.common.loadUsers();
+        
     }
 
     /**
