@@ -52,7 +52,7 @@ public class LoginController extends AnchorPane implements Initializable {
     private MainController mainController;
 
     private void cancelLogin() {
-        app.writeLog(Level.INFO, "User cancelled login attemp");
+        app.log.write(Level.INFO, "User cancelled login attemp");
         this.mainController.endProcess();
     }
     
@@ -96,10 +96,10 @@ public class LoginController extends AnchorPane implements Initializable {
     
     private void userLogin() {
         if (!app.loggedIn()) {
-            app.writeLog(Level.INFO, "not already logged in");
+            app.log.write(Level.INFO, "not already logged in");
         }
         else {
-            app.writeLog(Level.INFO, "already logged in");
+            app.log.write(Level.INFO, "already logged in");
         }
     }
     
