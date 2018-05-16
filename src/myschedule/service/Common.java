@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import javafx.application.Platform;
 
 /**
@@ -37,9 +38,12 @@ import javafx.application.Platform;
  */
 public class Common  {
 //    private final static Logger LOGGER = Logger.getLogger( Common.class.getName() );
-    public enum Authenticate { SUCCESS, INVALID_USER, INVALID_PASSWORD };
-    
-    public static HashMap<String, String> MENU = new HashMap<String, String>();
+    public enum Auth { SUCCESS, INVALID_USER, INVALID_PASSWORD };
+    public Map<Integer, String> authMsg = new HashMap<Integer, String>() {{
+        put(0, "Successful Login");
+        put(1, "Invalid Username");
+        put(2, "Invalid Password");
+    }};
     public HashMap<String, String> USERS = new HashMap<>();
     public static String currentUser;
     public static int currentUserId;
@@ -59,11 +63,14 @@ public class Common  {
         bgThread.start();
     }
     
-
     public static String currDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         return dateFormat.format(date);
+    }
+    
+    private String getAuthMsg(Auth authCode) {
+        return authMsg.get(authCode);
     }
     
     public void loadUsers() {
@@ -121,5 +128,15 @@ public class Common  {
         });
     }
     
-    public 
+    public String validateUser(String user, String password) {
+        if (!USERS.containsKey(user)) {
+            return getAuthMsg(Auth.INVALID_USER);
+        }
+        else if (!(USERS.get(user).equals(password))) {
+            return getAuthMsg(Auth.INVALID_PASSWORD);
+        }
+        else {
+            return getAuthMsg(Auth.SUCCESS);
+        }
+    }
 }

@@ -93,7 +93,9 @@ public class LoginController extends AnchorPane {
     
     private void userLogin() {
         if (!app.loggedIn()) {
-            app.log.write(Level.INFO, "not already logged in");
+            String user = txtUsername.getText();
+            String password = txtPassword.getText();
+            lblFeedback.setText(app.common.validateUser(user, password));
         }
         else {
             app.log.write(Level.INFO, "already logged in");
