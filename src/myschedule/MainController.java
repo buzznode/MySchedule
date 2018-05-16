@@ -25,7 +25,6 @@ package myschedule;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -58,7 +57,7 @@ public class MainController implements Initializable {
     protected MenuItem miHelpAbout;
 
     /**
-     * 
+     * Create action listeners
      */
     private void createActionListeners() {
         miFileExit.setOnAction((ea) -> {
@@ -75,7 +74,7 @@ public class MainController implements Initializable {
     }
     
     /**
-     * 
+     * End currently running process
      */
     protected void endProcess() {
         Node node = mainContainer.getCenter();
@@ -83,14 +82,15 @@ public class MainController implements Initializable {
     }
 
     /**
+     * Inject App object
      * @param _app 
      */
     protected void injectApp(App _app) {
         app = _app;
-        app.log.write(Level.INFO, "App has been injected into MainController");
     }
     
     /**
+     * Initialize class
      * @param location
      * @param resources 
      */
@@ -130,7 +130,7 @@ public class MainController implements Initializable {
     }
   
     /**
-     * 
+     * Start the login process
      */
     private void startLogin() throws Exception {
         FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Login.fxml"));

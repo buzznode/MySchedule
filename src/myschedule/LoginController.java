@@ -46,15 +46,18 @@ public class LoginController extends AnchorPane {
     @FXML TextField txtUsername;
 
     private App app;
-    private MainController mainController;
+    private MainController main;
 
+    /**
+     * Cancel login 
+     */
     private void cancelLogin() {
-        app.log.write(Level.INFO, "User cancelled login attemp");
-        this.mainController.endProcess();
+        app.log.write(Level.INFO, "User cancelled login attempt");
+        main.endProcess();
     }
     
     /**
-     *  Define action event listeners
+     *  Create action event listeners
      */
     private void createActionListeners() {
         btnCancel.setOnAction((ea) -> {
@@ -64,19 +67,31 @@ public class LoginController extends AnchorPane {
         btnLogin.setOnAction((ea) -> {
             userLogin();
         });
+        
+        txtPassword.setOnMouseClicked((me) -> {
+            txtPassword.setText("");
+            lblFeedback.setText("");
+        });
+        
+        txtUsername.setOnMouseClicked((me) -> {
+            txtUsername.setText("");
+            lblFeedback.setText("");
+        });
     }
 
+    /**
+     * Begin login process
+     */
     public void go() {
         createActionListeners();
         txtUsername.setPromptText("username");
         txtPassword.setPromptText("password");
         lblFeedback.setText("");
-        app.common.USERS.clear();
         app.common.loadUsers();
-        
     }
 
     /**
+     * Inject App object
      * @param _app 
      */
     public void injectApp(App _app) {
@@ -84,31 +99,33 @@ public class LoginController extends AnchorPane {
     }
 
     /**
-     * @param _mainController 
+     * Inject MainController object
+     * @param _main 
      */
-    public void injectMainController(MainController _mainController) {
-        this.mainController = _mainController;
-        System.out.println("MainController: " + mainController);
+    public void injectMainController(MainController _main) {
+        main = _main;
     }
     
+    /**
+     * Process login
+     */
     private void userLogin() {
         if (!app.loggedIn()) {
             String user = txtUsername.getText();
             String password = txtPassword.getText();
-            lblFeedback.setText(app.common.validateUser(user, password));
+            
+            if (app.common.validateUser(user, password)) {
+                app.userName(user);
+                app.loggedIn(true);
+                main.endProcess();
+                app.log.write(Level.INFO, user + " has logged in");
+            }
+            else {
+                lblFeedback.setText("Invalid username / password. Please try again.");
+            }
         }
         else {
             app.log.write(Level.INFO, "already logged in");
         }
     }
-    
-//    public void processLogin() {
-//        if (! Authenticate.validate( txtUsername.getText(), txtPassword.getText() )) {
-//            lblFeedback.setText("Invalid Username / Password combination");
-//            LOGGER.log(Level.INFO, "Invalid username: ({0}) / password: ({1}) combination", new Object[]{ txtUsername.getText(), txtPassword.getText() } );
-//        }
-//        else {
-//            lblFeedback.setText("Looks good!!! Congrats!");
-//        }
-//    }
 }
