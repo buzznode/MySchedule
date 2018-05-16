@@ -29,72 +29,81 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.logging.Level;
 import javafx.application.Platform;
+import static myschedule.service.Logging.LOGGER;
 
 /**
- *
  * @author bradd
+ * @version 0.5.0
  */
 public class Common  {
 //    private final static Logger LOGGER = Logger.getLogger( Common.class.getName() );
-    public enum Auth { SUCCESS, INVALID_USER, INVALID_PASSWORD };
-    public Map<Integer, String> authMsg = new HashMap<Integer, String>() {{
-        put(0, "Successful Login");
-        put(1, "Invalid Username");
-        put(2, "Invalid Password");
-    }};
     public HashMap<String, String> USERS = new HashMap<>();
     public static String currentUser;
     public static int currentUserId;
     public static String currentLangCode;
     public static String currentLangName;
+    private final Logging log;
     
-    public static void changeCursor(boolean busy) {
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                setCursor(busy);
-            }
-        };
+    /**
+     * Common constructor with Logging param
+     * @param _log 
+     */
+    public Common(Logging _log) {
+        log = _log;
+    }
+    
+//    public static void changeCursor(boolean busy) {
+//        Runnable task = new Runnable() {
+//            @Override
+//            public void run() {
+//                setCursor(busy);
+//            }
+//        };
+//
+//        Thread bgThread = new Thread(task);
+//        bgThread.setDaemon(true);
+//        bgThread.start();
+//    }
+    
+//    public static String currDate() {
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//        Date date = new Date();
+//        return dateFormat.format(date);
+//    }
 
-        Thread bgThread = new Thread(task);
-        bgThread.setDaemon(true);
-        bgThread.start();
-    }
-    
-    public static String currDate() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        return dateFormat.format(date);
-    }
-    
-    private String getAuthMsg(Auth authCode) {
-        return authMsg.get(authCode);
-    }
-    
+    /**
+     * Load users from database
+     */
     public void loadUsers() {
+        if (USERS.size() > 0) {
+            log.write(Level.INFO, "USERS already loaded");
+            return;
+        }
+        
         try {
-            DB db = new DB();
+            DB db = new DB(log);
             db.connect();
-            String sql = "select userName, password from user";
+            String sql = "select userName, password from userhoser";
             ResultSet results =  db.exec( sql );
             int recordCount = 0;
            
             while (results.next()) {
                 String user = results.getString("userName");
                 String pwd = results.getString("password");
-                System.out.println("adding {serName: " + user + "; password: " + pwd + " to USERS");
+                log.write(Level.INFO, "adding (Username " + user + "; password: " + pwd + " to USERS");
                 USERS.put(user, pwd);
                 recordCount++;
             }
-            System.out.println(recordCount + "records added to USERS");
+            
+            log.write(Level.INFO, recordCount + " records added to USERS");
         }
-        catch ( SQLException e )  {
-//            LOGGER.log(Level.SEVERE, e.toString(), e);
-//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
-//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
-//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
+        catch (SQLException e)  {
+            log.write(Level.SEVERE, e.toString());
+            log.write(Level.SEVERE, "SQLException: {0}", e.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", e.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
     }
     
@@ -110,33 +119,33 @@ public class Common  {
 //        menuBar.getMenus().get( menu ).getItems().get( menuItem ).setDisable( false );
 //    }
     
-    public static void setCursor(boolean busy) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (busy) {
-//                        Main.getRoot().sceneProperty().get().setCursor(Cursor.WAIT);
-                    }
-                    else {
-//                        Main.getRoot().sceneProperty().get().setCursor(Cursor.DEFAULT);
-                    }
-                }
-                catch (Exception e) {
-                }
-            }
-        });
-    }
+//    public static void setCursor(boolean busy) {
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    if (busy) {
+////                        Main.getRoot().sceneProperty().get().setCursor(Cursor.WAIT);
+//                    }
+//                    else {
+////                        Main.getRoot().sceneProperty().get().setCursor(Cursor.DEFAULT);
+//                    }
+//                }
+//                catch (Exception e) {
+//                }
+//            }
+//        });
+//    }
     
-    public String validateUser(String user, String password) {
+    public boolean validateUser(String user, String password) {
         if (!USERS.containsKey(user)) {
-            return getAuthMsg(Auth.INVALID_USER);
+            return false;
         }
         else if (!(USERS.get(user).equals(password))) {
-            return getAuthMsg(Auth.INVALID_PASSWORD);
+            return false;
         }
         else {
-            return getAuthMsg(Auth.SUCCESS);
+            return true;
         }
     }
 }

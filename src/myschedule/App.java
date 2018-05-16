@@ -43,11 +43,12 @@ public class App extends Application {
     private String userName;
 
     // Classes
-    protected final Common common = new Common();
-    protected final DB db = new DB();
     protected final Logging log = new Logging();
+    protected final Common common = new Common(log);
+    protected final DB db = new DB(log);
 
     /**
+     * Get loggedIn value
      * @return loggedIn as boolean
      */
     protected boolean loggedIn() {
@@ -55,6 +56,7 @@ public class App extends Application {
     }
     
     /**
+     * Set loggedIn value
      * @param _loggedIn
      * @return  _loggedIn as boolean
      */
@@ -63,24 +65,31 @@ public class App extends Application {
     }
     
     /**
+     * Main routine
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
     
+    /**
+     * Start routine for class
+     * @param stage
+     * @throws Exception 
+     */
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainContainer.fxml"));
         Parent node = loader.load();
-        MainController controller = loader.getController();
-        controller.injectApp(this);
+        MainController main = loader.getController();
+        main.injectApp(this);
         Scene scene = new Scene(node);
         stage.setScene(scene);
         stage.show();
     }
     
     /**
+     * Get userName value
      * @return userName
      */
     protected String userName() {
@@ -88,6 +97,7 @@ public class App extends Application {
     }
 
     /**
+     * Set userName value
      * @param _userName
      * @return userName 
      */

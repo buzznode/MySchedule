@@ -24,6 +24,7 @@
 package myschedule.service;
 
 import java.sql.*;
+import java.util.logging.Level;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 
@@ -40,6 +41,7 @@ public class DB {
     String dbUser;
     Statement stmt;
     String url;
+    private Logging log;
     
     public DB() {
         conn = null;
@@ -50,14 +52,25 @@ public class DB {
         url = "jdbc:mysql://52.206.157.109/" + db;
     }
     
+    public DB(Logging _log) {
+        log = _log;
+        conn = null;
+        driver = "com.mysql.jdbc.Driver";
+        db  = "U03MuY";
+        dbUser = "U03MuY";
+        dbPwd = "53688020218";
+        url = "jdbc:mysql://52.206.157.109/" + db;
+    }
+    
     protected void connect() {
-        System.out.println("DB.connect");
+        log.write(Level.INFO, "DB.connect");
+        
         try {
             try {
                 Class.forName(driver);
             }
             catch (ClassNotFoundException e) {
-                System.out.println("DB driver error: " + e.toString());
+                log.write(Level.SEVERE, "DB driver error: " + e.toString());
             }
         
             conn = DriverManager.getConnection(url, dbUser, dbPwd);

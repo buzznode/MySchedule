@@ -41,5 +41,12 @@ public class Logging {
         LOGGER.log(level, msg);
     }
     
+    public void write(Level level, String msg, Object param) {
+        LOGGER.log(level, msg, param);
+    }
+    
+    public void write(Level level, String msg, Object[] params) {
+        LOGGER.log(level, msg, params);
+    }
 }
 
