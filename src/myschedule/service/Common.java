@@ -85,14 +85,13 @@ public class Common  {
         try {
             DB db = new DB(log);
             db.connect();
-            String sql = "select userName, password from userhoser";
+            String sql = "select userName, password from user_bad";
             ResultSet results =  db.exec( sql );
             int recordCount = 0;
            
             while (results.next()) {
                 String user = results.getString("userName");
                 String pwd = results.getString("password");
-                log.write(Level.INFO, "adding (Username " + user + "; password: " + pwd + " to USERS");
                 USERS.put(user, pwd);
                 recordCount++;
             }

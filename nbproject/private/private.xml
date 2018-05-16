@@ -5,6 +5,7 @@
         <group>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/App.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/MainController.java</file>
+            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/service/DB.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/service/Logging.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/LoginController.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/service/Common.java</file>
