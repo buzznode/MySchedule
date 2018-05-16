@@ -63,8 +63,6 @@ public class DB {
     }
     
     protected void connect() {
-        log.write(Level.INFO, "DB.connect");
-        
         try {
             try {
                 Class.forName(driver);
@@ -77,10 +75,10 @@ public class DB {
             stmt = conn.createStatement();
         }
         catch (SQLException e) {
-//            LOGGER.log(Level.SEVERE, e.toString(), e);
-//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
-//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
-//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
+            log.write(Level.SEVERE, e.toString(), e);
+            log.write(Level.SEVERE, "SQLException: {0}", e.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", e.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
     }
     
