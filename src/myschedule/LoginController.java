@@ -29,7 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import myschedule.service.Logging;
 
 /**
  * @author bradd
@@ -42,6 +41,7 @@ public class LoginController extends AnchorPane {
     @FXML Button btnLogin;
     @FXML Label lblFeedback;
     @FXML Label lblPassword;
+    @FXML Label lblTitle;
     @FXML Label lblUsername;
     @FXML TextField txtPassword;
     @FXML TextField txtUsername;
@@ -62,11 +62,11 @@ public class LoginController extends AnchorPane {
      *  Create action event listeners
      */
     private void createActionListeners() {
-        btnCancel.setOnAction((ea) -> {
+        btnCancel.setOnMouseClicked((ea) -> {
             cancelLogin();
         });
         
-        btnLogin.setOnAction((ea) -> {
+        btnLogin.setOnMouseClicked((ea) -> {
             userLogin();
         });
         
@@ -87,8 +87,13 @@ public class LoginController extends AnchorPane {
     public void go() {
         app.log.write(Level.INFO, "Attempting login...");
         createActionListeners();
-        txtUsername.setPromptText("username");
-        txtPassword.setPromptText("password");
+        btnCancel.setText(app.localize("cancel"));
+        btnLogin.setText(app.localize("login"));
+        lblPassword.setText(app.localize("password"));
+        lblTitle.setText(app.localize("login"));
+        lblUsername.setText(app.localize("username"));
+        txtUsername.setPromptText(app.localize("username"));
+        txtPassword.setPromptText(app.localize("password"));
         lblFeedback.setText("");
         app.common.loadUsers();
     }
@@ -120,11 +125,12 @@ public class LoginController extends AnchorPane {
             if (app.common.validateUser(user, password)) {
                 app.userName(user);
                 app.loggedIn(true);
+                main.enableMenu();
                 main.endProcess();
                 app.log.write(Level.INFO, user + " has logged in");
             }
             else {
-                lblFeedback.setText("Invalid username / password. Please try again.");
+                lblFeedback.setText(app.localize("invalid_username_password"));
             }
         }
         else {
