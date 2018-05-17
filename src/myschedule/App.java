@@ -23,6 +23,8 @@
  */
 package myschedule;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -44,10 +46,20 @@ public class App extends Application {
     private String userName;
 
     // Classes
+    protected ResourceBundle rb;
     protected final Logging log = new Logging();
     protected final Common common = new Common(log);
     protected final DB db = new DB(log);
 
+    /**
+     * Localize a string
+     * @param str
+     * @return 
+     */
+    public String localize(String str) {
+        return rb.getString(str);
+    }
+    
     /**
      * Get loggedIn value
      * @return loggedIn as boolean
@@ -80,11 +92,14 @@ public class App extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-        log.write(Level.INFO, "Starting applications...");
+        log.write(Level.INFO, "Starting application...");
+        Locale.setDefault(new Locale("de", "DE"));
+        rb = ResourceBundle.getBundle("language_files/rb");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainContainer.fxml"));
         Parent node = loader.load();
         MainController main = loader.getController();
         main.injectApp(this);
+        main.go();
         Scene scene = new Scene(node);
         stage.setScene(scene);
         stage.show();

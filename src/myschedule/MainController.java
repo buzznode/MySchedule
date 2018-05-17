@@ -23,11 +23,8 @@
  */
 package myschedule;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -38,9 +35,10 @@ import javafx.scene.layout.BorderPane;
  * @author bradd
  * @version 0.5.0
  */
-public class MainController implements Initializable {
+public class MainController {
 
     private App app;
+    private final MenuBar menuBar = new MenuBar();
     
     // FXML Components
     @FXML protected BorderPane mainContainer;
@@ -72,6 +70,30 @@ public class MainController implements Initializable {
             }
         });
     }
+
+    /**
+     * Disable menu
+     */
+    public void disableMenu() {
+        menuBar.getMenus().forEach(( m ) -> {
+            m.setDisable(true);
+            m.getItems().forEach(( mi ) -> {
+                mi.setDisable( true );
+            });
+        });
+    }
+
+    /**
+     * Enable menu
+     */
+    public void enableMenu() {
+        menuBar.getMenus().forEach((m) -> {
+            m.setDisable(false);
+            m.getItems().forEach((mi) -> {
+                mi.setDisable(false);
+            });
+        });
+    }
     
     /**
      * End currently running process
@@ -79,6 +101,55 @@ public class MainController implements Initializable {
     protected void endProcess() {
         Node node = mainContainer.getCenter();
         mainContainer.getChildren().removeAll(node);
+    }
+    
+    /**
+     * Start the MainController
+     */
+    protected void go() {
+
+        // File menu
+        Menu menuFile = new Menu(app.localize("file"));
+        miFileNew = new MenuItem(app.localize("new"));
+        miFileOpen = new MenuItem(app.localize("open"));
+        miFileSave = new MenuItem(app.localize("save"));
+        miFileSaveAs = new MenuItem(app.localize("save_as"));
+        miFileExit = new MenuItem(app.localize("exit"));
+        menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
+
+        // Edit menu
+        Menu menuEdit = new Menu(app.localize("edit"));
+        miEditDelete = new MenuItem(app.localize("delete"));
+        menuEdit.getItems().addAll(miEditDelete);
+
+        // User menu
+        Menu menuUser = new Menu(app.localize("user"));
+        miUserLogin = new MenuItem(app.localize("login"));
+        miUserLogout = new MenuItem(app.localize("logout"));
+        menuUser.getItems().addAll(miUserLogin, miUserLogout);
+
+        // Help menu
+        Menu menuHelp = new Menu(app.localize("help"));
+        miHelpAbout = new MenuItem(app.localize("about"));
+        menuHelp.getItems().addAll(miHelpAbout);
+
+        createActionListeners();
+        menuBar.getMenus().addAll(menuFile, menuEdit, menuUser, menuHelp);
+        mainContainer.setTop(menuBar);
+        
+        if (!app.loggedIn()) {
+            disableMenu();
+            
+            try {
+                startLogin();
+            }
+            catch(Exception ex) {
+                
+            }
+        }
+        else {
+            enableMenu();
+        }
     }
 
     /**
@@ -89,46 +160,6 @@ public class MainController implements Initializable {
         app = _app;
     }
     
-    /**
-     * Initialize class
-     * @param location
-     * @param resources 
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        
-        MenuBar menuBar = new MenuBar();
-
-        // File menu
-        Menu menuFile = new Menu("File");
-        miFileNew = new MenuItem("New");
-        miFileOpen = new MenuItem("Open");
-        miFileSave = new MenuItem("Save");
-        miFileSaveAs = new MenuItem("Save As...");
-        miFileExit = new MenuItem("Exit");
-        menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
-
-        // Edit menu
-        Menu menuEdit = new Menu("Edit");
-        miEditDelete = new MenuItem("Delete");
-        menuEdit.getItems().addAll(miEditDelete);
-
-        // User menu
-        Menu menuUser = new Menu("User");
-        miUserLogin = new MenuItem("Login");
-        miUserLogout = new MenuItem("Logout");
-        menuUser.getItems().addAll(miUserLogin, miUserLogout);
-
-        // Help menu
-        Menu menuHelp = new Menu("Help");
-        miHelpAbout = new MenuItem("About");
-        menuHelp.getItems().addAll(miHelpAbout);
-
-        createActionListeners();
-        menuBar.getMenus().addAll(menuFile, menuEdit, menuUser, menuHelp);
-        mainContainer.setTop(menuBar);
-    }
-  
     /**
      * Start the login process
      */

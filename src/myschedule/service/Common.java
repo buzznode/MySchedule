@@ -49,40 +49,19 @@ public class Common  {
     public Common(Logging _log) {
         log = _log;
     }
-    
-//    public static void changeCursor(boolean busy) {
-//        Runnable task = new Runnable() {
-//            @Override
-//            public void run() {
-//                setCursor(busy);
-//            }
-//        };
-//
-//        Thread bgThread = new Thread(task);
-//        bgThread.setDaemon(true);
-//        bgThread.start();
-//    }
-    
-//    public static String currDate() {
-//        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//        Date date = new Date();
-//        return dateFormat.format(date);
-//    }
 
     /**
      * Load users from database
      */
     public void loadUsers() {
         if (USERS.size() > 0) {
-            log.write(Level.INFO, "USERS already loaded");
             return;
         }
         
         try {
-            log.write(Level.INFO, "Loading users...");
             DB db = new DB(log);
             db.connect();
-            String sql = "select userName, password from user_bad";
+            String sql = "select userName, password from user";
             ResultSet results =  db.exec( sql );
             int recordCount = 0;
            
@@ -92,8 +71,6 @@ public class Common  {
                 USERS.put(user, pwd);
                 recordCount++;
             }
-            
-            log.write(Level.INFO, recordCount + " user records added");
         }
         catch (SQLException e)  {
             log.write(Level.SEVERE, e.toString());
@@ -134,14 +111,12 @@ public class Common  {
 //    }
     
     public boolean validateUser(String user, String password) {
+
         if (!USERS.containsKey(user)) {
             return false;
         }
-        else if (!(USERS.get(user).equals(password))) {
-            return false;
-        }
         else {
-            return true;
+            return USERS.get(user).equals(password);
         }
     }
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-17T14:25:03</date>
+  <millis>1526585103935</millis>
+  <sequence>0</sequence>
+  <logger>myschedule</logger>
+  <level>INFO</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>Starting application...</message>
+</record>
+<record>
+  <date>2018-05-17T14:25:04</date>
+  <millis>1526585104073</millis>
+  <sequence>1</sequence>
+  <logger>myschedule</logger>
+  <level>INFO</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>Attempting login...</message>
+</record>
+<record>
+  <date>2018-05-17T14:25:12</date>
+  <millis>1526585112603</millis>
+  <sequence>2</sequence>
+  <logger>myschedule</logger>
+  <level>INFO</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>bradd has logged in</message>
+</record>
+</log>
