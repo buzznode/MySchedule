@@ -83,6 +83,16 @@ public class MainController {
         });
     }
 
+    public void enableExist() {
+        
+    }
+    
+    public void enableLogin() {
+        menuBar.getMenus().get(2).setDisable(false);
+        menuBar.getMenus().get(2).getItems().get(0).setDisable(false);
+    }
+    
+    
     /**
      * Enable menu
      */
@@ -108,29 +118,29 @@ public class MainController {
      */
     protected void go() {
 
-        // File menu
-        Menu menuFile = new Menu(app.localize("file"));
-        miFileNew = new MenuItem(app.localize("new"));
-        miFileOpen = new MenuItem(app.localize("open"));
-        miFileSave = new MenuItem(app.localize("save"));
-        miFileSaveAs = new MenuItem(app.localize("save_as"));
-        miFileExit = new MenuItem(app.localize("exit"));
+        // File menu [0]
+        Menu menuFile = new Menu(app.localize("file")); // [0]
+        miFileNew = new MenuItem(app.localize("new")); // [1]             
+        miFileOpen = new MenuItem(app.localize("open")); // [2]
+        miFileSave = new MenuItem(app.localize("save")); // [3]
+        miFileSaveAs = new MenuItem(app.localize("save_as")); // [4]
+        miFileExit = new MenuItem(app.localize("exit")); // [5]
         menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
 
-        // Edit menu
-        Menu menuEdit = new Menu(app.localize("edit"));
-        miEditDelete = new MenuItem(app.localize("delete"));
-        menuEdit.getItems().addAll(miEditDelete);
+        // Edit menu [1]
+        Menu menuEdit = new Menu(app.localize("edit")); // [0]
+        miEditDelete = new MenuItem(app.localize("delete")); // [1]
+        menuEdit.getItems().addAll(miEditDelete); 
 
-        // User menu
-        Menu menuUser = new Menu(app.localize("user"));
-        miUserLogin = new MenuItem(app.localize("login"));
-        miUserLogout = new MenuItem(app.localize("logout"));
+        // User menu [2]
+        Menu menuUser = new Menu(app.localize("user")); // [0]
+        miUserLogin = new MenuItem(app.localize("login")); // [1]
+        miUserLogout = new MenuItem(app.localize("logout")); // [2]
         menuUser.getItems().addAll(miUserLogin, miUserLogout);
 
-        // Help menu
-        Menu menuHelp = new Menu(app.localize("help"));
-        miHelpAbout = new MenuItem(app.localize("about"));
+        // Help menu [3]
+        Menu menuHelp = new Menu(app.localize("help")); // [0]
+        miHelpAbout = new MenuItem(app.localize("about")); // [1]
         menuHelp.getItems().addAll(miHelpAbout);
 
         createActionListeners();
@@ -139,6 +149,7 @@ public class MainController {
         
         if (!app.loggedIn()) {
             disableMenu();
+            enableLogin();
             
             try {
                 startLogin();
