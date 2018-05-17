@@ -29,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import myschedule.service.Logging;
 
 /**
  * @author bradd
@@ -52,6 +53,7 @@ public class LoginController extends AnchorPane {
      * Cancel login 
      */
     private void cancelLogin() {
+
         app.log.write(Level.INFO, "User cancelled login attempt");
         main.endProcess();
     }
@@ -83,6 +85,7 @@ public class LoginController extends AnchorPane {
      * Begin login process
      */
     public void go() {
+        app.log.write(Level.INFO, "Attempting login...");
         createActionListeners();
         txtUsername.setPromptText("username");
         txtPassword.setPromptText("password");

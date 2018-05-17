@@ -23,6 +23,10 @@
  */
 package myschedule.service;
 
+import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,8 +35,27 @@ import java.util.logging.Logger;
  * @version 0.5.0
  */
 public class Logging {
-    protected static final Logger LOGGER = Logger.getLogger("myschedule.log");
+    
+    protected static final Logger LOGGER = Logger.getLogger("myschedule");
+    
+    public Logging() {
+        
+        Handler consoleHandler;
+        Handler fileHandler;
 
+        try {
+            consoleHandler = new ConsoleHandler();
+            fileHandler = new FileHandler("./myschedule.log");
+            consoleHandler.setLevel(Level.ALL);
+            fileHandler.setLevel(Level.ALL);
+            LOGGER.addHandler(consoleHandler);
+            LOGGER.addHandler(fileHandler);
+            LOGGER.setLevel(Level.ALL);
+        }
+        catch(IOException ex) {
+        }
+    }
+    
     /**
      * @param level
      * @param msg 

@@ -25,25 +25,21 @@ package myschedule.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
-import javafx.application.Platform;
-import static myschedule.service.Logging.LOGGER;
 
 /**
  * @author bradd
  * @version 0.5.0
  */
 public class Common  {
-//    private final static Logger LOGGER = Logger.getLogger( Common.class.getName() );
+    
     public HashMap<String, String> USERS = new HashMap<>();
     public static String currentUser;
     public static int currentUserId;
     public static String currentLangCode;
     public static String currentLangName;
+    
     private final Logging log;
     
     /**
@@ -83,6 +79,7 @@ public class Common  {
         }
         
         try {
+            log.write(Level.INFO, "Loading users...");
             DB db = new DB(log);
             db.connect();
             String sql = "select userName, password from user_bad";
@@ -96,7 +93,7 @@ public class Common  {
                 recordCount++;
             }
             
-            log.write(Level.INFO, recordCount + " records added to USERS");
+            log.write(Level.INFO, recordCount + " user records added");
         }
         catch (SQLException e)  {
             log.write(Level.SEVERE, e.toString());
