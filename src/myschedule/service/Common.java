@@ -26,6 +26,7 @@ package myschedule.service;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -35,6 +36,9 @@ import java.util.logging.Level;
 public class Common  {
     
     public HashMap<String, String> USERS = new HashMap<>();
+    public Map<String, Integer> MENUS = new HashMap<>();
+    public Map<String, Integer> MENUITEMS = new HashMap<>();
+    
     public static String currentUser;
     public static int currentUserId;
     public static String currentLangCode;

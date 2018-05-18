@@ -93,7 +93,8 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         log.write(Level.INFO, "Starting application...");
-        Locale.setDefault(new Locale("de", "DE"));
+        Locale.setDefault(new Locale("en", "EN"));
+//        Locale.setDefault(new Locale("de", "DE"));
         rb = ResourceBundle.getBundle("language_files/rb");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainContainer.fxml"));
         Parent node = loader.load();
