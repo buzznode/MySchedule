@@ -126,6 +126,7 @@ public class LoginController extends AnchorPane {
                 app.userName(user);
                 app.loggedIn(true);
                 main.enableMenu();
+                main.disableLogin();
                 main.endProcess();
                 app.log.write(Level.INFO, user + " has logged in");
             }

@@ -72,33 +72,63 @@ public class MainController {
     }
 
     /**
+     * Disable Users.Login
+     */
+    public void disableLogin() {
+        menuBar.getMenus().get(2).getItems().get(0).setDisable(true);
+    }
+    
+    /**
+     * Disable Users.Logout
+     */
+    public void disableLogout() {
+        menuBar.getMenus().get(2).getItems().get(1).setDisable(false);
+    }
+    
+    /**
      * Disable menu
      */
     public void disableMenu() {
         menuBar.getMenus().forEach(( m ) -> {
-            m.setDisable(true);
             m.getItems().forEach(( mi ) -> {
                 mi.setDisable( true );
             });
         });
     }
 
-    public void enableExist() {
-        
+    /**
+     * Enable Help.About
+     */
+    public void enableAbout() {
+        menuBar.getMenus().get(3).getItems().get(0).setDisable(false);
     }
     
+    /**
+     * Enable Menu.Exit
+     */
+    public void enableExit() {
+        menuBar.getMenus().get(0).getItems().get(4).setDisable(false);
+    }
+    
+    /**
+     * Enable Users.Login
+     */
     public void enableLogin() {
-        menuBar.getMenus().get(2).setDisable(false);
         menuBar.getMenus().get(2).getItems().get(0).setDisable(false);
     }
     
+    /**
+     * Enable Users.Logout
+     */
+    public void enableLogout() {
+        menuBar.getMenus().get(2).getItems().get(1).setDisable(false);
+    }
     
     /**
      * Enable menu
      */
     public void enableMenu() {
         menuBar.getMenus().forEach((m) -> {
-            m.setDisable(false);
             m.getItems().forEach((mi) -> {
                 mi.setDisable(false);
             });
@@ -119,28 +149,28 @@ public class MainController {
     protected void go() {
 
         // File menu [0]
-        Menu menuFile = new Menu(app.localize("file")); // [0]
-        miFileNew = new MenuItem(app.localize("new")); // [1]             
-        miFileOpen = new MenuItem(app.localize("open")); // [2]
-        miFileSave = new MenuItem(app.localize("save")); // [3]
-        miFileSaveAs = new MenuItem(app.localize("save_as")); // [4]
-        miFileExit = new MenuItem(app.localize("exit")); // [5]
+        Menu menuFile = new Menu(app.localize("file"));
+        miFileNew = new MenuItem(app.localize("new"));          // [0]             
+        miFileOpen = new MenuItem(app.localize("open"));        // [1]
+        miFileSave = new MenuItem(app.localize("save"));        // [2]
+        miFileSaveAs = new MenuItem(app.localize("save_as"));   // [3]
+        miFileExit = new MenuItem(app.localize("exit"));        // [4]
         menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
 
         // Edit menu [1]
-        Menu menuEdit = new Menu(app.localize("edit")); // [0]
-        miEditDelete = new MenuItem(app.localize("delete")); // [1]
+        Menu menuEdit = new Menu(app.localize("edit"));
+        miEditDelete = new MenuItem(app.localize("delete"));    // [0]
         menuEdit.getItems().addAll(miEditDelete); 
 
         // User menu [2]
-        Menu menuUser = new Menu(app.localize("user")); // [0]
-        miUserLogin = new MenuItem(app.localize("login")); // [1]
-        miUserLogout = new MenuItem(app.localize("logout")); // [2]
+        Menu menuUser = new Menu(app.localize("user"));
+        miUserLogin = new MenuItem(app.localize("login"));      // [0]
+        miUserLogout = new MenuItem(app.localize("logout"));    // [1]
         menuUser.getItems().addAll(miUserLogin, miUserLogout);
 
         // Help menu [3]
-        Menu menuHelp = new Menu(app.localize("help")); // [0]
-        miHelpAbout = new MenuItem(app.localize("about")); // [1]
+        Menu menuHelp = new Menu(app.localize("help"));
+        miHelpAbout = new MenuItem(app.localize("about"));      // [0]
         menuHelp.getItems().addAll(miHelpAbout);
 
         createActionListeners();
@@ -149,6 +179,8 @@ public class MainController {
         
         if (!app.loggedIn()) {
             disableMenu();
+            enableAbout();
+            enableExit();
             enableLogin();
             
             try {
@@ -160,6 +192,7 @@ public class MainController {
         }
         else {
             enableMenu();
+            disableLogin();
         }
     }
 
