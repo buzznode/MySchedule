@@ -29,16 +29,62 @@ import java.util.Date;
  * @author bradd
  * @version 0.5.0
  */
-public class City {
+public class User {
 
-    private int cityId;
-    private String city;
-    private int countryId;
+    private int userId;
+    private String userName;
+    private String password;
+    private boolean active;
+    private String createBy;
     private Date createDate;
-    private String createdBy;
     private Date lastUpdate;
-    private String lastUpdateBy;
+    private String lastUpdatedBy;
     
+    /**
+     * @return addressId
+     */
+    public int addressId() {
+        return addressId;
+    }
+    
+    /**
+     * @param _addressId
+     * @return addressId
+     */
+    public int addressId(int _addressId) {
+        return addressId = _addressId;
+    }
+    
+    /**
+     * @return address
+     */
+    public String address() {
+        return address;
+    }
+    
+    /**
+     * @param _address
+     * @return address
+     */
+    public String address(String _address) {
+        return address = _address;
+    }
+    
+    /**
+     * @return address2
+     */
+    public String address2() {
+        return address2;
+    }
+    
+    /**
+     * @param _address2
+     * @return address2
+     */
+    public String address2(String _address2) {
+        return address2 = _address2;
+    }
+
     /**
      * @return cityId
      */
@@ -55,33 +101,33 @@ public class City {
     }
     
     /**
-     * @return city
+     * @return postalCode
      */
-    public String city() {
-        return city;
+    public String postalCode() {
+        return postalCode;
     }
     
     /**
-     * @param _city
-     * @return city
+     * @param _postalCode
+     * @return postalCode
      */
-    public String city(String _city) {
-        return city = _city;
+    public String postalCode(String _postalCode) {
+        return postalCode = _postalCode;
     }
     
     /**
-     * @return countryId
+     * @return phone
      */
-    public int countryId() {
-        return countryId;
+    public String phone() {
+        return phone;
     }
     
     /**
-     * @param _countryId
-     * @return countryId
+     * @param _phone
+     * @return phone
      */
-    public int countryId(int _countryId) {
-        return countryId = _countryId;
+    public String phone(String _phone) {
+        return phone = _phone;
     }
     
     /**

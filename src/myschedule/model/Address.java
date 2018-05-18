@@ -23,8 +23,7 @@
  */
 package myschedule.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 /**
  * @author bradd
@@ -32,46 +31,21 @@ import java.util.Map;
  */
 public class Address {
 
-    protected static final Map<String, Address> ADDRESSES = new HashMap<String, Address>();
-    protected String addressId = "";
-    protected String address = "";
-    protected String address2 = "";
-    protected int cityId = 0;
-    protected String postalCode = "";
-    protected String phone = "";
-    protected String createDate = "";
-    protected String createdBy = "";
-    protected String lastUpdate = "";
-    protected String lastUpdateBy = "";
-    
-    /**
-     * @param _addressId
-     * @return Address object
-     */
-    protected Address of(String _addressId) {
-        Address xAddress = ADDRESSES.get(_addressId);
-        
-        if (xAddress == null) {
-            xAddress = new Address(_addressId);
-            ADDRESSES.put(_addressId, xAddress);
-        }
-        
-        return xAddress;
-    }
-    
-    /**
-     * @param _addressId 
-     */
-    protected Address(String _addressId) {
-        this.addressId = _addressId;
-    }
-    
-    /* Getters & Setters */
+    private int addressId;
+    private String address;
+    private String address2;
+    private int cityId;
+    private String postalCode;
+    private String phone;
+    private Date createDate;
+    private String createdBy;
+    private Date lastUpdate;
+    private String lastUpdateBy;
     
     /**
      * @return addressId
      */
-    protected String addressId() {
+    public int addressId() {
         return addressId;
     }
     
@@ -79,14 +53,14 @@ public class Address {
      * @param _addressId
      * @return addressId
      */
-    protected String addressId(String _addressId) {
+    public int addressId(int _addressId) {
         return addressId = _addressId;
     }
     
     /**
      * @return address
      */
-    protected String address() {
+    public String address() {
         return address;
     }
     
@@ -94,14 +68,14 @@ public class Address {
      * @param _address
      * @return address
      */
-    protected String address(String _address) {
+    public String address(String _address) {
         return address = _address;
     }
     
     /**
      * @return address2
      */
-    protected String address2() {
+    public String address2() {
         return address2;
     }
     
@@ -109,14 +83,14 @@ public class Address {
      * @param _address2
      * @return address2
      */
-    protected String address2(String _address2) {
+    public String address2(String _address2) {
         return address2 = _address2;
     }
-    
+
     /**
      * @return cityId
      */
-    protected int cityId() {
+    public int cityId() {
         return cityId;
     }
     
@@ -124,14 +98,14 @@ public class Address {
      * @param _cityId
      * @return cityId
      */
-    protected int cityId(int _cityId) {
+    public int cityId(int _cityId) {
         return cityId = _cityId;
     }
-
+    
     /**
      * @return postalCode
      */
-    protected String postalCode() {
+    public String postalCode() {
         return postalCode;
     }
     
@@ -139,14 +113,14 @@ public class Address {
      * @param _postalCode
      * @return postalCode
      */
-    protected String postalCode(String _postalCode) {
+    public String postalCode(String _postalCode) {
         return postalCode = _postalCode;
     }
     
     /**
      * @return phone
      */
-    protected String phone() {
+    public String phone() {
         return phone;
     }
     
@@ -154,29 +128,29 @@ public class Address {
      * @param _phone
      * @return phone
      */
-    protected String phone(String _phone) {
+    public String phone(String _phone) {
         return phone = _phone;
     }
     
     /**
      * @return createDate
      */
-    protected String createDate() {
+    public Date createDate() {
         return createDate;
     }
-
+    
     /**
      * @param _createDate
      * @return createDate
      */
-    protected String _createDate(String _createDate) {
+    public Date createDate(Date _createDate) {
         return createDate = _createDate;
     }
     
     /**
      * @return createdBy
      */
-    protected String createdBy() {
+    public String createdBy() {
         return createdBy;
     }
     
@@ -184,29 +158,29 @@ public class Address {
      * @param _createdBy
      * @return createdBy
      */
-    protected String createdBy(String _createdBy) {
+    public String createdBy(String _createdBy) {
         return createdBy = _createdBy;
     }
     
     /**
      * @return lastUpdate
      */
-    protected String lastUpdate() {
+    public Date lastUpdate() {
         return lastUpdate;
     }
-    
-    /**
-     * @param _lastUpdate
-     * @return lastUpdate
-     */
-    protected String lastUpdate(String _lastUpdate) {
+
+/**
+ * @param _lastUpdate
+ * @return lastUpdate
+ */    
+    public Date lastUpdate(Date _lastUpdate) {
         return lastUpdate = _lastUpdate;
     }
     
     /**
      * @return lastUpdateBy
      */
-    protected String lastUpdateBy() {
+    public String lastUpdateBy() {
         return lastUpdateBy;
     }
     
@@ -214,8 +188,7 @@ public class Address {
      * @param _lastUpdateBy
      * @return lastUpdateBy
      */
-    protected String lastUpdateBy(String _lastUpdateBy) {
+    public String lastUpdateBy(String _lastUpdateBy) {
         return lastUpdateBy = _lastUpdateBy;
     }
 }
-

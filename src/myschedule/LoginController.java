@@ -84,7 +84,7 @@ public class LoginController extends AnchorPane {
     /**
      * Begin login process
      */
-    public void go() {
+    public void start() {
         app.log.write(Level.INFO, "Attempting login...");
         createActionListeners();
         btnCancel.setText(app.localize("cancel"));

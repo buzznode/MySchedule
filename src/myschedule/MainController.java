@@ -50,6 +50,9 @@ public class MainController {
     protected MenuItem miFileSaveAs;
     protected MenuItem miFileExit;
     protected MenuItem miEditDelete;
+    protected MenuItem miMaintAddress;
+    protected MenuItem miMaintCity;
+    protected MenuItem miMaintCountry;
     protected MenuItem miUserLogin;
     protected MenuItem miUserLogout;
     protected MenuItem miHelpAbout;
@@ -75,14 +78,14 @@ public class MainController {
      * Disable Users.Login
      */
     public void disableLogin() {
-        menuBar.getMenus().get(2).getItems().get(0).setDisable(true);
+        menuBar.getMenus().get(3).getItems().get(0).setDisable(true);
     }
     
     /**
      * Disable Users.Logout
      */
     public void disableLogout() {
-        menuBar.getMenus().get(2).getItems().get(1).setDisable(false);
+        menuBar.getMenus().get(3).getItems().get(1).setDisable(false);
     }
     
     /**
@@ -100,7 +103,7 @@ public class MainController {
      * Enable Help.About
      */
     public void enableAbout() {
-        menuBar.getMenus().get(3).getItems().get(0).setDisable(false);
+        menuBar.getMenus().get(4).getItems().get(0).setDisable(false);
     }
     
     /**
@@ -114,14 +117,14 @@ public class MainController {
      * Enable Users.Login
      */
     public void enableLogin() {
-        menuBar.getMenus().get(2).getItems().get(0).setDisable(false);
+        menuBar.getMenus().get(3).getItems().get(0).setDisable(false);
     }
     
     /**
      * Enable Users.Logout
      */
     public void enableLogout() {
-        menuBar.getMenus().get(2).getItems().get(1).setDisable(false);
+        menuBar.getMenus().get(3).getItems().get(1).setDisable(false);
     }
     
     /**
@@ -146,35 +149,54 @@ public class MainController {
     /**
      * Start the MainController
      */
-    protected void go() {
+    protected void start() {
 
         // File menu [0]
         Menu menuFile = new Menu(app.localize("file"));
-        miFileNew = new MenuItem(app.localize("new"));          // [0]             
-        miFileOpen = new MenuItem(app.localize("open"));        // [1]
-        miFileSave = new MenuItem(app.localize("save"));        // [2]
-        miFileSaveAs = new MenuItem(app.localize("save_as"));   // [3]
-        miFileExit = new MenuItem(app.localize("exit"));        // [4]
+        // [0.0]
+        miFileNew = new MenuItem(app.localize("new"));
+        // [0.1]
+        miFileOpen = new MenuItem(app.localize("open"));
+        // [0.2]
+        miFileSave = new MenuItem(app.localize("save"));
+        // [0.3]
+        miFileSaveAs = new MenuItem(app.localize("save_as"));
+        // [0.4]
+        miFileExit = new MenuItem(app.localize("exit"));
         menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
 
         // Edit menu [1]
         Menu menuEdit = new Menu(app.localize("edit"));
-        miEditDelete = new MenuItem(app.localize("delete"));    // [0]
+        // [1.0]
+        miEditDelete = new MenuItem(app.localize("delete"));
         menuEdit.getItems().addAll(miEditDelete); 
 
-        // User menu [2]
+        // Maintenance menu [2]
+        Menu menuMaint = new Menu(app.localize("maintenance"));
+        // [2.0]
+        miMaintAddress = new MenuItem(app.localize("address"));
+        // [2.1]
+        miMaintCity = new MenuItem(app.localize("city"));
+        // [2.2]
+        miMaintCountry = new MenuItem(app.localize("country"));
+        menuMaint.getItems().addAll(miMaintAddress, miMaintCity, miMaintCountry);
+        
+        // User menu [3]
         Menu menuUser = new Menu(app.localize("user"));
-        miUserLogin = new MenuItem(app.localize("login"));      // [0]
-        miUserLogout = new MenuItem(app.localize("logout"));    // [1]
+        // [3.0]
+        miUserLogin = new MenuItem(app.localize("login"));
+        // [3.1]
+        miUserLogout = new MenuItem(app.localize("logout"));
         menuUser.getItems().addAll(miUserLogin, miUserLogout);
 
-        // Help menu [3]
+        // Help menu [4]
         Menu menuHelp = new Menu(app.localize("help"));
-        miHelpAbout = new MenuItem(app.localize("about"));      // [0]
+        // [4.0]
+        miHelpAbout = new MenuItem(app.localize("about"));
         menuHelp.getItems().addAll(miHelpAbout);
 
         createActionListeners();
-        menuBar.getMenus().addAll(menuFile, menuEdit, menuUser, menuHelp);
+        menuBar.getMenus().addAll(menuFile, menuEdit, menuMaint, menuUser, menuHelp);
         mainContainer.setTop(menuBar);
         
         if (!app.loggedIn()) {
@@ -214,7 +236,7 @@ public class MainController {
         login.injectMainController(this);
         login.injectApp(app);
         mainContainer.setCenter(node);
-        login.go();
+        login.start();
     }
 }
 
