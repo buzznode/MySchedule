@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-05-17T21:08:21</date>
-  <millis>1526609301657</millis>
+  <date>2018-05-18T10:33:46</date>
+  <millis>1526657626533</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
@@ -13,8 +13,8 @@
   <message>Starting application...</message>
 </record>
 <record>
-  <date>2018-05-17T21:08:21</date>
-  <millis>1526609301889</millis>
+  <date>2018-05-18T10:33:46</date>
+  <millis>1526657626674</millis>
   <sequence>1</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
@@ -24,14 +24,14 @@
   <message>Attempting login...</message>
 </record>
 <record>
-  <date>2018-05-17T21:08:28</date>
-  <millis>1526609308991</millis>
+  <date>2018-05-18T10:34:21</date>
+  <millis>1526657661728</millis>
   <sequence>2</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
   <class>myschedule.service.Logging</class>
   <method>write</method>
   <thread>14</thread>
-  <message>User cancelled login attempt</message>
+  <message>bradd has logged in</message>
 </record>
 </log>

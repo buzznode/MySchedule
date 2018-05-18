@@ -100,7 +100,7 @@ public class App extends Application {
         Parent node = loader.load();
         MainController main = loader.getController();
         main.injectApp(this);
-        main.go();
+        main.start();
         Scene scene = new Scene(node);
         stage.setScene(scene);
         stage.show();
