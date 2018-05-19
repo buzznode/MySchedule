@@ -66,11 +66,14 @@ THE SOFTWARE.
     -fx-text-fill: #19205c;
 }
 
-.feedback {
-    -fx-text-fill: #b80000;
-}
-
 .mainFxmlClass {
     -fx-background-color: #cccccc;
+}
+
+.title {
+    -fx-font-family: "Trebuchet MS";
+    -fx-font-size: 36px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #19205c;
 }
 

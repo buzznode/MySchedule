@@ -22,21 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /* 
-    Created on : May 11, 2018, 6:45:55 AM
+    Created on : May 19, 2018, 6:45:55 AM
     Author     : bradd
 */
 
-.login {
+.country {
     -fx-border-color: #19205c;
     -fx-border-style: solid;
     -fx-border-width: 2px;
 }
 
-.feedback {
-    -fx-text-fill: #b80000;
-}
-
-/*.mainFxmlClass {
-    -fx-background-color: #cccccc;
-}*/
 

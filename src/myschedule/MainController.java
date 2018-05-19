@@ -64,6 +64,15 @@ public class MainController {
         miFileExit.setOnAction((ea) -> {
             System.exit(0);
         });
+
+        miMaintCountry.setOnAction((ae) -> {
+            try {
+                startCountryMaintenance();
+            }
+            catch(Exception ex) {
+                
+            }
+        });
         
         miUserLogin.setOnAction((ae) -> {
             try {
@@ -145,6 +154,14 @@ public class MainController {
         Node node = mainContainer.getCenter();
         mainContainer.getChildren().removeAll(node);
     }
+
+    /**
+     * Inject App object
+     * @param _app 
+     */
+    protected void injectApp(App _app) {
+        app = _app;
+    }
     
     /**
      * Start the MainController
@@ -219,14 +236,6 @@ public class MainController {
     }
 
     /**
-     * Inject App object
-     * @param _app 
-     */
-    protected void injectApp(App _app) {
-        app = _app;
-    }
-    
-    /**
      * Start the login process
      */
     private void startLogin() throws Exception {
@@ -237,6 +246,16 @@ public class MainController {
         login.injectApp(app);
         mainContainer.setCenter(node);
         login.start();
+    }
+    
+    private void startCountryMaintenance() throws Exception {
+        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Country.fxml"));
+        Node node = loader.load();
+        CountryController country = loader.getController();
+        country.injectMainController(this);
+        country.injectApp(app);
+        mainContainer.setCenter(node);
+        country.start();
     }
 }
 

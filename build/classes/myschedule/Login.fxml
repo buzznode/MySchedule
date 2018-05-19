@@ -57,7 +57,7 @@
                 <PasswordField fx:id="txtPassword" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                 <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
                     <children>
-                        <Button fx:id="btnCancel" alignment="CENTER" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" prefHeight="35.0" prefWidth="85.0" text="Cancel">
+                        <Button fx:id="btnCancel" alignment="CENTER" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" prefHeight="35.0" prefWidth="85.0">
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>
