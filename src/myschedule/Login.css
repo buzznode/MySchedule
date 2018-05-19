@@ -26,50 +26,10 @@ THE SOFTWARE.
     Author     : bradd
 */
 
-.frmLogin {
+.login {
     -fx-border-color: #19205c;
     -fx-border-style: solid;
     -fx-border-width: 2px;
-}
-
-.button .text {
-    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.8), 0, 0.0 , 0 , -1 );
-}
-
-.button {
-    -fx-background-color: 
-        #242e82,
-        linear-gradient(#242e82, #0b0d2e),
-        linear-gradient(#242e82, #0b0d2e),
-        linear-gradient(#242e82, #0b0d2e);
-    -fx-background-insets: 0, 1, 2, 3;
-    -fx-background-radius: 3, 3, 3, 3;
-    -fx-padding: 7 10 7 10;
-    -fx-text-fill: white;
-    -fx-font-size: 12px;
-}
-  
-.button:focused, .button:hover {
-    -fx-background-color: 
-        #bfbfbf,
-        linear-gradient(#bfbfbf, #5b5e5e),
-        linear-gradient(#bfbfbf, #5b5e5e),
-        linear-gradient(#bfbfbf, #5b5e5e);
-    -fx-background-insets: 0, 1, 2, 3;
-    -fx-background-radius: 3, 3, 3, 3;
-    -fx-padding: 7 10 7 10;
-    -fx-text-fill: #19205c;
-    -fx-font-size: 12px;
-}
-
-.header-bar {
-    -fx-background-color: #19205c;
-}
-
-.label {
-    -fx-font-family: "Trebuchet MS";
-    -fx-font-weight: 800;
-    -fx-text-fill: #19205c;
 }
 
 .feedback {

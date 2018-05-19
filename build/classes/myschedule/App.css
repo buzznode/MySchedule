@@ -26,12 +26,6 @@ THE SOFTWARE.
     Author     : bradd
 */
 
-.frmLogin {
-    -fx-border-color: #19205c;
-    -fx-border-style: solid;
-    -fx-border-width: 2px;
-}
-
 .button .text {
     -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.8), 0, 0.0 , 0 , -1 );
 }
@@ -60,6 +54,10 @@ THE SOFTWARE.
     -fx-padding: 7 10 7 10;
     -fx-text-fill: #19205c;
     -fx-font-size: 12px;
+}
+
+.header-bar {
+    -fx-background-color: #19205c;
 }
 
 .label {

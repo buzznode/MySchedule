@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
  * @author bradd
  * @version 0.5.0
  */
-public class Reminder {
+public class ReminderModel {
     private int reminderId;
     private LocalDateTime reminderDate;
     private int snoozeIncrement;

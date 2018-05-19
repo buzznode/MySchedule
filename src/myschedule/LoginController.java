@@ -36,7 +36,7 @@ import javafx.scene.layout.AnchorPane;
  */
 public class LoginController extends AnchorPane {
 
-    @FXML AnchorPane frmLogin;
+    @FXML AnchorPane login;
     @FXML Button btnCancel;
     @FXML Button btnLogin;
     @FXML Label lblFeedback;
