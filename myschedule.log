@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-05-18T10:33:46</date>
-  <millis>1526657626533</millis>
+  <date>2018-05-18T20:40:25</date>
+  <millis>1526694025885</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
@@ -13,8 +13,8 @@
   <message>Starting application...</message>
 </record>
 <record>
-  <date>2018-05-18T10:33:46</date>
-  <millis>1526657626674</millis>
+  <date>2018-05-18T20:40:26</date>
+  <millis>1526694026028</millis>
   <sequence>1</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
@@ -24,8 +24,8 @@
   <message>Attempting login...</message>
 </record>
 <record>
-  <date>2018-05-18T10:34:21</date>
-  <millis>1526657661728</millis>
+  <date>2018-05-18T20:40:34</date>
+  <millis>1526694034230</millis>
   <sequence>2</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>

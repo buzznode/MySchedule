@@ -23,7 +23,7 @@
  */
 package myschedule.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author bradd
@@ -37,9 +37,9 @@ public class Address {
     private int cityId;
     private String postalCode;
     private String phone;
-    private Date createDate;
+    private LocalDateTime createDate;
     private String createdBy;
-    private Date lastUpdate;
+    private LocalDateTime lastUpdate;
     private String lastUpdateBy;
     
     /**
@@ -135,7 +135,7 @@ public class Address {
     /**
      * @return createDate
      */
-    public Date createDate() {
+    public LocalDateTime createDate() {
         return createDate;
     }
     
@@ -143,7 +143,7 @@ public class Address {
      * @param _createDate
      * @return createDate
      */
-    public Date createDate(Date _createDate) {
+    public LocalDateTime createDate(LocalDateTime _createDate) {
         return createDate = _createDate;
     }
     
@@ -165,7 +165,7 @@ public class Address {
     /**
      * @return lastUpdate
      */
-    public Date lastUpdate() {
+    public LocalDateTime lastUpdate() {
         return lastUpdate;
     }
 
@@ -173,7 +173,7 @@ public class Address {
  * @param _lastUpdate
  * @return lastUpdate
  */    
-    public Date lastUpdate(Date _lastUpdate) {
+    public LocalDateTime lastUpdate(LocalDateTime _lastUpdate) {
         return lastUpdate = _lastUpdate;
     }
     
