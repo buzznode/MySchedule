@@ -30,7 +30,7 @@ import javafx.beans.property.SimpleStringProperty;
  * @author bradd
  * @version 0.5.0
  */
-public class Country {
+public class CountryModel {
     private final SimpleIntegerProperty countryId;
     private final SimpleStringProperty country;
     private final SimpleStringProperty createDate;
@@ -38,7 +38,7 @@ public class Country {
     private final SimpleStringProperty lastUpdate;
     private final SimpleStringProperty lastUpdateBy;
     
-    private Country(int _countryId, String _country, String _createDate, String _createdBy,
+    private CountryModel(int _countryId, String _country, String _createDate, String _createdBy,
         String _lastUpdate, String _lastUpdateBy) {
         this.countryId = new SimpleIntegerProperty(_countryId);
         this.country = new SimpleStringProperty(_country);

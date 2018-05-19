@@ -29,90 +29,107 @@ import java.time.LocalDateTime;
  * @author bradd
  * @version 0.5.0
  */
-public class User {
+public class AddressModel {
 
-    private int userId;
-    private String userName;
-    private String password;
-    private boolean active;
-    private String createBy;
+    private int addressId;
+    private String address;
+    private String address2;
+    private int cityId;
+    private String postalCode;
+    private String phone;
     private LocalDateTime createDate;
+    private String createdBy;
     private LocalDateTime lastUpdate;
-    private String lastUpdatedBy;
+    private String lastUpdateBy;
     
     /**
-     * @return userId
+     * @return addressId
      */
-    public int userId() {
-        return userId;
+    public int addressId() {
+        return addressId;
     }
     
     /**
-     * @param _userId
-     * @return userId
+     * @param _addressId
+     * @return addressId
      */
-    public int userId(int _userId) {
-        return userId = _userId;
+    public int addressId(int _addressId) {
+        return addressId = _addressId;
     }
     
     /**
-     * @return userName
+     * @return address
      */
-    public String userName() {
-        return userName;
+    public String address() {
+        return address;
     }
     
     /**
-     * @param _userName
-     * @return userName
+     * @param _address
+     * @return address
      */
-    public String userName(String _userName) {
-        return userName = _userName;
+    public String address(String _address) {
+        return address = _address;
     }
     
     /**
-     * @return password
+     * @return address2
      */
-    public String password() {
-        return password;
+    public String address2() {
+        return address2;
     }
     
     /**
-     * @param _password
-     * @return password
+     * @param _address2
+     * @return address2
      */
-    public String password(String _password) {
-        return password = _password;
+    public String address2(String _address2) {
+        return address2 = _address2;
     }
 
     /**
-     * @return active
+     * @return cityId
      */
-    public boolean active() {
-        return active;
+    public int cityId() {
+        return cityId;
     }
     
     /**
-     * @param _active
-     * @return active
+     * @param _cityId
+     * @return cityId
      */
-    public boolean active(boolean _active) {
-        return active = _active;
+    public int cityId(int _cityId) {
+        return cityId = _cityId;
     }
     
     /**
-     * @return createBy
+     * @return postalCode
      */
-    public String createBy() {
-        return createBy;
+    public String postalCode() {
+        return postalCode;
     }
     
     /**
-     * @param _createBy
-     * @return createBy
+     * @param _postalCode
+     * @return postalCode
      */
-    public String createBy(String _createBy) {
-        return createBy = _createBy;
+    public String postalCode(String _postalCode) {
+        return postalCode = _postalCode;
+    }
+    
+    /**
+     * @return phone
+     */
+    public String phone() {
+        return phone;
+    }
+    
+    /**
+     * @param _phone
+     * @return phone
+     */
+    public String phone(String _phone) {
+        return phone = _phone;
     }
     
     /**
@@ -131,6 +148,21 @@ public class User {
     }
     
     /**
+     * @return createdBy
+     */
+    public String createdBy() {
+        return createdBy;
+    }
+    
+    /**
+     * @param _createdBy
+     * @return createdBy
+     */
+    public String createdBy(String _createdBy) {
+        return createdBy = _createdBy;
+    }
+    
+    /**
      * @return lastUpdate
      */
     public LocalDateTime lastUpdate() {
@@ -146,17 +178,17 @@ public class User {
     }
     
     /**
-     * @return lastUpdatedBy
+     * @return lastUpdateBy
      */
-    public String lastUpdatedBy() {
-        return lastUpdatedBy;
+    public String lastUpdateBy() {
+        return lastUpdateBy;
     }
     
     /**
-     * @param _lastUpdatedBy
-     * @return lastUpdatedBy
+     * @param _lastUpdateBy
+     * @return lastUpdateBy
      */
-    public String lastUpdatedBy(String _lastUpdatedBy) {
-        return lastUpdatedBy = _lastUpdatedBy;
+    public String lastUpdateBy(String _lastUpdateBy) {
+        return lastUpdateBy = _lastUpdateBy;
     }
 }

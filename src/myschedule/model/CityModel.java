@@ -24,82 +24,67 @@
 package myschedule.model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author bradd
  * @version 0.5.0
  */
-public class Customer {
+public class CityModel {
 
-    private int customerId;
-    private String customerName;
-    private int addressId;
-    private boolean active;
+    private int cityId;
+    private String city;
+    private int countryId;
     private LocalDateTime createDate;
     private String createdBy;
     private LocalDateTime lastUpdate;
     private String lastUpdateBy;
     
     /**
-     * @return customerId
+     * @return cityId
      */
-    public int customerId() {
-        return customerId;
+    public int cityId() {
+        return cityId;
     }
     
     /**
-     * @param _customerId
-     * @return customerId
+     * @param _cityId
+     * @return cityId
      */
-    public int customerId(int _customerId) {
-        return customerId = _customerId;
+    public int cityId(int _cityId) {
+        return cityId = _cityId;
     }
     
     /**
-     * @return customerName
+     * @return city
      */
-    public String customerName() {
-        return customerName;
+    public String city() {
+        return city;
     }
     
     /**
-     * @param _customerName
-     * @return customerName
+     * @param _city
+     * @return city
      */
-    public String customerName(String _customerName) {
-        return customerName = _customerName;
+    public String city(String _city) {
+        return city = _city;
     }
     
     /**
-     * @return addressId
+     * @return countryId
      */
-    public int addressId() {
-        return addressId;
+    public int countryId() {
+        return countryId;
     }
     
     /**
-     * @param _addressId
-     * @return addressId
+     * @param _countryId
+     * @return countryId
      */
-    public int addressId(int _addressId) {
-        return addressId = _addressId;
-    }
-
-    /**
-     * @return active
-     */
-    public boolean active() {
-        return active;
+    public int countryId(int _countryId) {
+        return countryId = _countryId;
     }
     
-    /**
-     * @param _active
-     * @return active
-     */
-    public boolean active(boolean _active) {
-        return active = _active;
-    }
-
     /**
      * @return createDate
      */
@@ -115,7 +100,6 @@ public class Customer {
         return createDate = _createDate;
     }
     
-    
     /**
      * @return createdBy
      */
@@ -127,7 +111,7 @@ public class Customer {
      * @param _createdBy
      * @return createdBy
      */
-    public String createBy(String _createdBy) {
+    public String createdBy(String _createdBy) {
         return createdBy = _createdBy;
     }
     

@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
  * @author bradd
  * @version 0.5.0
  */
-public class Appointment {
+public class AppointmentModel {
     private int appointmentId;
     private int customerId;
     private String title;

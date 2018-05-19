@@ -27,7 +27,7 @@ package myschedule.model;
  * @author bradd
  * @version 0.5.0
  */
-public class IncrementTypes {
+public class IncrementTypesModel {
     private int incrementTypeId;
     private String incrementTypeDescription;
     
