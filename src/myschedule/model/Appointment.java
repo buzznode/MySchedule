@@ -24,65 +24,159 @@
 package myschedule.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author bradd
  * @version 0.5.0
  */
-public class City {
-
-    private int cityId;
-    private String city;
-    private int countryId;
+public class Appointment {
+    private int appointmentId;
+    private int customerId;
+    private String title;
+    private String description;
+    private String location;
+    private String contact;
+    private String url;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private LocalDateTime createDate;
     private String createdBy;
     private LocalDateTime lastUpdate;
     private String lastUpdateBy;
-    
+
     /**
-     * @return cityId
+     * @return appointmentId
      */
-    public int cityId() {
-        return cityId;
+    public int appointmentId() {
+        return appointmentId;
     }
     
     /**
-     * @param _cityId
-     * @return cityId
+     * @param _appointmentId
+     * @return appointmentId
      */
-    public int cityId(int _cityId) {
-        return cityId = _cityId;
+    public int appointmentId(int _appointmentId) {
+        return appointmentId = _appointmentId;
     }
     
     /**
-     * @return city
+     * @return customerId
      */
-    public String city() {
-        return city;
+    public int customerId() {
+        return customerId;
     }
     
     /**
-     * @param _city
-     * @return city
+     * @param _customerId
+     * @return customerId
      */
-    public String city(String _city) {
-        return city = _city;
+    public int customerId(int _customerId) {
+        return customerId = _customerId;
     }
     
     /**
-     * @return countryId
+     * @return title
      */
-    public int countryId() {
-        return countryId;
+    public String title() {
+        return title;
     }
     
     /**
-     * @param _countryId
-     * @return countryId
+     * @param _title
+     * @return title
      */
-    public int countryId(int _countryId) {
-        return countryId = _countryId;
+    public String title(String _title) {
+        return title = _title;
+    }
+    
+    /**
+     * @return description
+     */
+    public String description() {
+        return description;
+    }
+    
+    /**
+     * @param _description
+     * @return description
+     */
+    public String description(String _description) {
+        return description = _description;
+    }
+    
+    /**
+     * @return location
+     */
+    public String location() {
+        return location;
+    }
+    
+    /**
+     * @param _location
+     * @return location
+     */
+    public String location(String _location) {
+        return location = _location;
+    }
+    
+    /**
+     * @return contact
+     */
+    public String contact() {
+        return contact;
+    }
+    
+    /**
+     * @param _contact
+     * @return contact
+     */
+    public String contact(String _contact) {
+        return contact = _contact;
+    }
+    
+    /**
+     * @return url
+     */
+    public String url() {
+        return url;
+    }
+    
+    /**
+     * @param _url
+     * @return url
+     */
+    public String url(String _url) {
+        return url = _url;
+    }
+    
+    /**
+     * @return start
+     */
+    public LocalDateTime start() {
+        return start;
+    }
+    
+    /**
+     * @param _start
+     * @return start
+     */
+    public LocalDateTime start(LocalDateTime _start) {
+        return start = _start;
+    }
+    
+    /**
+     * @return end
+     */
+    public LocalDateTime end() {
+        return end;
+    }
+    
+    /**
+     * @param _end
+     * @return end
+     */
+    public LocalDateTime end(LocalDateTime _end) {
+        return end = _end;
     }
     
     /**
@@ -121,11 +215,11 @@ public class City {
     public LocalDateTime lastUpdate() {
         return lastUpdate;
     }
-
-/**
- * @param _lastUpdate
- * @return lastUpdate
- */    
+    
+    /**
+     * @param _lastUpdate
+     * @return lastUpdate
+     */
     public LocalDateTime lastUpdate(LocalDateTime _lastUpdate) {
         return lastUpdate = _lastUpdate;
     }
