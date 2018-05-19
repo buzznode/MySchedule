@@ -29,60 +29,60 @@ import java.time.LocalDateTime;
  * @author bradd
  * @version 0.5.0
  */
-public class User {
+public class Customer {
 
-    private int userId;
-    private String userName;
-    private String password;
+    private int customerId;
+    private String customerName;
+    private int addressId;
     private boolean active;
-    private String createBy;
     private LocalDateTime createDate;
+    private String createdBy;
     private LocalDateTime lastUpdate;
-    private String lastUpdatedBy;
+    private String lastUpdateBy;
     
     /**
-     * @return userId
+     * @return customerId
      */
-    public int userId() {
-        return userId;
+    public int customerId() {
+        return customerId;
     }
     
     /**
-     * @param _userId
-     * @return userId
+     * @param _customerId
+     * @return customerId
      */
-    public int userId(int _userId) {
-        return userId = _userId;
+    public int customerId(int _customerId) {
+        return customerId = _customerId;
     }
     
     /**
-     * @return userName
+     * @return customerName
      */
-    public String userName() {
-        return userName;
+    public String customerName() {
+        return customerName;
     }
     
     /**
-     * @param _userName
-     * @return userName
+     * @param _customerName
+     * @return customerName
      */
-    public String userName(String _userName) {
-        return userName = _userName;
+    public String customerName(String _customerName) {
+        return customerName = _customerName;
     }
     
     /**
-     * @return password
+     * @return addressId
      */
-    public String password() {
-        return password;
+    public int addressId() {
+        return addressId;
     }
     
     /**
-     * @param _password
-     * @return password
+     * @param _addressId
+     * @return addressId
      */
-    public String password(String _password) {
-        return password = _password;
+    public int addressId(int _addressId) {
+        return addressId = _addressId;
     }
 
     /**
@@ -99,22 +99,7 @@ public class User {
     public boolean active(boolean _active) {
         return active = _active;
     }
-    
-    /**
-     * @return createBy
-     */
-    public String createBy() {
-        return createBy;
-    }
-    
-    /**
-     * @param _createBy
-     * @return createBy
-     */
-    public String createBy(String _createBy) {
-        return createBy = _createBy;
-    }
-    
+
     /**
      * @return createDate
      */
@@ -128,6 +113,22 @@ public class User {
      */
     public LocalDateTime createDate(LocalDateTime _createDate) {
         return createDate = _createDate;
+    }
+    
+    
+    /**
+     * @return createdBy
+     */
+    public String createdBy() {
+        return createdBy;
+    }
+    
+    /**
+     * @param _createdBy
+     * @return createdBy
+     */
+    public String createBy(String _createdBy) {
+        return createdBy = _createdBy;
     }
     
     /**
@@ -146,17 +147,17 @@ public class User {
     }
     
     /**
-     * @return lastUpdatedBy
+     * @return lastUpdateBy
      */
-    public String lastUpdatedBy() {
-        return lastUpdatedBy;
+    public String lastUpdateBy() {
+        return lastUpdateBy;
     }
     
     /**
-     * @param _lastUpdatedBy
-     * @return lastUpdatedBy
+     * @param _lastUpdateBy
+     * @return lastUpdateBy
      */
-    public String lastUpdatedBy(String _lastUpdatedBy) {
-        return lastUpdatedBy = _lastUpdatedBy;
+    public String lastUpdateBy(String _lastUpdateBy) {
+        return lastUpdateBy = _lastUpdateBy;
     }
 }
