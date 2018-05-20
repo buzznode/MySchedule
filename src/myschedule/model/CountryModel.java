@@ -38,7 +38,7 @@ public class CountryModel {
     private final SimpleStringProperty lastUpdate;
     private final SimpleStringProperty lastUpdateBy;
     
-    private CountryModel(int _countryId, String _country, String _createDate, String _createdBy,
+    public CountryModel(int _countryId, String _country, String _createDate, String _createdBy,
         String _lastUpdate, String _lastUpdateBy) {
         this.countryId = new SimpleIntegerProperty(_countryId);
         this.country = new SimpleStringProperty(_country);
