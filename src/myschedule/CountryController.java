@@ -23,12 +23,16 @@
  */
 package myschedule;
 
-import java.util.logging.Level;
+import java.sql.ResultSet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import myschedule.model.CountryModel;
 
@@ -45,13 +49,15 @@ public class CountryController {
     private MainController main;
     
     private final TableView<CountryModel> table = new TableView<>();
-    private final ObservableList<CountryModel> data =
-            FXCollections.observableArrayList(
-            new Person("Jacob", "Smith", "jacob.smith@example.com"),
-            new Person("Isabella", "Johnson", "isabella.johnson@example.com"),
-            new Person("Ethan", "Williams", "ethan.williams@example.com"),
-            new Person("Emma", "Jones", "emma.jones@example.com"),
-            new Person("Michael", "Brown", "michael.brown@example.com"));
+    private ObservableList<CountryModel> countryList = FXCollections.observableArrayList();
+    
+//    private final ObservableList<CountryModel> data =
+//            FXCollections.observableArrayList(
+//            new Person("Jacob", "Smith", "jacob.smith@example.com"),
+//            new Person("Isabella", "Johnson", "isabella.johnson@example.com"),
+//            new Person("Ethan", "Williams", "ethan.williams@example.com"),
+//            new Person("Emma", "Jones", "emma.jones@example.com"),
+//            new Person("Michael", "Brown", "michael.brown@example.com"));
     
 
     /**
@@ -94,6 +100,37 @@ public class CountryController {
 //        btnLogin.setText(app.localize("login"));
         lblTitle.setText(app.localize("countries"));
 //        app.common.loadUsers();
+        countryList = app.db.getCountries();
+        table.setEditable(true);
+        
+        TableColumn countryIdCol = new TableColumn();
+        countryIdCol.setText("Country Id");
+        countryIdCol.setCellValueFactory(new PropertyValueFactory("countryId"));
+        
+        TableColumn countryCol = new TableColumn();
+        countryCol.setText("Country");
+        countryCol.setCellValueFactory(new PropertyValueFactory<>("column"));
+        
+        TableColumn createDateCol = new TableColumn();
+        createDateCol.setText("Create Date");
+        createDateCol.setCellValueFactory(new PropertyValueFactory("createDate"));
+        
+        TableColumn createdByCol = new TableColumn();
+        createdByCol.setText("Created By");
+        createdByCol.setCellValueFactory(new PropertyValueFactory("createdBy"));
+        
+        TableColumn lastUpdateCol = new TableColumn();
+        lastUpdateCol.setText("Last Update");
+        lastUpdateCol.setCellValueFactory(new PropertyValueFactory("lastUpdate"));
+        
+        TableColumn lastUpdateByCol = new TableColumn();
+        lastUpdateByCol.setText("Last Update By");
+        lastUpdateByCol.setCellValueFactory(new PropertyValueFactory("lastUpdateBy"));
+        
+        table.setItems(countryList);
+        table.getColumns().addAll(countryIdCol, countryCol, createDateCol, createdByCol, lastUpdateCol, lastUpdateByCol);
+        tableContainer.getChildren().add(table);
+        
     }
 
     /**

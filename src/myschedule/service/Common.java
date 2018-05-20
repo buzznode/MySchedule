@@ -84,17 +84,6 @@ public class Common  {
         }
     }
     
-//    public static void disableMenu() {
-//        menuBar.getMenus().forEach(( m ) -> {
-//            m.getItems().forEach(( mi ) -> {
-//                mi.setDisable( true );
-//            });
-//        });
-//    }
-    
-//    public static void enableMenuItem( int menu, int menuItem) {
-//        menuBar.getMenus().get( menu ).getItems().get( menuItem ).setDisable( false );
-//    }
     
 //    public static void setCursor(boolean busy) {
 //        Platform.runLater(new Runnable() {

@@ -24,7 +24,11 @@
 package myschedule.service;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import myschedule.model.CountryModel;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 
@@ -39,6 +43,7 @@ public class DB {
     String driver;
     String dbPwd;
     String dbUser;
+    ResultSet rs;
     Statement stmt;
     String url;
     private Logging log;
@@ -80,6 +85,32 @@ public class DB {
             log.write(Level.SEVERE, "SQLState: {0}", e.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
+    }
+    
+    public ObservableList<CountryModel>  getCountries() {
+        ObservableList<CountryModel> list = FXCollections.observableArrayList();
+        connect();
+        
+        try {
+            rs = stmt.executeQuery("SELECT countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy " +
+                                                           "FROM country ");
+           rs.beforeFirst();
+           while (rs.next()) {
+                boolean add = list.add(new CountryModel(
+                    rs.getInt("countryId"),
+                    rs.getString("country"),
+                    rs.getString("createDate"),
+                    rs.getString("createdBy"),
+                    rs.getString("lastUpdate"),
+                    rs.getString("lastUpdateBy")
+                ));
+           }
+        }
+        catch(SQLException ex) {
+            
+        }
+        
+        return list;
     }
     
     protected void run(String sql) throws SQLException {
