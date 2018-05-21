@@ -25,11 +25,15 @@ package myschedule;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
@@ -43,6 +47,7 @@ public class CountryController {
     @FXML private Label lblTitle;
     @FXML private HBox tableContainer;
     @FXML private HBox controlsContainer;
+    @FXML private HBox buttonsContainer;
     
     private App app;
     private MainController main;
@@ -156,6 +161,64 @@ public class CountryController {
             createdByColumn, lastUpdateColumn, lastUpdateByColumn);
         tableContainer.getChildren().add(table);
         
+        final TextField addCountryId = new TextField();
+        addCountryId.setPromptText("Country Id");
+        addCountryId.setMinWidth(countryIdColumn.getPrefWidth());
+        
+        final TextField addCountry = new TextField();
+        addCountry.setPromptText("Country");
+        addCountry.setMinWidth(countryColumn.getPrefWidth());
+        
+        final TextField addCreateDate = new TextField();
+        addCreateDate.setPromptText("Create Date");
+        addCreateDate.setMinWidth(createDateColumn.getPrefWidth());
+        
+        final TextField addCreatedBy = new TextField();
+        addCreatedBy.setPromptText("Created By");
+        addCreatedBy.setMinWidth(createdByColumn.getPrefWidth());
+        
+        final TextField addLastUpdate = new TextField();
+        addLastUpdate.setPromptText("Last Update");
+        addLastUpdate.setMinWidth(lastUpdateColumn.getPrefWidth());
+        
+        final TextField addLastUpdateBy = new TextField();
+        addLastUpdateBy.setPromptText("Last Update By");
+        addLastUpdateBy.setMinWidth(lastUpdateByColumn.getPrefWidth());
+        
+        final Button addButton = new Button("Add");
+        addButton.setOnAction((ae) -> {
+            countryList.add(new CountryModel(
+                Integer.parseInt(addCountryId.getText()),
+                addCountry.getText(),
+                addCreateDate.getText(),
+                addCreatedBy.getText(),
+                addLastUpdate.getText(),
+                addLastUpdateBy.getText()
+            ));
+            addCountryId.clear();
+            addCountry.clear();
+            addCreateDate.clear();
+            addCreatedBy.clear();
+            addLastUpdate.clear();
+            addLastUpdateBy.clear();
+        });
+        
+        final Button deleteButton = new Button("Delete");
+        deleteButton.setOnAction((ae) -> {
+            ObservableList<CountryModel> countrySelected, allCountries;
+            allCountries = table.getItems();
+            countrySelected = table.getSelectionModel().getSelectedItems();
+            countrySelected.forEach(allCountries::remove);
+        });
+ 
+        controlsContainer.getChildren().addAll(addCountryId, addCountry, addCreateDate, 
+                addCreatedBy, addLastUpdate, addLastUpdateBy);
+        controlsContainer.setSpacing(5);
+        controlsContainer.setPadding(new Insets(10, 0, 0, 10));
+        
+        buttonsContainer.getChildren().addAll(addButton, deleteButton);
+        buttonsContainer.setSpacing(5);
+        buttonsContainer.setPadding(new Insets(10, 0, 0, 10));
     }
 
     /**

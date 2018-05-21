@@ -6,10 +6,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="country" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" styleClass="country" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.CountryController">
+<VBox id="country" maxHeight="-Infinity" maxWidth="-Infinity" 
+      minHeight="-Infinity" minWidth="-Infinity" 
+      prefHeight="500.0" prefWidth="900.0" styleClass="country" 
+      xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="myschedule.CountryController">
    <children>
-    <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="900.0" styleClass="header-bar" />
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="900.0">
+    <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" 
+          minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="900.0" 
+          styleClass="header-bar" />
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+            prefHeight="60.0" prefWidth="900.0">
          <children>
             <Label id="title" fx:id="lblTitle" styleClass="title" text="Countries">
                <HBox.margin>
@@ -20,12 +27,16 @@
       </HBox>
       <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false">
          <VBox.margin>
-            <Insets bottom="20.0" />
-         </VBox.margin></HBox>
-      <HBox fx:id="controlsContainer" fillHeight="false">
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false">
          <VBox.margin>
-            <Insets bottom="20.0" />
-         </VBox.margin></HBox>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox fx:id="buttonsContainer" alignment="RIGHT" fillHeight="false">
+      </HBox>
    </children>
    <stylesheets>
       <URL value="@App.css" />
