@@ -38,8 +38,16 @@ public class CountryModel {
     private final SimpleStringProperty lastUpdate;
     private final SimpleStringProperty lastUpdateBy;
     
-    public CountryModel(int _countryId, String _country, String _createDate, String _createdBy,
-        String _lastUpdate, String _lastUpdateBy) {
+    public CountryModel() {
+        this.countryId = new SimpleIntegerProperty(0);
+        this.country = new SimpleStringProperty("");
+        this.createDate = new SimpleStringProperty("");
+        this.createdBy = new SimpleStringProperty("");
+        this.lastUpdate = new SimpleStringProperty("");
+        this.lastUpdateBy = new SimpleStringProperty("");
+    }
+    
+    public CountryModel(int _countryId, String _country, String _createDate, String _createdBy, String _lastUpdate, String _lastUpdateBy) {
         this.countryId = new SimpleIntegerProperty(_countryId);
         this.country = new SimpleStringProperty(_country);
         this.createDate = new SimpleStringProperty(_createDate);
@@ -49,86 +57,98 @@ public class CountryModel {
     }
     
     /**
-     * @return countryId
+     * Get countryId value
+     * @return countryId value
      */
-    public int countryId() {
+    public int getCountryId() {
         return countryId.get();
     }
-    
+
     /**
-     * @param _countryId
+     * Set countryId value
+     * @param _countryId 
      */
-    public void countryId(int _countryId) {
+    public void setCountryId(int _countryId) {
         countryId.set(_countryId);
     }
     
     /**
-     * @return country
+     * Get country value
+     * @return country value
      */
-    public String country() {
+    public String getCountry() {
         return country.get();
     }
-    
+
     /**
-     * @param _country
+     * Set country value
+     * @param _country 
      */
-    public void country(String _country) {
+    public void setCountry(String _country) {
         country.set(_country);
     }
-    
+
     /**
-     * @return createDate
+     * Get createDate value
+     * @return createDate value
      */
-    public String createDate() {
+    public String getCreateDate() {
         return createDate.get();
     }
-    
+
     /**
-     * @param _createDate
+     * Set createDate value
+     * @param _createDate 
      */
-    public void createDate(String _createDate) {
+    public void setCreateDate(String _createDate) {
         createDate.set(_createDate);
     }
-    
+
     /**
-     * @return createdBy
+     * Get createdBy value
+     * @return createdBy value
      */
-    public String createdBy() {
+    public String getCreatedBy() {
         return createdBy.get();
     }
-    
+
     /**
-     * @param _createdBy
+     * Get createdBy value
+     * @param _createdBy 
      */
-    public void createdBy(String _createdBy) {
+    public void setCreatedBy(String _createdBy) {
         createdBy.set(_createdBy);
     }
-    
+
     /**
-     * @return lastUpdate
+     * Get lastUpdate value
+     * @return lastUpdate value
      */
-    public String lastUpdate() {
+    public String getLastUpdate() {
         return lastUpdate.get();
     }
-    
+
     /**
-     * @param _lastUpdate
+     * Set lastUpdate value
+     * @param _lastUpdate 
      */
-    public void lastUpdate(String _lastUpdate) {
+    public void setLastUpdate(String _lastUpdate) {
         lastUpdate.set(_lastUpdate);
     }
-    
+
     /**
-     * @return lastUpdateBy
+     * Get lastUpdateBy value
+     * @return lastUpdateBy value
      */
-    public String lastUpdateBy() {
+    public String getLastUpdateBy() {
         return lastUpdateBy.get();
     }
-    
+
     /**
-     * @param _lastUpdateBy
+     * Set lastUpdateBy value
+     * @param _lastUpdateBy 
      */
-    public void lastUpdateBy(String _lastUpdateBy) {
+    public void setLastUpdateBy(String _lastUpdateBy) {
         lastUpdateBy.set(_lastUpdateBy);
     }
 }

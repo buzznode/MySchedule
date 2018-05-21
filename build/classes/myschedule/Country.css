@@ -32,4 +32,8 @@ THE SOFTWARE.
     -fx-border-width: 2px;
 }
 
+.table-view {
+    -fx-border-color: #19205c;
+}
+
 
