@@ -23,7 +23,6 @@
  */
 package myschedule;
 
-import java.sql.ResultSet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -51,15 +50,6 @@ public class CountryController {
     private final TableView<CountryModel> table = new TableView<>();
     private ObservableList<CountryModel> countryList = FXCollections.observableArrayList();
     
-//    private final ObservableList<CountryModel> data =
-//            FXCollections.observableArrayList(
-//            new Person("Jacob", "Smith", "jacob.smith@example.com"),
-//            new Person("Isabella", "Johnson", "isabella.johnson@example.com"),
-//            new Person("Ethan", "Williams", "ethan.williams@example.com"),
-//            new Person("Emma", "Jones", "emma.jones@example.com"),
-//            new Person("Michael", "Brown", "michael.brown@example.com"));
-    
-
     /**
      * Close country maintenance 
      */
@@ -94,7 +84,10 @@ public class CountryController {
     /**
      * Start country maintenance
      */
+    @SuppressWarnings("unchecked")
     public void start() {
+        table.setMinHeight(300);
+        table.setMinWidth(800);
         createActionListeners();
 //        btnCancel.setText(app.localize("cancel"));
 //        btnLogin.setText(app.localize("login"));
@@ -103,32 +96,64 @@ public class CountryController {
         countryList = app.db.getCountries();
         table.setEditable(true);
         
-        TableColumn countryIdCol = new TableColumn();
-        countryIdCol.setText("Country Id");
-        countryIdCol.setCellValueFactory(new PropertyValueFactory("countryId"));
+        // Country Id column
+        TableColumn<CountryModel, Integer> countryIdColumn = new TableColumn<>("Country Id");
+        countryIdColumn.setMinWidth(80);
+        countryIdColumn.setCellValueFactory(new PropertyValueFactory("countryId"));
         
-        TableColumn countryCol = new TableColumn();
-        countryCol.setText("Country");
-        countryCol.setCellValueFactory(new PropertyValueFactory<>("column"));
+        // Country column
+        TableColumn<CountryModel, String> countryColumn = new TableColumn<>("Country");
+        countryColumn.setMinWidth(120);
+        countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+        countryColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        countryColumn.setOnEditCommit(
+            (CellEditEvent<CountryModel, String> t) -> {
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
+            });
         
-        TableColumn createDateCol = new TableColumn();
-        createDateCol.setText("Create Date");
-        createDateCol.setCellValueFactory(new PropertyValueFactory("createDate"));
-        
-        TableColumn createdByCol = new TableColumn();
-        createdByCol.setText("Created By");
-        createdByCol.setCellValueFactory(new PropertyValueFactory("createdBy"));
-        
-        TableColumn lastUpdateCol = new TableColumn();
-        lastUpdateCol.setText("Last Update");
-        lastUpdateCol.setCellValueFactory(new PropertyValueFactory("lastUpdate"));
-        
-        TableColumn lastUpdateByCol = new TableColumn();
-        lastUpdateByCol.setText("Last Update By");
-        lastUpdateByCol.setCellValueFactory(new PropertyValueFactory("lastUpdateBy"));
-        
+        // Create Date column
+        TableColumn<CountryModel, String> createDateColumn = new TableColumn<>("Create Date");
+        createDateColumn.setMinWidth(80);
+        createDateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        createDateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        createDateColumn.setOnEditCommit(
+            (CellEditEvent<CountryModel, String> t) -> {
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCreateDate(t.getNewValue());
+            });
+
+        // Created By column
+        TableColumn<CountryModel, String> createdByColumn = new TableColumn<>("Created By");
+        createdByColumn.setMinWidth(80);
+        createdByColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        createdByColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        createdByColumn.setOnEditCommit(
+            (CellEditEvent<CountryModel, String> t) -> {
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCreatedBy(t.getNewValue());
+            });
+
+        // Last Update column
+        TableColumn<CountryModel, String> lastUpdateColumn = new TableColumn<>("Last Update");
+        lastUpdateColumn.setMinWidth(80);
+        lastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        lastUpdateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        lastUpdateColumn.setOnEditCommit(
+            (CellEditEvent<CountryModel, String> t) -> {
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(t.getNewValue());
+            });
+
+        // Last Update By column
+        TableColumn<CountryModel, String> lastUpdateByColumn = new TableColumn<>("Last Update By");
+        lastUpdateByColumn.setMinWidth(80);
+        lastUpdateByColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        lastUpdateByColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        lastUpdateByColumn.setOnEditCommit(
+            (CellEditEvent<CountryModel, String> t) -> {
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(t.getNewValue());
+            });
+
         table.setItems(countryList);
-        table.getColumns().addAll(countryIdCol, countryCol, createDateCol, createdByCol, lastUpdateCol, lastUpdateByCol);
+        table.getColumns().addAll(countryIdColumn, countryColumn, createDateColumn, 
+            createdByColumn, lastUpdateColumn, lastUpdateByColumn);
         tableContainer.getChildren().add(table);
         
     }
