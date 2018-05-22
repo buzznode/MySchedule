@@ -34,7 +34,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import myschedule.model.CountryModel;
 
 /**
@@ -82,10 +81,10 @@ public class CountryController {
      *  Create action event listeners
      */
     private void createActionListeners() {
-//        btnCancel.setOnMouseClicked((ea) -> {
-//            cancelLogin();
-//        });
-//        
+        btnCancel.setOnMouseClicked((ea) -> {
+            closeCountryMaint();
+        });
+        
 //        btnLogin.setOnMouseClicked((ea) -> {
 //            userLogin();
 //        });
@@ -134,7 +133,7 @@ public class CountryController {
             });
 
         // Created By column
-        createdByColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        createdByColumn.setCellValueFactory(new PropertyValueFactory<>("createdBy"));
         createdByColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         createdByColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CountryModel, String> t) -> {
@@ -142,7 +141,7 @@ public class CountryController {
             });
 
         // Last Update column
-        lastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        lastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdate"));
         lastUpdateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         lastUpdateColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CountryModel, String> t) -> {
@@ -150,7 +149,7 @@ public class CountryController {
             });
 
         // Last Update By column
-        lastUpdateByColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        lastUpdateByColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdateBy"));
         lastUpdateByColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         lastUpdateByColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CountryModel, String> t) -> {
@@ -158,9 +157,6 @@ public class CountryController {
             });
 
         table.setItems(countryList);
-        table.getColumns().addAll(countryIdColumn, countryColumn, createDateColumn, 
-            createdByColumn, lastUpdateColumn, lastUpdateByColumn);
-        tableContainer.getChildren().add(table);
         
         btnAdd.setOnAction((ae) -> {
             countryList.add(new CountryModel(

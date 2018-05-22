@@ -2,36 +2,14 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-05-21T21:58:03</date>
-  <millis>1526957883028</millis>
+  <date>2018-05-22T06:59:46</date>
+  <millis>1526990386391</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
   <class>myschedule.service.Logging</class>
   <method>write</method>
-  <thread>17</thread>
+  <thread>14</thread>
   <message>Starting application...</message>
-</record>
-<record>
-  <date>2018-05-21T21:58:12</date>
-  <millis>1526957892105</millis>
-  <sequence>1</sequence>
-  <logger>myschedule</logger>
-  <level>INFO</level>
-  <class>myschedule.service.Logging</class>
-  <method>write</method>
-  <thread>17</thread>
-  <message>Attempting login...</message>
-</record>
-<record>
-  <date>2018-05-21T21:58:38</date>
-  <millis>1526957918651</millis>
-  <sequence>2</sequence>
-  <logger>myschedule</logger>
-  <level>INFO</level>
-  <class>myschedule.service.Logging</class>
-  <method>write</method>
-  <thread>17</thread>
-  <message>bradd has logged in</message>
 </record>
 </log>

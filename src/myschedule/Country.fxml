@@ -11,91 +11,97 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox id="country" fx:id="country" maxHeight="-Infinity" maxWidth="-Infinity" 
-      minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" 
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" 
       styleClass="country" xmlns="http://javafx.com/javafx/8.0.141" 
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.CountryController">
     <children>
         <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" 
               minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" 
-              prefWidth="900.0" styleClass="header-bar" />
+              prefWidth="996.0" styleClass="header-bar" />
         <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
-              minWidth="-Infinity" prefHeight="60.0" prefWidth="900.0">
+              minWidth="-Infinity" prefHeight="60.0" prefWidth="1000.0">
             <children>
-                <Label id="title" fx:id="lblTitle" styleClass="title" text="Countries">
+                <Label id="title" fx:id="lblTitle" maxWidth="-Infinity" 
+                       minWidth="-Infinity" prefWidth="950.0" styleClass="title" 
+                       text="Countries">
                     <HBox.margin>
                         <Insets left="10.0" top="10.0" />
                     </HBox.margin>
                 </Label>
             </children>
         </HBox>
-        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false">
+        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false" 
+              maxWidth="-Infinity" minWidth="-Infinity" prefWidth="1000.0">
             <VBox.margin>
                 <Insets bottom="10.0" />
             </VBox.margin>
             <children>
-                <TableView fx:id="table" editable="true" prefHeight="317.0" 
-                           prefWidth="865.0">
+                <TableView fx:id="table" editable="true" prefHeight="415.0" prefWidth="955.0">
                     <columns>
-                        <TableColumn fx:id="countryIdColumn" minWidth="100.0" 
-                                     prefWidth="-1.0" text="Country Id" />
-                        <TableColumn fx:id="countryColumn" minWidth="250.0" 
-                                     prefWidth="-1.0" text="Country" />
-                        <TableColumn fx:id="createDateColumn" minWidth="120.0" 
-                                     prefWidth="-1.0" text="Create Date" />
-                        <TableColumn fx:id="createdByColumn" minWidth="120.0" 
-                                     prefWidth="-1.0" text="Created By" />
-                        <TableColumn fx:id="lastUpdateColumn" minWidth="120.0" 
-                                     prefWidth="-1.0" text="Last Update" />
-                        <TableColumn fx:id="lastUpdateByColumn" minWidth="120.0" 
-                                     prefWidth="-1.0" text="Last Update By" />
+                        <TableColumn fx:id="countryIdColumn" maxWidth="100.0" minWidth="100.0" 
+                                     prefWidth="100.0" resizable="false" text="Country Id" />
+                        <TableColumn fx:id="countryColumn" maxWidth="250.0" minWidth="250.0" 
+                                     prefWidth="250.0" resizable="false" text="Country" />
+                        <TableColumn fx:id="createDateColumn" maxWidth="150.0" minWidth="150.0" 
+                                     prefWidth="150.0" resizable="false" text="Create Date" />
+                        <TableColumn fx:id="createdByColumn" maxWidth="150.0" minWidth="150.0" 
+                                     prefWidth="150.0" resizable="false" text="Created By" />
+                        <TableColumn fx:id="lastUpdateColumn" maxWidth="150.0" minWidth="150.0" 
+                                     prefWidth="150.0" resizable="false" text="Last Update" />
+                        <TableColumn fx:id="lastUpdateByColumn" maxWidth="150.0" minWidth="150.0" 
+                                     prefWidth="150.0" resizable="false" text="Last Update By" />
                     </columns>
                 </TableView>
             </children>
         </HBox>
         <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false" 
+              maxWidth="-Infinity" minWidth="-Infinity" prefWidth="950.0" 
               styleClass="controlsContainer">
             <VBox.margin>
-                <Insets bottom="10.0" left="15.0" />
+                <Insets bottom="10.0" left="25.0" />
             </VBox.margin>
             <children>
                 <TextField fx:id="txtCountryId" maxWidth="-Infinity" minWidth="-Infinity" 
-                           prefWidth="100.0" promptText="Country Id" />
+                           prefWidth="95.0" promptText="Country Id">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin></TextField>
                 <TextField fx:id="txtCountry" maxWidth="-Infinity" minWidth="-Infinity" 
-                           prefWidth="250.0" promptText="Country">
+                           prefWidth="245.0" promptText="Country">
                     <HBox.margin>
-                        <Insets left="5.0" />
+                        <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
                 <TextField fx:id="txtCreateDate" maxWidth="-Infinity" minWidth="-Infinity" 
-                           prefWidth="125.0" promptText="Create Date">
+                           prefWidth="145.0" promptText="Create Date">
                     <HBox.margin>
-                        <Insets left="5.0" />
+                        <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
                 <TextField fx:id="txtCreatedBy" maxWidth="-Infinity" minWidth="-Infinity" 
-                           prefWidth="120.0" promptText="Created By">
+                           prefWidth="145.0" promptText="Created By">
                     <HBox.margin>
-                        <Insets left="5.0" />
+                        <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
                 <TextField fx:id="txtLastUpdate" maxWidth="-Infinity" minWidth="-Infinity" 
-                           prefWidth="125.0" promptText="Last Update">
+                           prefWidth="145.0" promptText="Last Update">
                     <HBox.margin>
-                        <Insets left="5.0" />
+                        <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
                 <TextField fx:id="txtLastUpdateBy" maxWidth="-Infinity" minWidth="-Infinity" 
-                           prefWidth="120.0" promptText="Last Update By">
+                           prefWidth="150.0" promptText="Last Update By">
                     <HBox.margin>
-                        <Insets left="5.0" />
+                        <Insets />
                     </HBox.margin>
                 </TextField>
             </children>
         </HBox>
         <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" 
-              styleClass="buttonsContainer">
+              maxWidth="-Infinity" minWidth="-Infinity" prefWidth="975.0" styleClass="buttonsContainer">
             <VBox.margin>
-                <Insets right="10.0" top="5.0" />
+                <Insets right="20.0" top="5.0" />
             </VBox.margin>
             <children>
                 <Button fx:id="btnAdd" maxHeight="-Infinity" maxWidth="-Infinity" 
