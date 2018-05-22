@@ -25,18 +25,16 @@ package myschedule;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import myschedule.model.CountryModel;
 
 /**
@@ -44,15 +42,32 @@ import myschedule.model.CountryModel;
  * @version 0.5.0
  */
 public class CountryController {
+
     @FXML private Label lblTitle;
     @FXML private HBox tableContainer;
+    @FXML private TableView table;
+    @FXML private TableColumn<CountryModel, Integer> countryIdColumn;
+    @FXML private TableColumn<CountryModel, String> countryColumn;
+    @FXML private TableColumn<CountryModel, String> createDateColumn;
+    @FXML private TableColumn<CountryModel, String> createdByColumn;
+    @FXML private TableColumn<CountryModel, String> lastUpdateColumn;
+    @FXML private TableColumn<CountryModel, String> lastUpdateByColumn;
     @FXML private HBox controlsContainer;
+    @FXML private TextField txtCountryId;
+    @FXML private TextField txtCountry;
+    @FXML private TextField txtCreateDate;
+    @FXML private TextField txtCreatedBy;
+    @FXML private TextField txtLastUpdate;
+    @FXML private TextField txtLastUpdateBy;
     @FXML private HBox buttonsContainer;
-    
+    @FXML private Button btnAdd;
+    @FXML private Button btnRemove;
+    @FXML private Button btnCancel;
+    @FXML private Button btnSave;
+
     private App app;
     private MainController main;
     
-    private final TableView<CountryModel> table = new TableView<>();
     private ObservableList<CountryModel> countryList = FXCollections.observableArrayList();
     
     /**
@@ -91,8 +106,6 @@ public class CountryController {
      */
     @SuppressWarnings("unchecked")
     public void start() {
-        table.setMinHeight(300);
-        table.setMinWidth(800);
         createActionListeners();
 //        btnCancel.setText(app.localize("cancel"));
 //        btnLogin.setText(app.localize("login"));
@@ -102,57 +115,45 @@ public class CountryController {
         table.setEditable(true);
         
         // Country Id column
-        TableColumn<CountryModel, Integer> countryIdColumn = new TableColumn<>("Country Id");
-        countryIdColumn.setMinWidth(80);
         countryIdColumn.setCellValueFactory(new PropertyValueFactory("countryId"));
         
         // Country column
-        TableColumn<CountryModel, String> countryColumn = new TableColumn<>("Country");
-        countryColumn.setMinWidth(120);
         countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
         countryColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         countryColumn.setOnEditCommit(
-            (CellEditEvent<CountryModel, String> t) -> {
+            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
             });
         
         // Create Date column
-        TableColumn<CountryModel, String> createDateColumn = new TableColumn<>("Create Date");
-        createDateColumn.setMinWidth(80);
         createDateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
         createDateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         createDateColumn.setOnEditCommit(
-            (CellEditEvent<CountryModel, String> t) -> {
+            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCreateDate(t.getNewValue());
             });
 
         // Created By column
-        TableColumn<CountryModel, String> createdByColumn = new TableColumn<>("Created By");
-        createdByColumn.setMinWidth(80);
         createdByColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
         createdByColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         createdByColumn.setOnEditCommit(
-            (CellEditEvent<CountryModel, String> t) -> {
+            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCreatedBy(t.getNewValue());
             });
 
         // Last Update column
-        TableColumn<CountryModel, String> lastUpdateColumn = new TableColumn<>("Last Update");
-        lastUpdateColumn.setMinWidth(80);
         lastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
         lastUpdateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         lastUpdateColumn.setOnEditCommit(
-            (CellEditEvent<CountryModel, String> t) -> {
+            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(t.getNewValue());
             });
 
         // Last Update By column
-        TableColumn<CountryModel, String> lastUpdateByColumn = new TableColumn<>("Last Update By");
-        lastUpdateByColumn.setMinWidth(80);
         lastUpdateByColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
         lastUpdateByColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         lastUpdateByColumn.setOnEditCommit(
-            (CellEditEvent<CountryModel, String> t) -> {
+            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(t.getNewValue());
             });
 
@@ -161,64 +162,29 @@ public class CountryController {
             createdByColumn, lastUpdateColumn, lastUpdateByColumn);
         tableContainer.getChildren().add(table);
         
-        final TextField addCountryId = new TextField();
-        addCountryId.setPromptText("Country Id");
-        addCountryId.setMinWidth(countryIdColumn.getPrefWidth());
-        
-        final TextField addCountry = new TextField();
-        addCountry.setPromptText("Country");
-        addCountry.setMinWidth(countryColumn.getPrefWidth());
-        
-        final TextField addCreateDate = new TextField();
-        addCreateDate.setPromptText("Create Date");
-        addCreateDate.setMinWidth(createDateColumn.getPrefWidth());
-        
-        final TextField addCreatedBy = new TextField();
-        addCreatedBy.setPromptText("Created By");
-        addCreatedBy.setMinWidth(createdByColumn.getPrefWidth());
-        
-        final TextField addLastUpdate = new TextField();
-        addLastUpdate.setPromptText("Last Update");
-        addLastUpdate.setMinWidth(lastUpdateColumn.getPrefWidth());
-        
-        final TextField addLastUpdateBy = new TextField();
-        addLastUpdateBy.setPromptText("Last Update By");
-        addLastUpdateBy.setMinWidth(lastUpdateByColumn.getPrefWidth());
-        
-        final Button addButton = new Button("Add");
-        addButton.setOnAction((ae) -> {
+        btnAdd.setOnAction((ae) -> {
             countryList.add(new CountryModel(
-                Integer.parseInt(addCountryId.getText()),
-                addCountry.getText(),
-                addCreateDate.getText(),
-                addCreatedBy.getText(),
-                addLastUpdate.getText(),
-                addLastUpdateBy.getText()
+                Integer.parseInt(txtCountryId.getText()),
+                txtCountry.getText(),
+                txtCreateDate.getText(),
+                txtCreatedBy.getText(),
+                txtLastUpdate.getText(),
+                txtLastUpdateBy.getText()
             ));
-            addCountryId.clear();
-            addCountry.clear();
-            addCreateDate.clear();
-            addCreatedBy.clear();
-            addLastUpdate.clear();
-            addLastUpdateBy.clear();
+            txtCountryId.clear();
+            txtCountry.clear();
+            txtCreateDate.clear();
+            txtCreatedBy.clear();
+            txtLastUpdate.clear();
+            txtLastUpdateBy.clear();
         });
         
-        final Button deleteButton = new Button("Delete");
-        deleteButton.setOnAction((ae) -> {
+        btnRemove.setOnAction((ae) -> {
             ObservableList<CountryModel> countrySelected, allCountries;
             allCountries = table.getItems();
             countrySelected = table.getSelectionModel().getSelectedItems();
             countrySelected.forEach(allCountries::remove);
         });
- 
-        controlsContainer.getChildren().addAll(addCountryId, addCountry, addCreateDate, 
-                addCreatedBy, addLastUpdate, addLastUpdateBy);
-        controlsContainer.setSpacing(5);
-        controlsContainer.setPadding(new Insets(10, 0, 0, 10));
-        
-        buttonsContainer.getChildren().addAll(addButton, deleteButton);
-        buttonsContainer.setSpacing(5);
-        buttonsContainer.setPadding(new Insets(10, 0, 0, 10));
     }
 
     /**

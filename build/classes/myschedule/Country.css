@@ -26,6 +26,14 @@ THE SOFTWARE.
     Author     : bradd
 */
 
+.buttonsContainer {
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.controlsContainer {
+    -fx-alignment: CENTER_LEFT;
+}
+
 .country {
     -fx-border-color: #19205c;
     -fx-border-style: solid;

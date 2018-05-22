@@ -42,7 +42,7 @@ import myschedule.service.Logging;
 public class App extends Application {
     
     // Private general variables   
-    private boolean loggedIn = true;
+    private boolean loggedIn = false;
     private String userName;
 
     // Classes

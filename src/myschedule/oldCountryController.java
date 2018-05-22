@@ -43,7 +43,7 @@ import myschedule.model.CountryModel;
  * @author bradd
  * @version 0.5.0
  */
-public class SaveCountryController {
+public class oldCountryController {
     @FXML private Label lblTitle;
     @FXML private HBox tableContainer;
     @FXML private HBox controlsContainer;
