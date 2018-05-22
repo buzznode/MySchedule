@@ -15,7 +15,7 @@
 
 <AnchorPane id="login" fx:id="login" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="325.0" prefWidth="400.0" styleClass="login" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.LoginController">
     <children>
-    <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="400.0" styleClass="header-bar" />
+    <HBox alignment="CENTER_LEFT"  prefWidth="400.0" styleClass="header-bar" />
         <GridPane layoutX="12.0" layoutY="64.0" prefHeight="241.0" prefWidth="357.0">
             <columnConstraints>
                 <ColumnConstraints maxWidth="131.0" minWidth="10.0" prefWidth="131.0" />

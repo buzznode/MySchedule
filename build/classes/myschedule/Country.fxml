@@ -2,21 +2,24 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="country" maxHeight="-Infinity" maxWidth="-Infinity" 
-      minHeight="-Infinity" minWidth="-Infinity" 
-      prefHeight="500.0" prefWidth="900.0" styleClass="country" 
-      xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="myschedule.CountryController">
+<VBox id="country" fx:id="country" maxHeight="-Infinity" maxWidth="-Infinity" 
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" 
+      styleClass="country" xmlns="http://javafx.com/javafx/8.0.141" 
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.CountryController">
     <children>
         <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" 
-              minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="900.0" 
-              styleClass="header-bar" />
-        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
-              prefHeight="60.0" prefWidth="900.0">
+              minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" 
+              prefWidth="900.0" styleClass="header-bar" />
+        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+              minWidth="-Infinity" prefHeight="60.0" prefWidth="900.0">
             <children>
                 <Label id="title" fx:id="lblTitle" styleClass="title" text="Countries">
                     <HBox.margin>
@@ -29,16 +32,97 @@
             <VBox.margin>
                 <Insets bottom="10.0" />
             </VBox.margin>
+            <children>
+                <TableView fx:id="table" editable="true" prefHeight="317.0" 
+                           prefWidth="865.0">
+                    <columns>
+                        <TableColumn fx:id="countryIdColumn" minWidth="100.0" 
+                                     prefWidth="-1.0" text="Country Id" />
+                        <TableColumn fx:id="countryColumn" minWidth="250.0" 
+                                     prefWidth="-1.0" text="Country" />
+                        <TableColumn fx:id="createDateColumn" minWidth="120.0" 
+                                     prefWidth="-1.0" text="Create Date" />
+                        <TableColumn fx:id="createdByColumn" minWidth="120.0" 
+                                     prefWidth="-1.0" text="Created By" />
+                        <TableColumn fx:id="lastUpdateColumn" minWidth="120.0" 
+                                     prefWidth="-1.0" text="Last Update" />
+                        <TableColumn fx:id="lastUpdateByColumn" minWidth="120.0" 
+                                     prefWidth="-1.0" text="Last Update By" />
+                    </columns>
+                </TableView>
+            </children>
         </HBox>
-        <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false">
+        <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false" 
+              styleClass="controlsContainer">
             <VBox.margin>
-                <Insets bottom="10.0" />
+                <Insets bottom="10.0" left="15.0" />
             </VBox.margin>
+            <children>
+                <TextField fx:id="txtCountryId" maxWidth="-Infinity" minWidth="-Infinity" 
+                           prefWidth="100.0" promptText="Country Id" />
+                <TextField fx:id="txtCountry" maxWidth="-Infinity" minWidth="-Infinity" 
+                           prefWidth="250.0" promptText="Country">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </TextField>
+                <TextField fx:id="txtCreateDate" maxWidth="-Infinity" minWidth="-Infinity" 
+                           prefWidth="125.0" promptText="Create Date">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </TextField>
+                <TextField fx:id="txtCreatedBy" maxWidth="-Infinity" minWidth="-Infinity" 
+                           prefWidth="120.0" promptText="Created By">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </TextField>
+                <TextField fx:id="txtLastUpdate" maxWidth="-Infinity" minWidth="-Infinity" 
+                           prefWidth="125.0" promptText="Last Update">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </TextField>
+                <TextField fx:id="txtLastUpdateBy" maxWidth="-Infinity" minWidth="-Infinity" 
+                           prefWidth="120.0" promptText="Last Update By">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </TextField>
+            </children>
         </HBox>
-        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false">
+        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" 
+              styleClass="buttonsContainer">
             <VBox.margin>
-                <Insets bottom="10.0" />
+                <Insets right="10.0" top="5.0" />
             </VBox.margin>
+            <children>
+                <Button fx:id="btnAdd" maxHeight="-Infinity" maxWidth="-Infinity" 
+                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" 
+                        prefHeight="35.0" prefWidth="85.0" text="Add" />
+                <Button fx:id="btnRemove" maxHeight="-Infinity" maxWidth="-Infinity" 
+                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" 
+                        prefHeight="35.0" prefWidth="85.0" text="Remove">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </Button>
+                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" 
+                        prefWidth="85.0" text="Commit">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="btnCancel" maxHeight="-Infinity" maxWidth="-Infinity" 
+                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" 
+                        prefHeight="35.0" prefWidth="85.0" text="Cancel">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
         </HBox>
     </children>
     <stylesheets>

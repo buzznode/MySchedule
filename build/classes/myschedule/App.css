@@ -58,6 +58,7 @@ THE SOFTWARE.
 
 .header-bar {
     -fx-background-color: #19205c;
+    -fx-pref-height: 25px;
 }
 
 .label {
