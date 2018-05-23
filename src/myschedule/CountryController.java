@@ -24,23 +24,23 @@
 package myschedule;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Optional;
 import java.util.logging.Level;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import myschedule.model.CountryModel;
 
 /**
@@ -71,13 +71,40 @@ public class CountryController {
     private App app;
     private ObservableList<CountryModel> countryList = FXCollections.observableArrayList();
     private MainController main;
+    private boolean unsavedChanges = false;
     
     /**
      * Close country maintenance 
      */
     private void closeCountryMaint() {
 
-        main.endProcess();
+        if (unsavedChanges) {
+            if (confirmClose()) {
+                main.endProcess();
+            }
+        }
+        else {
+            main.endProcess();
+        }
+
+    }
+    
+    private boolean confirmClose() {
+        Alert confirm = new Alert(
+            Alert.AlertType.CONFIRMATION,
+            "There are unsaved changes. Are you sure you want to exit without saving them?"
+        );
+        
+        Button btnYes = (Button) confirm.getDialogPane().lookupButton(ButtonType.YES);
+        btnYes.setText("Yes");
+        Button btnNo = (Button) confirm.getDialogPane().lookupButton(ButtonType.NO);
+        btnNo.setText("No");
+        
+        confirm.initModality(Modality.APPLICATION_MODAL);
+        confirm.initOwner(app.mainStage);
+        Optional<ButtonType> response = confirm.showAndWait();
+        
+        return ButtonType.YES.equals(response.get());
 
     }
     
@@ -111,6 +138,7 @@ public class CountryController {
         btnCommit.setOnAction((ea) -> {
             try {
                 app.db.updateCountries(countryList);
+                unsavedChanges = false;
             }
             catch (SQLException ex) {
                 
@@ -195,7 +223,9 @@ public class CountryController {
             (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
+                unsavedChanges = true;
             }
         );
         

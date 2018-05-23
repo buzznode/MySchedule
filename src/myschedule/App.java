@@ -47,6 +47,8 @@ public class App extends Application {
     
     private boolean loggedIn = true;
     private String userName = "bradd";
+    
+    protected Stage mainStage;
 
     // Classes
     protected ResourceBundle rb;
@@ -106,6 +108,7 @@ public class App extends Application {
         main.start();
         Scene scene = new Scene(node);
         stage.setScene(scene);
+        mainStage = stage;
         stage.show();
     }
     
