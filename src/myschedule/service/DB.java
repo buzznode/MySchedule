@@ -24,7 +24,6 @@
 package myschedule.service;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,27 +36,32 @@ import myschedule.model.CountryModel;
  * @version 0.5.0
  */
 public class DB {
+
 //    private static final Logger LOGGER = Logger.getLogger( DB.class.getName() );
     Connection conn;
     String db;
     String driver;
     String dbPwd;
     String dbUser;
+    PreparedStatement pstmt;
     ResultSet rs;
     Statement stmt;
     String url;
     private Logging log;
     
     public DB() {
+
         conn = null;
         driver = "com.mysql.jdbc.Driver";
         db  = "U03MuY";
         dbUser = "U03MuY";
         dbPwd = "53688020218";
         url = "jdbc:mysql://52.206.157.109/" + db;
+
     }
     
     public DB(Logging _log) {
+
         log = _log;
         conn = null;
         driver = "com.mysql.jdbc.Driver";
@@ -65,9 +69,11 @@ public class DB {
         dbUser = "U03MuY";
         dbPwd = "53688020218";
         url = "jdbc:mysql://52.206.157.109/" + db;
+
     }
     
     protected void connect() {
+
         try {
             try {
                 Class.forName(driver);
@@ -85,9 +91,45 @@ public class DB {
             log.write(Level.SEVERE, "SQLState: {0}", e.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
+
+    }
+
+    protected ResultSet exec(String sql) throws SQLException {
+
+        ResultSet rset = null;
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                connect();
+            }
+            rset =  stmt.executeQuery(sql);
+        }
+        catch (SQLException e) {
+//            LOGGER.log(Level.SEVERE, e.toString(), e);
+//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
+//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
+//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
+        }
+        return rset;
+
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+            }
+        } 
+        finally {
+            super.finalize();
+        }
+
     }
     
     public ObservableList<CountryModel>  getCountries() {
+
         ObservableList<CountryModel> list = FXCollections.observableArrayList();
         connect();
         
@@ -111,9 +153,11 @@ public class DB {
         }
         
         return list;
+
     }
     
     protected void run(String sql) throws SQLException {
+
         try {
             if (conn == null || conn.isClosed()) {
                 connect();
@@ -126,64 +170,32 @@ public class DB {
 //            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
         stmt.execute(sql);
-    }
-    
-    protected ResultSet exec(String sql) throws SQLException {
-        ResultSet rset = null;
-        try {
-            if (conn == null || conn.isClosed()) {
-                connect();
-            }
-            rset =  stmt.executeQuery(sql);
-        }
-        catch (SQLException e) {
-//            LOGGER.log(Level.SEVERE, e.toString(), e);
-//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
-//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
-//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
-        }
-        return rset;
-    }
 
-    /**
-     * @return return value
-     */
-    public boolean testConnection() {
-        boolean retval;
-        
-        try {
-            try {
-                Class.forName(driver);
-            }
-            catch (ClassNotFoundException e) {
-//                LOGGER.log(Level.SEVERE, e.toString(), e );
-            }
-        
-            conn = DriverManager.getConnection(url, dbUser, dbPwd);
-            stmt = conn.createStatement();
-            retval = true;
-        }
-        catch (SQLException e) {
-//            LOGGER.log(Level.SEVERE, e.toString(), e);
-//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
-//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
-//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
-            retval = false;
-        }
-        
-        return retval;
     }
     
-    
-    @Override
-    protected void finalize() throws Throwable {
+    public boolean updateCountries(ObservableList<CountryModel> list) throws SQLException{
+        
         try {
-            if (conn != null && !conn.isClosed()) {
-                conn.close();
+            String sql = "TRUNCATE country";
+            run(sql);
+            
+            sql = "INSERT INTO country (countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, ?, ?,?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            
+            for (CountryModel c : list) {
+                pstmt.setInt(1, c.getCountryId());
+                pstmt.setString(2, c.getCountry());
+                pstmt.setString(3, c.getCreateDate());
+                pstmt.setString(4, c.getCreatedBy());
+                pstmt.setString(5, c.getLastUpdate());
+                pstmt.setString(6, c.getLastUpdateBy());
+                pstmt.executeUpdate();
             }
-        } 
-        finally {
-            super.finalize();
+            
+            return true;
+        }
+        catch (SQLException ex) {
+            throw new SQLException(ex.getMessage());
         }
     }
-}
+}  

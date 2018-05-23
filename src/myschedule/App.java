@@ -42,8 +42,11 @@ import myschedule.service.Logging;
 public class App extends Application {
     
     // Private general variables   
+//    private boolean loggedIn = false;
+//    private String userName = "";
+    
     private boolean loggedIn = true;
-    private String userName;
+    private String userName = "bradd";
 
     // Classes
     protected ResourceBundle rb;

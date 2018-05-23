@@ -112,4 +112,44 @@ public class Common  {
             return USERS.get(user).equals(password);
         }
     }
+    
+    public boolean isNumber(String str) throws NumberFormatException {
+        try {
+            Integer.parseInt(str);
+            return true;
+        }
+        catch (NumberFormatException ex) {
+            throw new NumberFormatException("Error parsing " + str + "; " + ex.getMessage());
+        }
+    }
+    
+    public boolean isNumber(String str, boolean zeroOK) {
+        try {
+            int result = Integer.parseInt(str);
+            
+            if (result == 0 && zeroOK) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (NumberFormatException ex) {
+            throw new NumberFormatException("Error parsing " + str + "; " + ex.getMessage());
+        }
+    }
+    
+    public boolean isString(String str) {
+        return str.length() > 0;
+    }
+    
+    public boolean isString(String str, boolean emptyNullOK) {
+        if (str.length() > 0) {
+            return true;
+        }
+        else {
+            return !str.isEmpty();
+        }
+    }
+    
 }
