@@ -49,6 +49,9 @@ public class DB {
     String url;
     private Logging log;
     
+    /**
+     * Default constructor
+     */
     public DB() {
 
         conn = null;
@@ -60,6 +63,10 @@ public class DB {
 
     }
     
+    /**
+     * Constructor taking log parameter
+     * @param _log 
+     */
     public DB(Logging _log) {
 
         log = _log;
@@ -72,6 +79,9 @@ public class DB {
 
     }
     
+    /**
+     * Connect to database
+     */
     protected void connect() {
 
         try {
@@ -94,6 +104,12 @@ public class DB {
 
     }
 
+    /**
+     * Execute SQL and return result
+     * @param sql
+     * @return ResultSet
+     * @throws SQLException 
+     */
     protected ResultSet exec(String sql) throws SQLException {
 
         ResultSet rset = null;
@@ -114,6 +130,10 @@ public class DB {
 
     }
 
+    /**
+     * Finalize
+     * @throws Throwable 
+     */
     @Override
     protected void finalize() throws Throwable {
 
@@ -128,7 +148,11 @@ public class DB {
 
     }
     
-    public ObservableList<CountryModel>  getCountries() {
+    /**
+     * Get Country list
+     * @return CountryModel OberservableList
+     */
+    public ObservableList<CountryModel> getCountries() {
 
         ObservableList<CountryModel> list = FXCollections.observableArrayList();
         connect();
@@ -156,6 +180,11 @@ public class DB {
 
     }
     
+    /**
+     * Execute query without result set
+     * @param sql
+     * @throws SQLException 
+     */
     protected void run(String sql) throws SQLException {
 
         try {
@@ -170,9 +199,14 @@ public class DB {
 //            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
         stmt.execute(sql);
-
     }
     
+    /**
+     * Update Country
+     * @param list
+     * @return boolean
+     * @throws SQLException 
+     */
     public boolean updateCountries(ObservableList<CountryModel> list) throws SQLException{
         
         try {

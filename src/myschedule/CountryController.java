@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Optional;
 import java.util.logging.Level;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -49,7 +50,6 @@ import myschedule.model.CountryModel;
 public class CountryController {
 
     @FXML private Label lblTitle;
-    @FXML private HBox tableContainer;
     @FXML private TableView table;
     @FXML private TableColumn<CountryModel, Integer> countryIdColumn;
     @FXML private TableColumn<CountryModel, String> countryColumn;
@@ -57,14 +57,12 @@ public class CountryController {
     @FXML private TableColumn<CountryModel, String> createdByColumn;
     @FXML private TableColumn<CountryModel, String> lastUpdateColumn;
     @FXML private TableColumn<CountryModel, String> lastUpdateByColumn;
-    @FXML private HBox controlsContainer;
     @FXML private TextField txtCountryId;
     @FXML private TextField txtCountry;
     @FXML private TextField txtCreateDate;
     @FXML private TextField txtCreatedBy;
     @FXML private TextField txtLastUpdate;
     @FXML private TextField txtLastUpdateBy;
-    @FXML private HBox buttonsContainer;
     @FXML private Button btnAdd;
     @FXML private Button btnRemove;
     @FXML private Button btnCancel;
@@ -148,12 +146,13 @@ public class CountryController {
     private void initializeNewRecord() {
 
         int nextCountryId = getNextCountryId(countryList);
-        String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        String now = app.common.now();
         String user = app.userName();
         
         txtCountryId.setDisable(false);
         txtCountryId.setText(Integer.toString(nextCountryId));
         txtCountryId.setDisable(true);
+        txtCountry.setText("");
         txtCreateDate.setText(now);
         txtCreatedBy.setText(user);
         txtLastUpdate.setText(now);
@@ -187,7 +186,7 @@ public class CountryController {
     private void setupColumns() {
 
         // Country Id column
-        countryIdColumn.setCellValueFactory(new PropertyValueFactory("countryId"));
+        countryIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCountryId()));
         
         // Country column
         countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
@@ -195,23 +194,30 @@ public class CountryController {
         countryColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
-        });
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                table.refresh();
+            }
+        );
+        
         
         // Create Date column
-        createDateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
-        createDateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        createDateColumn.setOnEditCommit(
-            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
-                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCreateDate(t.getNewValue());
-        });
+        createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
+//        createDateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+//        createDateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+//        createDateColumn.setOnEditCommit(
+//            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
+//                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCreateDate(t.getNewValue());
+//        });
 
         // Created By column
+        createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
         createdByColumn.setCellValueFactory(new PropertyValueFactory<>("createdBy"));
         createdByColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         createdByColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCreatedBy(t.getNewValue());
-        });
+            }
+        );
 
         // Last Update column
         lastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdate"));
@@ -219,7 +225,8 @@ public class CountryController {
         lastUpdateColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(t.getNewValue());
-        });
+            }
+        );
 
         // Last Update By column
         lastUpdateByColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdateBy"));
@@ -227,7 +234,8 @@ public class CountryController {
         lastUpdateByColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(t.getNewValue());
-        });
+            }
+        );
 
     }
     

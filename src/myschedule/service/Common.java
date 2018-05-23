@@ -25,6 +25,8 @@ package myschedule.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -82,6 +84,12 @@ public class Common  {
             log.write(Level.SEVERE, "SQLState: {0}", e.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
+    }
+    
+    public String now() {
+        
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+        
     }
     
     
