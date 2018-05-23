@@ -114,9 +114,9 @@
                         <Insets left="5.0" />
                     </HBox.margin>
                 </Button>
-                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
-                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" 
-                        prefWidth="85.0" text="Commit">
+                <Button fx:id="btnCommit" maxHeight="-Infinity" maxWidth="-Infinity" 
+                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" 
+                        prefHeight="35.0" prefWidth="85.0" text="Commit">
                     <HBox.margin>
                         <Insets left="5.0" />
                     </HBox.margin>
