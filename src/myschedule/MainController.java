@@ -189,7 +189,7 @@ public class MainController {
         menuEdit.getItems().addAll(miEditDelete); 
 
         // Maintenance menu [2]
-        Menu menuMaint = new Menu(app.localize("maintenance"));
+        Menu menuMaint = new Menu(app.localize("maintain"));
         // [2.0]
         miMaintAddress = new MenuItem(app.localize("address"));
         // [2.1]
