@@ -206,12 +206,12 @@ public class CityController {
         });
         
         btnClose.setOnMouseClicked((ea) -> {
-            closeCountryMaint();
+            closeCityMaint();
         });
         
         btnCommit.setOnAction((ea) -> {
             try {
-                app.db.updateCountries(countryList);
+                app.db.updateCities(cityList);
                 unsavedChanges = false;
                 alertStatus(1);
             }
@@ -221,10 +221,10 @@ public class CityController {
         });
 
         btnRemove.setOnAction((ae) -> {
-            ObservableList<CityModel> countrySelected, allCountries;
-            allCountries = table.getItems();
-            countrySelected = table.getSelectionModel().getSelectedItems();
-            countrySelected.forEach(allCountries::remove);
+            ObservableList<CityModel> citySelected, allCities;
+            allCities = table.getItems();
+            citySelected = table.getSelectionModel().getSelectedItems();
+            citySelected.forEach(allCities::remove);
             unsavedChanges = true;
         });
     }
@@ -234,23 +234,24 @@ public class CityController {
      * @param clist
      * @return 
      */
-    private int getNextCountryId(ObservableList<CityModel> clist) {
-        Optional<CityModel> country = clist
+    private int getNextCityId(ObservableList<CityModel> clist) {
+        Optional<CityModel> city = clist
             .stream()
-            .max(Comparator.comparing(CityModel::getCountryId));
-        return country.get().getCountryId() + 1;
+            .max(Comparator.comparing(CityModel::getCityId));
+        return city.get().getCityId() + 1;
     }
 
     /**
      * Set default values for new record
      */
     private void initializeNewRecord() {
-        int nextCountryId = getNextCountryId(countryList);
+        int nextCityId = getNextCityId(cityList);
         String now = app.common.now();
         String user = app.userName();
         
-        txtCountryId.setText(Integer.toString(nextCountryId));
-        txtCountry.setText("");
+        txtCityId.setText(Integer.toString(nextCityId));
+        txtCity.setText("");
+//        cboCountryId=;
         txtCreateDate.setText(now);
         txtCreatedBy.setText(user);
         txtLastUpdate.setText(now);
@@ -282,15 +283,14 @@ public class CityController {
         createActionListeners();
 //        btnCancel.setText(app.localize("cancel"));
 //        btnLogin.setText(app.localize("login"));
-        lblTitle.setText(app.localize("countries"));
+        lblTitle.setText(app.localize("cities"));
 //        app.common.loadUsers();
-        countryList = app.db.getCountries();
+        cityList = app.db.getCities();
         initializeNewRecord();
         configureColumns();
         configureTextFields();
         table.setEditable(true);
-        table.setItems(countryList);
-
+        table.setItems(cityList);
     }
     
     /**
@@ -298,8 +298,9 @@ public class CityController {
      * @return 
      */
     private boolean validateCountryRecord() {
-        return app.common.isNumber(txtCountryId.getText())
-              && app.common.isString(txtCountry.getText())
+        return app.common.isNumber(txtCityId.getText())
+              && app.common.isString(txtCity.getText())
+//              && app.common.isString(cboCountryId)
               && app.common.isString(txtCreateDate.getText())   
               && app.common.isString(txtCreatedBy.getText())
               && app.common.isString(txtLastUpdate.getText())  
