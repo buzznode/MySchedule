@@ -35,30 +35,34 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.stage.Modality;
-import myschedule.model.CountryModel;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import myschedule.model.CityModel;
 
 /**
  * @author bradd
  * @version 0.5.0
  */
-public class CountryController {
+public class CityController {
     @FXML private Label lblTitle;
     @FXML private TableView table;
-    @FXML private TableColumn<CountryModel, Integer> countryIdColumn;
-    @FXML private TableColumn<CountryModel, String> countryColumn;
-    @FXML private TableColumn<CountryModel, String> createDateColumn;
-    @FXML private TableColumn<CountryModel, String> createdByColumn;
-    @FXML private TableColumn<CountryModel, String> lastUpdateColumn;
-    @FXML private TableColumn<CountryModel, String> lastUpdateByColumn;
-    @FXML private TextField txtCountryId;
-    @FXML private TextField txtCountry;
+    @FXML private TableColumn<CityModel, Integer> cityIdColumn;
+    @FXML private TableColumn<CityModel, String> cityColumn;
+    @FXML private TableColumn<CityModel, Integer> countryIdColumn;
+    @FXML private TableColumn<CityModel, String> createDateColumn;
+    @FXML private TableColumn<CityModel, String> createdByColumn;
+    @FXML private TableColumn<CityModel, String> lastUpdateColumn;
+    @FXML private TableColumn<CityModel, String> lastUpdateByColumn;
+    @FXML private TextField txtCityId;
+    @FXML private TextField txtCity;
+    @FXML private ComboBox cboCountryId;
     @FXML private TextField txtCreateDate;
     @FXML private TextField txtCreatedBy;
     @FXML private TextField txtLastUpdate;
@@ -69,9 +73,13 @@ public class CountryController {
     @FXML private Button btnCommit;
 
     private App app;
-    private ObservableList<CountryModel> countryList = FXCollections.observableArrayList();
+    private ObservableList<CityModel> cityList = FXCollections.observableArrayList();
     private MainController main;
     private boolean unsavedChanges = false;
+    @FXML private VBox city;
+    @FXML private HBox tableContainer;
+    @FXML private HBox controlsContainer;
+    @FXML private HBox buttonsContainer;
     
     private void alertStatus(int status) {
         if (status == 1) {
@@ -93,7 +101,7 @@ public class CountryController {
     /**
      * Close country maintenance 
      */
-    private void closeCountryMaint() {
+    private void closeCityMaint() {
         if (unsavedChanges) {
             if (confirmUnsaved()) {
                 main.endProcess();
@@ -108,21 +116,23 @@ public class CountryController {
      * Configure Cell Factories and Cell Value Factories
      */
     private void configureColumns() {
-        // Country Id column
-        countryIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCountryId()));
+        // City Id column
+        cityIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCityId()));
         
-        // Country column
-        countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
-        countryColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        countryColumn.setOnEditCommit(
-            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
-                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
-                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
-                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+        // City column
+        cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
+        cityColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        cityColumn.setOnEditCommit(
+            (TableColumn.CellEditEvent<CityModel, String> t) -> {
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
                 unsavedChanges = true;
             }
         );
+        
+        // Country Id column
         
         // Create Date column
         createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
@@ -141,8 +151,9 @@ public class CountryController {
      * Configure TextFields
      */
     private void configureTextFields() {
-        txtCountryId.setDisable(true);
-        txtCountry.setDisable(false);
+        txtCityId.setDisable(true);
+        txtCity.setDisable(false);
+        cboCountryId.setDisable(false);
         txtCreateDate.setDisable(true);
         txtCreatedBy.setDisable(true);
         txtLastUpdate.setDisable(true);
@@ -156,11 +167,11 @@ public class CountryController {
     private boolean confirmUnsaved() {
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle("Unsaved Changes");
-        alert.setHeaderText("Pending country changes exist.");
+        alert.setHeaderText("Pending city changes exist.");
         alert.setContentText(
-            "There have been changes made to the country data that have not been saved.\n\nTo save these changes, " +
+            "There have been changes made to the city data that have not been saved.\n\nTo save these changes, " +
             "click \"No\" to close this alert, and then click on the \"Commit\" button to save the changes.\n\n" +
-            "Clicking \"Yes\" will result in the pending changes being lost and the country maintenance process ending."
+            "Clicking \"Yes\" will result in the pending changes being lost and the city maintenance process ending."
         );
         
         ButtonType btnYes = new ButtonType("Yes");
@@ -175,10 +186,11 @@ public class CountryController {
      */
     private void createActionListeners() {
         btnAdd.setOnAction((ae) -> {
-            if (validateCountryRecord()) {
-                countryList.add(new CountryModel(
-                    Integer.parseInt(txtCountryId.getText()),
-                    txtCountry.getText(),
+            if (validateCityRecord()) {
+                cityList.add(new CityModel(
+                    Integer.parseInt(txtCityId.getText()),
+                    txtCity.getText(),
+                    cboCountryId.getSelectionModel().getSelectedItem(),
                     txtCreateDate.getText(),
                     txtCreatedBy.getText(),
                     txtLastUpdate.getText(),
@@ -209,7 +221,7 @@ public class CountryController {
         });
 
         btnRemove.setOnAction((ae) -> {
-            ObservableList<CountryModel> countrySelected, allCountries;
+            ObservableList<CityModel> countrySelected, allCountries;
             allCountries = table.getItems();
             countrySelected = table.getSelectionModel().getSelectedItems();
             countrySelected.forEach(allCountries::remove);
@@ -222,10 +234,10 @@ public class CountryController {
      * @param clist
      * @return 
      */
-    private int getNextCountryId(ObservableList<CountryModel> clist) {
-        Optional<CountryModel> country = clist
+    private int getNextCountryId(ObservableList<CityModel> clist) {
+        Optional<CityModel> country = clist
             .stream()
-            .max(Comparator.comparing(CountryModel::getCountryId));
+            .max(Comparator.comparing(CityModel::getCountryId));
         return country.get().getCountryId() + 1;
     }
 

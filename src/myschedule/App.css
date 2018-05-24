@@ -43,7 +43,7 @@ THE SOFTWARE.
     -fx-font-size: 12px;
 }
   
-.button:focused, .button:hover {
+.button:hover {
     -fx-background-color: 
         #bfbfbf,
         linear-gradient(#bfbfbf, #5b5e5e),
