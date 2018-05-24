@@ -27,6 +27,7 @@ import java.sql.*;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import myschedule.model.CityModel;
 import myschedule.model.CountryModel;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
@@ -36,8 +37,6 @@ import myschedule.model.CountryModel;
  * @version 0.5.0
  */
 public class DB {
-
-//    private static final Logger LOGGER = Logger.getLogger( DB.class.getName() );
     Connection conn;
     String db;
     String driver;
@@ -53,14 +52,12 @@ public class DB {
      * Default constructor
      */
     public DB() {
-
         conn = null;
         driver = "com.mysql.jdbc.Driver";
         db  = "U03MuY";
         dbUser = "U03MuY";
         dbPwd = "53688020218";
         url = "jdbc:mysql://52.206.157.109/" + db;
-
     }
     
     /**
@@ -68,7 +65,6 @@ public class DB {
      * @param _log 
      */
     public DB(Logging _log) {
-
         log = _log;
         conn = null;
         driver = "com.mysql.jdbc.Driver";
@@ -76,14 +72,12 @@ public class DB {
         dbUser = "U03MuY";
         dbPwd = "53688020218";
         url = "jdbc:mysql://52.206.157.109/" + db;
-
     }
     
     /**
      * Connect to database
      */
     protected void connect() {
-
         try {
             try {
                 Class.forName(driver);
@@ -101,7 +95,6 @@ public class DB {
             log.write(Level.SEVERE, "SQLState: {0}", e.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
-
     }
 
     /**
@@ -111,7 +104,6 @@ public class DB {
      * @throws SQLException 
      */
     protected ResultSet exec(String sql) throws SQLException {
-
         ResultSet rset = null;
 
         try {
@@ -127,7 +119,6 @@ public class DB {
 //            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
         return rset;
-
     }
 
     /**
@@ -136,7 +127,6 @@ public class DB {
      */
     @Override
     protected void finalize() throws Throwable {
-
         try {
             if (conn != null && !conn.isClosed()) {
                 conn.close();
@@ -145,7 +135,40 @@ public class DB {
         finally {
             super.finalize();
         }
-
+    }
+    
+    /**
+     * Get City list
+     * @return CityModel OberservableList
+     */
+    public ObservableList<CityModel> getCities() {
+        ObservableList<CityModel> list = FXCollections.observableArrayList();
+        connect();
+        
+        try {
+            String sql = String.join(" ",
+                "SELECT cityId, city, countryId, createDate, createdBy, lastUpdate, ",
+                "       lastUpdateBy",
+                "  FROM city"
+            );
+            
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new CityModel(
+                    rs.getInt("cityId"), rs.getString("city"), 
+                    rs.getInt("countryId"), rs.getString("createDate"), 
+                    rs.getString("createdBy"), rs.getString("lastUpdate"), 
+                    rs.getString("lastUpdateBy")
+                ));
+            }
+        }
+        catch(SQLException ex) {
+            
+        }
+        
+        return list;
     }
     
     /**
@@ -153,31 +176,31 @@ public class DB {
      * @return CountryModel OberservableList
      */
     public ObservableList<CountryModel> getCountries() {
-
         ObservableList<CountryModel> list = FXCollections.observableArrayList();
         connect();
         
         try {
-            rs = stmt.executeQuery("SELECT countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy " +
-                                                           "FROM country ");
-           rs.beforeFirst();
-           while (rs.next()) {
-                boolean add = list.add(new CountryModel(
-                    rs.getInt("countryId"),
-                    rs.getString("country"),
-                    rs.getString("createDate"),
-                    rs.getString("createdBy"),
-                    rs.getString("lastUpdate"),
-                    rs.getString("lastUpdateBy")
+            String sql = String.join(" ",
+                "SELECT countryId, country, createDate, createdBy, lastUpdate",
+                "       lastUpdateBy",
+                "  FROM country"
+            );
+            
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new CountryModel(
+                    rs.getInt("countryId"), rs.getString("country"),
+                    rs.getString("createDate"), rs.getString("createdBy"),
+                    rs.getString("lastUpdate"), rs.getString("lastUpdateBy")
                 ));
-           }
+            }
         }
         catch(SQLException ex) {
             
         }
-        
         return list;
-
     }
     
     /**
@@ -186,7 +209,6 @@ public class DB {
      * @throws SQLException 
      */
     protected void run(String sql) throws SQLException {
-
         try {
             if (conn == null || conn.isClosed()) {
                 connect();
@@ -200,20 +222,76 @@ public class DB {
         }
         stmt.execute(sql);
     }
+
+    /**
+     * Update city
+     * @param list
+     * @return boolean
+     * @throws SQLException 
+     */
+    public boolean updateCity(ObservableList<CityModel> list, String country) throws SQLException{
+        try {
+            String sql = "TRUNCATE country";
+            run(sql);
+            
+            sql = String.join(" ",
+                "SELECT countryId",
+                "  FROM country",
+                " WHERE country = ?"
+            );
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, country);
+            rs = pstmt.executeQuery(sql);
+            rs.beforeFirst();
+            rs.next();
+            int countryId = rs.getInt("countryId");
+            
+            sql = String.join(" ", 
+                "INSERT ",
+                "  INTO city (cityId, city, countryId, createDate, createdBy,",
+                "             lastUpdate, lastUpdateBy)",
+                "VALUES (?, ?, ?, ?, ?, ?, ?)"
+            );
+            
+            pstmt = conn.prepareStatement(sql);
+            
+            for (CityModel c : list) {
+                pstmt.setInt(1, c.getCityId());
+                pstmt.setString(2, c.getCity());
+                pstmt.setInt(3, countryId);
+                pstmt.setString(4, c.getCreateDate());
+                pstmt.setString(5, c.getCreatedBy());
+                pstmt.setString(6, c.getLastUpdate());
+                pstmt.setString(7, c.getLastUpdateBy());
+                pstmt.executeUpdate();
+            }
+            return true;
+        }
+        catch (SQLException ex) {
+            throw new SQLException(ex.getMessage());
+        }
+    }
+
     
     /**
-     * Update Country
+     * Update country
      * @param list
      * @return boolean
      * @throws SQLException 
      */
     public boolean updateCountries(ObservableList<CountryModel> list) throws SQLException{
-        
         try {
             String sql = "TRUNCATE country";
             run(sql);
             
-            sql = "INSERT INTO country (countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, ?, ?,?, ?, ?)";
+            sql = String.join(" ", 
+                "INSERT ",
+                "  INTO country (countryId, country, createDate, createdBy,",
+                "                lastUpdate, lastUpdateBy)",
+                "VALUES (?, ?, ?,?, ?, ?)"
+            );
+            
             pstmt = conn.prepareStatement(sql);
             
             for (CountryModel c : list) {
@@ -225,7 +303,6 @@ public class DB {
                 pstmt.setString(6, c.getLastUpdateBy());
                 pstmt.executeUpdate();
             }
-            
             return true;
         }
         catch (SQLException ex) {
