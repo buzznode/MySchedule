@@ -24,6 +24,8 @@
 package myschedule.service;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -203,6 +205,31 @@ public class DB {
         return list;
     }
     
+    public List getCountryNames() {
+        connect();
+        List list = new ArrayList();
+        
+        try {
+            String sql = String.join(" ",
+                "SELECT country",
+                "  FROM country",
+                " ORDER BY country"
+            );
+            
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(rs.getString("country"));
+            }
+        }
+        catch(SQLException ex) {
+            
+        }
+        
+        return list;
+    }
+    
     /**
      * Execute query without result set
      * @param sql
@@ -226,10 +253,11 @@ public class DB {
     /**
      * Update city
      * @param list
+     * @param country
      * @return boolean
      * @throws SQLException 
      */
-    public boolean updateCity(ObservableList<CityModel> list, String country) throws SQLException{
+    public boolean updateCities(ObservableList<CityModel> list, String country) throws SQLException{
         try {
             String sql = "TRUNCATE country";
             run(sql);
