@@ -79,6 +79,7 @@ public class DB {
     /**
      * Connect to database
      */
+    @SuppressWarnings("unchecked")
     protected void connect() {
         try {
             try {
@@ -105,6 +106,7 @@ public class DB {
      * @return ResultSet
      * @throws SQLException 
      */
+    @SuppressWarnings("unchecked")
     protected ResultSet exec(String sql) throws SQLException {
         ResultSet rset = null;
 
@@ -128,6 +130,7 @@ public class DB {
      * @throws Throwable 
      */
     @Override
+    @SuppressWarnings("unchecked")
     protected void finalize() throws Throwable {
         try {
             if (conn != null && !conn.isClosed()) {
@@ -143,31 +146,31 @@ public class DB {
      * Get City list
      * @return CityModel OberservableList
      */
+    @SuppressWarnings("unchecked")
     public ObservableList<CityModel> getCities() {
         ObservableList<CityModel> list = FXCollections.observableArrayList();
+        String sql;
         connect();
+
+        sql = String.join(" ",
+            "SELECT a.cityId, a.city, b.country, a.createDate, a.createdBy, a.lastUpdate, ",
+            "               a.lastUpdateBy",
+            "  FROM city a",
+            "  JOIN country b ON a.countryId = b.countryId"
+        );
         
         try {
-            String sql = String.join(" ",
-                "SELECT cityId, city, countryId, createDate, createdBy, lastUpdate, ",
-                "       lastUpdateBy",
-                "  FROM city"
-            );
-            
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             
             while (rs.next()) {
                 list.add(new CityModel(
-                    rs.getInt("cityId"), rs.getString("city"), 
-                    rs.getInt("countryId"), rs.getString("createDate"), 
-                    rs.getString("createdBy"), rs.getString("lastUpdate"), 
-                    rs.getString("lastUpdateBy")
+                    rs.getInt("cityId"), rs.getString("city"),  rs.getString("country"), rs.getString("createDate"), 
+                    rs.getString("createdBy"), rs.getString("lastUpdate"), rs.getString("lastUpdateBy")
                 ));
             }
         }
         catch(SQLException ex) {
-            
         }
         
         return list;
@@ -177,17 +180,19 @@ public class DB {
      * Get Country list
      * @return CountryModel OberservableList
      */
+    @SuppressWarnings("unchecked")
     public ObservableList<CountryModel> getCountries() {
         ObservableList<CountryModel> list = FXCollections.observableArrayList();
+        String sql;
         connect();
+
+        sql = String.join(" ",
+            "SELECT countryId, country, createDate, createdBy, lastUpdate,",
+            "       lastUpdateBy",
+            "  FROM country"
+        );
         
         try {
-            String sql = String.join(" ",
-                "SELECT countryId, country, createDate, createdBy, lastUpdate",
-                "       lastUpdateBy",
-                "  FROM country"
-            );
-            
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             
@@ -200,22 +205,87 @@ public class DB {
             }
         }
         catch(SQLException ex) {
-            
         }
+        
         return list;
     }
-    
-    public List getCountryNames() {
+
+    /**
+     * @param country
+     * @return countryId
+     */    
+    @SuppressWarnings("unchecked")
+    public int getCountryId(String country) {
+        int countryId = 0;
+        String sql;
         connect();
-        List list = new ArrayList();
+
+        sql = String.join(" ",
+            "SELECT countryId",
+            "  FROM country",
+            "WHERE country = ?"
+        );
+            
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, country);
+            rs = pstmt.executeQuery(sql);
+            rs.beforeFirst();
+            rs.next();
+            countryId = rs.getInt("countryId");
+        }
+        catch (SQLException ex) {
+        }
+        
+        return countryId;
+    }
+    
+    /**
+     * @param countryId
+     * @return country
+     */
+    @SuppressWarnings("unchecked")
+    public String getCountryName(int countryId) {
+        String country = "";
+        String sql;
+        connect();
+
+        sql = String.join(" ",
+            "SELECT country",
+            "  FROM country",
+            "WHERE countryId = ?"
+        );
         
         try {
-            String sql = String.join(" ",
-                "SELECT country",
-                "  FROM country",
-                " ORDER BY country"
-            );
-            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, countryId);
+            rs = pstmt.executeQuery(sql);
+            rs.beforeFirst();
+            rs.next();
+            country = rs.getString("country");
+        }
+        catch (SQLException ex) {
+        }
+        
+        return country;
+    }
+
+    /**
+     * @return Country names list
+     */
+    @SuppressWarnings("unchecked")
+    public List getCountryNames() {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        String sql;
+        connect();
+
+        sql = String.join(" ",
+            "SELECT country",
+            "  FROM country",
+            " ORDER BY country"
+        );
+        
+        try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             
@@ -223,8 +293,7 @@ public class DB {
                 list.add(rs.getString("country"));
             }
         }
-        catch(SQLException ex) {
-            
+        catch (SQLException ex) {
         }
         
         return list;
@@ -235,18 +304,17 @@ public class DB {
      * @param sql
      * @throws SQLException 
      */
+    @SuppressWarnings("unchecked")
     protected void run(String sql) throws SQLException {
         try {
             if (conn == null || conn.isClosed()) {
                 connect();
             }
         }
-        catch (SQLException e) {
-//            LOGGER.log(Level.SEVERE, e.toString(), e);
-//            LOGGER.log(Level.SEVERE, "SQLException: {0}", e.getMessage());
-//            LOGGER.log(Level.SEVERE, "SQLState: {0}", e.getSQLState());
-//            LOGGER.log(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
+        catch (SQLException ex) {
+            throw new SQLException(ex.getMessage());
         }
+
         stmt.execute(sql);
     }
 
@@ -257,23 +325,15 @@ public class DB {
      * @return boolean
      * @throws SQLException 
      */
+    @SuppressWarnings("unchecked")
     public boolean updateCities(ObservableList<CityModel> list, String country) throws SQLException{
+        int countryId = 0;
+        String sql;
+        
         try {
-            String sql = "TRUNCATE country";
+            sql = "TRUNCATE country";
             run(sql);
-            
-            sql = String.join(" ",
-                "SELECT countryId",
-                "  FROM country",
-                " WHERE country = ?"
-            );
-            
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, country);
-            rs = pstmt.executeQuery(sql);
-            rs.beforeFirst();
-            rs.next();
-            int countryId = rs.getInt("countryId");
+            countryId = getCountryId(country);
             
             sql = String.join(" ", 
                 "INSERT ",
@@ -294,13 +354,13 @@ public class DB {
                 pstmt.setString(7, c.getLastUpdateBy());
                 pstmt.executeUpdate();
             }
+            
             return true;
         }
         catch (SQLException ex) {
             throw new SQLException(ex.getMessage());
         }
     }
-
     
     /**
      * Update country
@@ -308,15 +368,19 @@ public class DB {
      * @return boolean
      * @throws SQLException 
      */
+    @SuppressWarnings("unchecked")
     public boolean updateCountries(ObservableList<CountryModel> list) throws SQLException{
+        String sql;
+        connect();
+        
         try {
-            String sql = "TRUNCATE country";
+            sql = "TRUNCATE country";
             run(sql);
             
             sql = String.join(" ", 
                 "INSERT ",
                 "  INTO country (countryId, country, createDate, createdBy,",
-                "                lastUpdate, lastUpdateBy)",
+                "                              lastUpdate, lastUpdateBy)",
                 "VALUES (?, ?, ?,?, ?, ?)"
             );
             
@@ -331,6 +395,7 @@ public class DB {
                 pstmt.setString(6, c.getLastUpdateBy());
                 pstmt.executeUpdate();
             }
+            
             return true;
         }
         catch (SQLException ex) {
