@@ -24,7 +24,6 @@
 package myschedule.service;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
@@ -223,7 +222,7 @@ public class DB {
         sql = String.join(" ",
             "SELECT countryId",
             "  FROM country",
-            "WHERE country = ?"
+            "WHERE country = '?'"
         );
             
         try {
@@ -321,19 +320,18 @@ public class DB {
     /**
      * Update city
      * @param list
-     * @param country
      * @return boolean
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public boolean updateCities(ObservableList<CityModel> list, String country) throws SQLException{
-        int countryId = 0;
+    public boolean updateCities(ObservableList<CityModel> list) throws SQLException{
+        int countryId;
         String sql;
+        String lookup;
         
         try {
-            sql = "TRUNCATE country";
+            sql = "TRUNCATE city";
             run(sql);
-            countryId = getCountryId(country);
             
             sql = String.join(" ", 
                 "INSERT ",
@@ -345,6 +343,16 @@ public class DB {
             pstmt = conn.prepareStatement(sql);
             
             for (CityModel c : list) {
+                lookup = String.join(" ",
+                    "SELECT countryId",
+                    "  FROM country",
+                    " WHERE country = \"" + c.getCountry() + "\""
+                );
+                rs = stmt.executeQuery(lookup);
+                rs.beforeFirst();
+                rs.next();
+                countryId = rs.getInt("countryId");
+                
                 pstmt.setInt(1, c.getCityId());
                 pstmt.setString(2, c.getCity());
                 pstmt.setInt(3, countryId);

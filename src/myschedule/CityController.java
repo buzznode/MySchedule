@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -75,6 +74,8 @@ public class CityController {
 
     private App app;
     private ObservableList<CityModel> cityList = FXCollections.observableArrayList();
+    private List countryNameList;
+        
     private MainController main;
     private boolean unsavedChanges = false;
 
@@ -88,7 +89,7 @@ public class CityController {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(null);
-            alert.setContentText("Database commit was successful. Record added.");
+            alert.setContentText("Database commit was successful. Record(s) added.");
             alert.showAndWait();
         }
         else {
@@ -101,7 +102,8 @@ public class CityController {
     }
     
     /**
-     * Close country maintenance 
+     * Check for un-saved changes; display warning message
+     * as needed; close city maintenance function.
      */
     @SuppressWarnings("unchecked")
     private void closeCityMaint() {
@@ -113,69 +115,6 @@ public class CityController {
         else {
             main.endProcess();
         }
-    }
-    
-    /**
-     * Configure Cell Factories and Cell Value Factories
-     */
-    @SuppressWarnings("unchecked")
-    private void configureColumns() {
-        // City Id column
-        cityIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCityId()));
-        
-        // City column
-        cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
-        cityColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        cityColumn.setOnEditCommit(
-            (TableColumn.CellEditEvent<CityModel, String> t) -> {
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
-                table.refresh();
-                unsavedChanges = true;
-            }
-        );
-        
-        // Country column
-        List countries = app.db.getCountryNames();
-        
-        countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
-        countryColumn.setCellFactory(ComboBoxTableCell.forTableColumn((ObservableList) countries));
-        countryColumn.setOnEditCommit(
-            (TableColumn.CellEditEvent<CityModel, String> t) -> {
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
-                table.refresh();
-                unsavedChanges = true;
-            }
-        );
-            
-        // Create Date column
-        createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
-
-        // Created By column
-        createdByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreatedBy()));
-
-        // Last Update column
-        lastUpdateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdate()));
-
-        // Last Update By column
-        lastUpdateByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdateBy()));
-    }
-    
-    /**
-     * Configure TextFields
-     */
-    @SuppressWarnings("unchecked")
-    private void configureTextFields() {
-        txtCityId.setDisable(true);
-        txtCity.setDisable(false);
-        cboCountry.setDisable(false);
-        txtCreateDate.setDisable(true);
-        txtCreatedBy.setDisable(true);
-        txtLastUpdate.setDisable(true);
-        txtLastUpdateBy.setDisable(true);
     }
     
     /**
@@ -219,10 +158,10 @@ public class CityController {
                 );
                 
                 unsavedChanges = true;
-                initializeNewRecord();
+                initializeForm();
             }
             else {
-                app.log.write(Level.SEVERE, "Error parsing new country record");
+                app.log.write(Level.SEVERE, "Error parsing new city record");
             }
         });
         
@@ -232,8 +171,7 @@ public class CityController {
         
         btnCommit.setOnAction((ea) -> {
             try {
-                String country = "";
-                app.db.updateCities(cityList, country);
+                app.db.updateCities(cityList);
                 unsavedChanges = false;
                 alertStatus(1);
             }
@@ -259,28 +197,88 @@ public class CityController {
      */
     @SuppressWarnings("unchecked")
     private int getNextCityId(ObservableList<CityModel> clist) {
-        Optional<CityModel> c = clist
-            .stream()
-            .max(Comparator.comparing(CityModel::getCityId));
-        return c.get().getCityId() + 1;
+        if (clist.size() > 0) {
+            Optional<CityModel> c = clist
+                .stream()
+                .max(Comparator.comparing(CityModel::getCityId));
+            return c.get().getCityId() + 1;
+        }
+        else {
+            return 1;
+        }
     }
 
     /**
-     * Set default values for new record
+     * Initialize "add record" form elements
      */
     @SuppressWarnings("unchecked")
-    private void initializeNewRecord() {
+    private void initializeForm() {
         int nextCityId = getNextCityId(cityList);
         String now = app.common.now();
         String user = app.userName();
-        
+
         txtCityId.setText(Integer.toString(nextCityId));
         txtCity.setText("");
-//        cboCountry=;
+        cboCountry.getItems().addAll(countryNameList);
         txtCreateDate.setText(now);
         txtCreatedBy.setText(user);
         txtLastUpdate.setText(now);
         txtLastUpdateBy.setText(user);
+        
+        txtCityId.setDisable(true);
+        txtCity.setDisable(false);
+        cboCountry.setDisable(false);
+        txtCreateDate.setDisable(true);
+        txtCreatedBy.setDisable(true);
+        txtLastUpdate.setDisable(true);
+        txtLastUpdateBy.setDisable(true);
+    }
+    
+    /**
+     * Initialize Cell Factories and Cell Value Factories
+     */
+    @SuppressWarnings("unchecked")
+    private void initializeTableViewColumns() {
+        // City Id column
+        cityIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCityId()));
+        
+        // City column
+        cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
+        cityColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        cityColumn.setOnEditCommit(
+            (TableColumn.CellEditEvent<CityModel, String> t) -> {
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+                table.refresh();
+                unsavedChanges = true;
+            }
+        );
+        
+        // Country column
+        countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+        countryColumn.setCellFactory(ComboBoxTableCell.forTableColumn((ObservableList) countryNameList));
+        countryColumn.setOnEditCommit(
+            (TableColumn.CellEditEvent<CityModel, String> t) -> {
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+                table.refresh();
+                unsavedChanges = true;
+            }
+        );
+            
+        // Create Date column
+        createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
+
+        // Created By column
+        createdByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreatedBy()));
+
+        // Last Update column
+        lastUpdateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdate()));
+
+        // Last Update By column
+        lastUpdateByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdateBy()));
     }
     
     /**
@@ -307,14 +305,11 @@ public class CityController {
     @SuppressWarnings("unchecked")
     public void start() {
         createActionListeners();
-//        btnCancel.setText(app.localize("cancel"));
-//        btnLogin.setText(app.localize("login"));
         lblTitle.setText(app.localize("cities"));
-//        app.common.loadUsers();
         cityList = app.db.getCities();
-        initializeNewRecord();
-        configureColumns();
-        configureTextFields();
+        countryNameList = app.db.getCountryNames();
+        initializeForm();
+        initializeTableViewColumns();
         table.setEditable(true);
         table.setItems(cityList);
     }
@@ -327,7 +322,7 @@ public class CityController {
     private boolean validateCityRecord() {
         return app.common.isNumber(txtCityId.getText())
               && app.common.isString(txtCity.getText())
-//              && app.common.isString(cboCountry)
+              && app.common.isString((String) cboCountry.getValue())
               && app.common.isString(txtCreateDate.getText())   
               && app.common.isString(txtCreatedBy.getText())
               && app.common.isString(txtLastUpdate.getText())  

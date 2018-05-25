@@ -77,7 +77,7 @@ public class CountryController {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(null);
-            alert.setContentText("Database commit was successful. Record added.");
+            alert.setContentText("Database commit was successful. Record(s) added.");
             alert.showAndWait();
         }
         else {
@@ -101,51 +101,6 @@ public class CountryController {
         else {
             main.endProcess();
         }
-    }
-    
-    /**
-     * Configure Cell Factories and Cell Value Factories
-     */
-    private void configureColumns() {
-        // Country Id column
-        countryIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCountryId()));
-        
-        // Country column
-        countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
-        countryColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        countryColumn.setOnEditCommit(
-            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
-                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
-                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
-                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
-                table.refresh();
-                unsavedChanges = true;
-            }
-        );
-        
-        // Create Date column
-        createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
-
-        // Created By column
-        createdByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreatedBy()));
-
-        // Last Update column
-        lastUpdateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdate()));
-
-        // Last Update By column
-        lastUpdateByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdateBy()));
-    }
-    
-    /**
-     * Configure TextFields
-     */
-    private void configureTextFields() {
-        txtCountryId.setDisable(true);
-        txtCountry.setDisable(false);
-        txtCreateDate.setDisable(true);
-        txtCreatedBy.setDisable(true);
-        txtLastUpdate.setDisable(true);
-        txtLastUpdateBy.setDisable(true);
     }
     
     /**
@@ -185,7 +140,7 @@ public class CountryController {
                 );
                 
                 unsavedChanges = true;
-                initializeNewRecord();
+                initializeForm();
             }
             else {
                 app.log.write(Level.SEVERE, "Error parsing new country record");
@@ -222,16 +177,21 @@ public class CountryController {
      * @return 
      */
     private int getNextCountryId(ObservableList<CountryModel> clist) {
-        Optional<CountryModel> country = clist
-            .stream()
-            .max(Comparator.comparing(CountryModel::getCountryId));
-        return country.get().getCountryId() + 1;
+        if (clist.size() > 0) {
+            Optional<CountryModel> country = clist
+                .stream()
+                .max(Comparator.comparing(CountryModel::getCountryId));
+            return country.get().getCountryId() + 1;
+        }
+        else {
+            return 1;
+        }
     }
 
     /**
      * Set default values for new record
      */
-    private void initializeNewRecord() {
+    private void initializeForm() {
         int nextCountryId = getNextCountryId(countryList);
         String now = app.common.now();
         String user = app.userName();
@@ -242,6 +202,46 @@ public class CountryController {
         txtCreatedBy.setText(user);
         txtLastUpdate.setText(now);
         txtLastUpdateBy.setText(user);
+
+        txtCountryId.setDisable(true);
+        txtCountry.setDisable(false);
+        txtCreateDate.setDisable(true);
+        txtCreatedBy.setDisable(true);
+        txtLastUpdate.setDisable(true);
+        txtLastUpdateBy.setDisable(true);
+    }
+    
+    /**
+     * Initialize Cell Factories and Cell Value Factories
+     */
+    private void initializeTableViewColumns() {
+        // Country Id column
+        countryIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCountryId()));
+        
+        // Country column
+        countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+        countryColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        countryColumn.setOnEditCommit(
+            (TableColumn.CellEditEvent<CountryModel, String> t) -> {
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+                table.refresh();
+                unsavedChanges = true;
+            }
+        );
+        
+        // Create Date column
+        createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
+
+        // Created By column
+        createdByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreatedBy()));
+
+        // Last Update column
+        lastUpdateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdate()));
+
+        // Last Update By column
+        lastUpdateByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdateBy()));
     }
     
     /**
@@ -267,14 +267,10 @@ public class CountryController {
     public void start() {
 
         createActionListeners();
-//        btnCancel.setText(app.localize("cancel"));
-//        btnLogin.setText(app.localize("login"));
         lblTitle.setText(app.localize("countries"));
-//        app.common.loadUsers();
         countryList = app.db.getCountries();
-        initializeNewRecord();
-        configureColumns();
-        configureTextFields();
+        initializeForm();
+        initializeTableViewColumns();
         table.setEditable(true);
         table.setItems(countryList);
 
