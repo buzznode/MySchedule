@@ -65,9 +65,18 @@ public class MainController {
             System.exit(0);
         });
 
+        miMaintCity.setOnAction((ae) -> {
+            try {
+                startCityMaint();
+            }
+            catch (Exception ex) {
+                
+            }
+        });
+        
         miMaintCountry.setOnAction((ae) -> {
             try {
-                startCountryMaintenance();
+                startCountryMaint();
             }
             catch(Exception ex) {
                 
@@ -248,14 +257,24 @@ public class MainController {
         login.start();
     }
     
-    private void startCountryMaintenance() throws Exception {
+    private void startCityMaint() throws Exception {
+        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("City.fxml"));
+        Node node = loader.load();
+        CityController controller = loader.getController();
+        controller.injectMainController(this);
+        controller.injectApp(app);
+        mainContainer.setCenter(node);
+        controller.start();
+    }
+    
+    private void startCountryMaint() throws Exception {
         FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Country.fxml"));
         Node node = loader.load();
-        CountryController country = loader.getController();
-        country.injectMainController(this);
-        country.injectApp(app);
+        CountryController controller = loader.getController();
+        controller.injectMainController(this);
+        controller.injectApp(app);
         mainContainer.setCenter(node);
-        country.start();
+        controller.start();
     }
 }
 

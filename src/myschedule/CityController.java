@@ -25,9 +25,11 @@ package myschedule;
 
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -40,10 +42,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import myschedule.model.CityModel;
 
 /**
@@ -55,14 +56,14 @@ public class CityController {
     @FXML private TableView table;
     @FXML private TableColumn<CityModel, Integer> cityIdColumn;
     @FXML private TableColumn<CityModel, String> cityColumn;
-    @FXML private TableColumn<CityModel, Integer> countryIdColumn;
+    @FXML private TableColumn<CityModel, String> countryColumn;
     @FXML private TableColumn<CityModel, String> createDateColumn;
     @FXML private TableColumn<CityModel, String> createdByColumn;
     @FXML private TableColumn<CityModel, String> lastUpdateColumn;
     @FXML private TableColumn<CityModel, String> lastUpdateByColumn;
     @FXML private TextField txtCityId;
     @FXML private TextField txtCity;
-    @FXML private ComboBox cboCountryId;
+    @FXML private ComboBox cboCountry;
     @FXML private TextField txtCreateDate;
     @FXML private TextField txtCreatedBy;
     @FXML private TextField txtLastUpdate;
@@ -76,11 +77,12 @@ public class CityController {
     private ObservableList<CityModel> cityList = FXCollections.observableArrayList();
     private MainController main;
     private boolean unsavedChanges = false;
-    @FXML private VBox city;
-    @FXML private HBox tableContainer;
-    @FXML private HBox controlsContainer;
-    @FXML private HBox buttonsContainer;
-    
+
+    /**
+     * Alert status
+     * @param status 
+     */
+    @SuppressWarnings("unchecked")
     private void alertStatus(int status) {
         if (status == 1) {
             Alert alert = new Alert(AlertType.INFORMATION);
@@ -101,6 +103,7 @@ public class CityController {
     /**
      * Close country maintenance 
      */
+    @SuppressWarnings("unchecked")
     private void closeCityMaint() {
         if (unsavedChanges) {
             if (confirmUnsaved()) {
@@ -115,6 +118,7 @@ public class CityController {
     /**
      * Configure Cell Factories and Cell Value Factories
      */
+    @SuppressWarnings("unchecked")
     private void configureColumns() {
         // City Id column
         cityIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCityId()));
@@ -132,8 +136,21 @@ public class CityController {
             }
         );
         
-        // Country Id column
+        // Country column
+        List countries = app.db.getCountryNames();
         
+        countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+        countryColumn.setCellFactory(ComboBoxTableCell.forTableColumn((ObservableList) countries));
+        countryColumn.setOnEditCommit(
+            (TableColumn.CellEditEvent<CityModel, String> t) -> {
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+                table.refresh();
+                unsavedChanges = true;
+            }
+        );
+            
         // Create Date column
         createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
 
@@ -150,10 +167,11 @@ public class CityController {
     /**
      * Configure TextFields
      */
+    @SuppressWarnings("unchecked")
     private void configureTextFields() {
         txtCityId.setDisable(true);
         txtCity.setDisable(false);
-        cboCountryId.setDisable(false);
+        cboCountry.setDisable(false);
         txtCreateDate.setDisable(true);
         txtCreatedBy.setDisable(true);
         txtLastUpdate.setDisable(true);
@@ -164,6 +182,7 @@ public class CityController {
      * Confirm closing when unsaved data exists
      * @return boolean
      */
+    @SuppressWarnings("unchecked")
     private boolean confirmUnsaved() {
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle("Unsaved Changes");
@@ -184,13 +203,15 @@ public class CityController {
     /**
      *  Create action event listeners
      */
+    @SuppressWarnings("unchecked")
     private void createActionListeners() {
+        
         btnAdd.setOnAction((ae) -> {
             if (validateCityRecord()) {
                 cityList.add(new CityModel(
                     Integer.parseInt(txtCityId.getText()),
                     txtCity.getText(),
-                    cboCountryId.getSelectionModel().getSelectedItem(),
+                    (String) cboCountry.getValue(),
                     txtCreateDate.getText(),
                     txtCreatedBy.getText(),
                     txtLastUpdate.getText(),
@@ -211,7 +232,8 @@ public class CityController {
         
         btnCommit.setOnAction((ea) -> {
             try {
-                app.db.updateCities(cityList);
+                String country = "";
+                app.db.updateCities(cityList, country);
                 unsavedChanges = false;
                 alertStatus(1);
             }
@@ -220,6 +242,7 @@ public class CityController {
             }
         });
 
+        
         btnRemove.setOnAction((ae) -> {
             ObservableList<CityModel> citySelected, allCities;
             allCities = table.getItems();
@@ -234,16 +257,18 @@ public class CityController {
      * @param clist
      * @return 
      */
+    @SuppressWarnings("unchecked")
     private int getNextCityId(ObservableList<CityModel> clist) {
-        Optional<CityModel> city = clist
+        Optional<CityModel> c = clist
             .stream()
             .max(Comparator.comparing(CityModel::getCityId));
-        return city.get().getCityId() + 1;
+        return c.get().getCityId() + 1;
     }
 
     /**
      * Set default values for new record
      */
+    @SuppressWarnings("unchecked")
     private void initializeNewRecord() {
         int nextCityId = getNextCityId(cityList);
         String now = app.common.now();
@@ -251,7 +276,7 @@ public class CityController {
         
         txtCityId.setText(Integer.toString(nextCityId));
         txtCity.setText("");
-//        cboCountryId=;
+//        cboCountry=;
         txtCreateDate.setText(now);
         txtCreatedBy.setText(user);
         txtLastUpdate.setText(now);
@@ -262,6 +287,7 @@ public class CityController {
      * Inject App object
      * @param _app 
      */
+    @SuppressWarnings("unchecked")
     public void injectApp(App _app) {
         this.app = _app;
     }
@@ -270,6 +296,7 @@ public class CityController {
      * Inject MainController object
      * @param _main 
      */
+    @SuppressWarnings("unchecked")
     public void injectMainController(MainController _main) {
         main = _main;
     }
@@ -279,7 +306,6 @@ public class CityController {
      */
     @SuppressWarnings("unchecked")
     public void start() {
-
         createActionListeners();
 //        btnCancel.setText(app.localize("cancel"));
 //        btnLogin.setText(app.localize("login"));
@@ -297,14 +323,14 @@ public class CityController {
      * Validate new record data
      * @return 
      */
-    private boolean validateCountryRecord() {
+    @SuppressWarnings("unchecked")
+    private boolean validateCityRecord() {
         return app.common.isNumber(txtCityId.getText())
               && app.common.isString(txtCity.getText())
-//              && app.common.isString(cboCountryId)
+//              && app.common.isString(cboCountry)
               && app.common.isString(txtCreateDate.getText())   
               && app.common.isString(txtCreatedBy.getText())
               && app.common.isString(txtLastUpdate.getText())  
               && app.common.isString(txtLastUpdateBy.getText());
-
     }
 }

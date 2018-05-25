@@ -25,6 +25,7 @@ package myschedule.model;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * @author bradd
@@ -33,7 +34,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class CityModel {
     private final SimpleIntegerProperty cityId;
     private final SimpleStringProperty city;
-    private final SimpleIntegerProperty countryId;
+    private final SimpleStringProperty country;
     private final SimpleStringProperty createDate;
     private final SimpleStringProperty createdBy;
     private final SimpleStringProperty lastUpdate;
@@ -42,17 +43,17 @@ public class CityModel {
     public CityModel() {
         this.cityId = new SimpleIntegerProperty(0);
         this.city = new SimpleStringProperty("");
-        this.countryId = new SimpleIntegerProperty(0);
+        this.country = new SimpleStringProperty("");
         this.createDate = new SimpleStringProperty("");
         this.createdBy = new SimpleStringProperty("");
         this.lastUpdate = new SimpleStringProperty("");
         this.lastUpdateBy = new SimpleStringProperty("");
     }
     
-    public CityModel(int _cityId, String _city, int _countryId, String _createDate, String _createdBy, String _lastUpdate, String _lastUpdateBy) {
+    public CityModel(int _cityId, String _city, String _country, String _createDate, String _createdBy, String _lastUpdate, String _lastUpdateBy) {
         this.cityId = new SimpleIntegerProperty(_cityId);
         this.city = new SimpleStringProperty(_city);
-        this.countryId = new SimpleIntegerProperty(_countryId);
+        this.country = new SimpleStringProperty(_country);
         this.createDate = new SimpleStringProperty(_createDate);
         this.createdBy = new SimpleStringProperty(_createdBy);
         this.lastUpdate = new SimpleStringProperty(_lastUpdate);
@@ -92,19 +93,27 @@ public class CityModel {
     }
     
     /**
-     * Get countryId value
-     * @return countryId value
+     * Get country value
+     * @return country value
      */
-    public int getCountryId() {
-        return countryId.get();
+    public String getCountry() {
+        return country.get();
     }
 
     /**
-     * Set countryId value
-     * @param _countryId 
+     * Set country value
+     * @param _country 
      */
-    public void setCountryId(int _countryId) {
-        countryId.set(_countryId);
+    public void setCountry(String _country) {
+        country.set(_country);
+    }
+    
+    /**
+     * Get country object
+     * @return country object
+     */
+    public StringProperty countryProperty() {
+        return country;
     }
     
     /**
