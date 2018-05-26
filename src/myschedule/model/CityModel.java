@@ -112,9 +112,9 @@ public class CityModel {
      * Get country object
      * @return country object
      */
-    public StringProperty countryProperty() {
-        return country;
-    }
+//    public StringProperty countryProperty() {
+//        return country;
+//    }
     
     /**
      * Get createDate value
