@@ -99,7 +99,7 @@ public class AddressModel {
      * @param _address 
      */
     public void setAddress(String _address) {
-        city.set(_address);
+        address.set(_address);
     }
     
     /**
@@ -115,7 +115,7 @@ public class AddressModel {
      * @param _address2 
      */
     public void setAddress2(String _address2) {
-        city.set(_address2);
+        address2.set(_address2);
     }
     
     /**
