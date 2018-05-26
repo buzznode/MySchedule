@@ -6,8 +6,9 @@
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/AddressController.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/model/AddressModel.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/service/DB.java</file>
-            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/Address.css</file>
-            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/model/CityModel.java</file>
+            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/CityController.java</file>
+            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/CountryController.java</file>
+            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/Address.fxml</file>
         </group>
     </open-files>
 </project-private>

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import myschedule.model.AddressModel;
 import myschedule.model.CityModel;
 import myschedule.model.CountryModel;
 //import java.util.logging.Level;
@@ -142,6 +143,42 @@ public class DB {
     }
     
     /**
+     * Get list of addresses
+     * @return AddressModel ObservableList
+     */
+    @SuppressWarnings("unchecked")
+    public ObservableList<AddressModel> getAddresses() {
+        ObservableList<AddressModel> list = FXCollections.observableArrayList();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT a.addressId, a.address, a.address2, b.city, a.postalCode, a.phone, a.createDate,",
+            "               a.createdBy, a.lastUpdate, a.lastUpdateBy",
+            "  FROM address a",
+            "  JOIN city b ON a.cityId = b.cityId"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new AddressModel(
+                    rs.getInt("addressId"), rs.getString("address"), rs.getString("address2"), rs.getString("city"), 
+                    rs.getString("postalCode"), rs.getString("phone"), rs.getString("createDate"), rs.getString("createdBy"), 
+                    rs.getString("lastUpdate"), rs.getString("lastUpdatteBy")
+                ));
+            }
+        }
+        catch (SQLException ex) {
+        }
+        
+        return list;
+    }
+    
+    
+    /**
      * Get City list
      * @return CityModel OberservableList
      */
@@ -170,6 +207,95 @@ public class DB {
             }
         }
         catch(SQLException ex) {
+        }
+        
+        return list;
+    }
+
+    /**
+     * @param city
+     * @return cityId
+     */    
+    @SuppressWarnings("unchecked")
+    public int getCityId(String city) {
+        int cityId = 0;
+        String sql;
+        connect();
+
+        sql = String.join(" ",
+            "SELECT cityId",
+            "  FROM city",
+            "WHERE city = '?'"
+        );
+            
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, city);
+            rs = pstmt.executeQuery(sql);
+            rs.beforeFirst();
+            rs.next();
+            cityId = rs.getInt("cityId");
+        }
+        catch (SQLException ex) {
+        }
+        
+        return cityId;
+    }
+    
+    /**
+     * @param cityId
+     * @return city
+     */
+    @SuppressWarnings("unchecked")
+    public String getCityName(int cityId) {
+        String city = "";
+        String sql;
+        connect();
+
+        sql = String.join(" ",
+            "SELECT city",
+            "  FROM city",
+            "WHERE cityId = ?"
+        );
+        
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, cityId);
+            rs = pstmt.executeQuery(sql);
+            rs.beforeFirst();
+            rs.next();
+            city = rs.getString("city");
+        }
+        catch (SQLException ex) {
+        }
+        
+        return city;
+    }
+
+    /**
+     * @return City names list
+     */
+    @SuppressWarnings("unchecked")
+    public List getCityNames() {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        String sql;
+        connect();
+
+        sql = String.join(" ",
+            "SELECT city",
+            "  FROM city",
+            " ORDER BY city"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(rs.getString("city"));
+            }
+        }
+        catch (SQLException ex) {
         }
         
         return list;
@@ -317,6 +443,62 @@ public class DB {
         stmt.execute(sql);
     }
 
+    /**
+     * Update address
+     * @param list
+     * @return boolean
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public boolean updateAddresses(ObservableList<AddressModel> list) throws SQLException{
+        int cityId;
+        String sql;
+        String lookup;
+        
+        try {
+            sql = "TRUNCATE address";
+            run(sql);
+            
+            sql = String.join(" ", 
+                "INSERT ",
+                "  INTO address (addressId, address, address2, cityId, postalCode, phone, createDate, createdBy,",
+                "             lastUpdate, lastUpdateBy)",
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+            
+            pstmt = conn.prepareStatement(sql);
+            
+            for (AddressModel a : list) {
+                lookup = String.join(" ",
+                    "SELECT cityId",
+                    "  FROM city",
+                    " WHERE city = \"" + a.getCity()+ "\""
+                );
+                rs = stmt.executeQuery(lookup);
+                rs.beforeFirst();
+                rs.next();
+                cityId = rs.getInt("cityId");
+                
+                pstmt.setInt(1, a.getAddressId());
+                pstmt.setString(2, a.getAddress());
+                pstmt.setString(3, a.getAddress2());
+                pstmt.setInt(4, cityId);
+                pstmt.setString(5, a.getPostalCode());
+                pstmt.setString(6, a.getPhone());
+                pstmt.setString(7, a.getCreateDate());
+                pstmt.setString(8, a.getCreatedBy());
+                pstmt.setString(9, a.getLastUpdate());
+                pstmt.setString(10, a.getLastUpdateBy());
+                pstmt.executeUpdate();
+            }
+            
+            return true;
+        }
+        catch (SQLException ex) {
+            throw new SQLException(ex.getMessage());
+        }
+    }
+    
     /**
      * Update city
      * @param list

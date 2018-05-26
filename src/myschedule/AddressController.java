@@ -56,7 +56,7 @@ public class AddressController {
     @FXML private TableColumn<AddressModel, Integer> addressIdColumn;
     @FXML private TableColumn<AddressModel, String> addressColumn;
     @FXML private TableColumn<AddressModel, String> address2Column;
-    @FXML private TableColumn<AddressModel, Integer> cityColumn;
+    @FXML private TableColumn<AddressModel, String> cityColumn;
     @FXML private TableColumn<AddressModel, String> postalCodeColumn;
     @FXML private TableColumn<AddressModel, String> phoneColumn;
     @FXML private TableColumn<AddressModel, String> createDateColumn;
@@ -198,17 +198,17 @@ public class AddressController {
     }
 
     /**
-     * Get next available Country Id to be use for add
+     * Get next available Address Id to be use for add
      * @param clist
      * @return 
      */
     @SuppressWarnings("unchecked")
-    private int getNextCityId(ObservableList<CityModel> clist) {
-        if (clist.size() > 0) {
-            Optional<CityModel> c = clist
+    private int getNextAddressId(ObservableList<AddressModel> alist) {
+        if (alist.size() > 0) {
+            Optional<AddressModel> a = alist
                 .stream()
-                .max(Comparator.comparing(CityModel::getCityId));
-            return c.get().getCityId() + 1;
+                .max(Comparator.comparing(AddressModel::getAddressId));
+            return a.get().getAddressId() + 1;
         }
         else {
             return 1;
@@ -267,22 +267,59 @@ public class AddressController {
                 unsavedChanges = true;
             }
         );
-        
-        // hereiam
-        
-        // Country column
-        countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
-        countryColumn.setCellFactory(ComboBoxTableCell.forTableColumn((ObservableList) countryNameList));
-        countryColumn.setOnEditCommit(
-            (TableColumn.CellEditEvent<CityModel, String> t) -> {
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+
+        // Address2 column
+        address2Column.setCellValueFactory(new PropertyValueFactory<>("address2"));
+        address2Column.setCellFactory(TextFieldTableCell.forTableColumn());
+        address2Column.setOnEditCommit(
+            (TableColumn.CellEditEvent<AddressModel, String> t) -> {
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setAddress2(t.getNewValue());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
                 unsavedChanges = true;
             }
         );
-            
+        
+        // City column
+        cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
+        cityColumn.setCellFactory(ComboBoxTableCell.forTableColumn((ObservableList) cityNameList));
+        cityColumn.setOnEditCommit(
+            (TableColumn.CellEditEvent<AddressModel, String> t) -> {
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+                table.refresh();
+                unsavedChanges = true;
+            }
+        );
+
+        // PostalCode column
+        postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        postalCodeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        postalCodeColumn.setOnEditCommit(
+            (TableColumn.CellEditEvent<AddressModel, String> t) -> {
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setPostalCode(t.getNewValue());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+                table.refresh();
+                unsavedChanges = true;
+            }
+        );
+        
+        // Phone column
+        phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        phoneColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        phoneColumn.setOnEditCommit(
+            (TableColumn.CellEditEvent<AddressModel, String> t) -> {
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setPhone(t.getNewValue());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+                table.refresh();
+                unsavedChanges = true;
+            }
+        );
+        
         // Create Date column
         createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
 
@@ -315,18 +352,18 @@ public class AddressController {
     }
 
     /**
-     * Start country maintenance
+     * Start address maintenance
      */
     @SuppressWarnings("unchecked")
     public void start() {
         createActionListeners();
-        lblTitle.setText(app.localize("cities"));
-        cityList = app.db.getCities();
-        countryNameList = app.db.getCountryNames();
+        lblTitle.setText(app.localize("addresses"));
+        addressList = app.db.getAddresses();
+        cityNameList = app.db.getCityNames();
         initializeForm();
         initializeTableViewColumns();
         table.setEditable(true);
-        table.setItems(cityList);
+        table.setItems(addressList);
     }
     
     /**
@@ -334,10 +371,13 @@ public class AddressController {
      * @return 
      */
     @SuppressWarnings("unchecked")
-    private boolean validateCityRecord() {
-        return app.common.isNumber(txtCityId.getText())
-              && app.common.isString(txtCity.getText())
-              && app.common.isString((String) cboCountry.getValue())
+    private boolean validateAddressRecord() {
+        return app.common.isNumber(txtAddressId.getText())
+              && app.common.isString(txtAddress.getText())
+              && app.common.isString(txtAddress2.getText())
+              && app.common.isString((String) cboCity.getValue())
+              && app.common.isString(txtPostalCode.getText())
+              && app.common.isString(txtPhone.getText())
               && app.common.isString(txtCreateDate.getText())   
               && app.common.isString(txtCreatedBy.getText())
               && app.common.isString(txtLastUpdate.getText())  

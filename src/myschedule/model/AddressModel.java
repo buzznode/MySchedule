@@ -57,7 +57,7 @@ public class AddressModel {
     }
     
     public AddressModel(int _addressId, String _address, String _address2, String _city, String _postalCode, String _phone, 
-                        String _createDate, String _createdBy, String _lastUpdate, String _lastUpdateBy) {
+            String _createDate, String _createdBy, String _lastUpdate, String _lastUpdateBy) {
         this.addressId = new SimpleIntegerProperty(_addressId);
         this.address = new SimpleStringProperty(_address);
         this.address2 = new SimpleStringProperty(_address2);
