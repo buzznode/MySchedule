@@ -69,10 +69,10 @@ public class AddressController {
     @FXML private ComboBox cboCity;
     @FXML private TextField txtPostalCode;
     @FXML private TextField txtPhone;
-    @FXML private TextField txtCreateDate;
-    @FXML private TextField txtCreatedBy;
-    @FXML private TextField txtLastUpdate;
-    @FXML private TextField txtLastUpdateBy;
+//    @FXML private TextField txtCreateDate;
+//    @FXML private TextField txtCreatedBy;
+//    @FXML private TextField txtLastUpdate;
+//    @FXML private TextField txtLastUpdateBy;
     @FXML private Button btnAdd;
     @FXML private Button btnRemove;
     @FXML private Button btnClose;
@@ -362,8 +362,14 @@ public class AddressController {
     public void start() {
         createActionListeners();
         lblTitle.setText(app.localize("addresses"));
-        addressList = app.db.getAddresses();
-        cityNameList = app.db.getCityNames();
+        
+        try {
+            addressList = app.db.getAddresses();
+            cityNameList = app.db.getCityNames();
+        }
+        catch (SQLException ex) {
+            app.log.write(Level.SEVERE, ex.getMessage());
+        }
         initializeForm();
         initializeTableViewColumns();
         table.setEditable(true);

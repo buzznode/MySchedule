@@ -13,7 +13,7 @@
 
 <VBox id="address" fx:id="address" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" styleClass="address" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.AddressController">
     <children>
-        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="996.0" styleClass="header-bar" />
+        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="1096.0" styleClass="header-bar" />
         <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="1000.0">
             <children>
                 <Label id="title" fx:id="lblTitle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="950.0" styleClass="title" text="Addresses">
@@ -23,21 +23,21 @@
                 </Label>
             </children>
         </HBox>
-        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="1000.0">
+        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="1100.0">
             <VBox.margin>
                 <Insets bottom="10.0" />
             </VBox.margin>
             <children>
-                <TableView fx:id="table" editable="true" prefHeight="415.0" prefWidth="955.0">
+                <TableView fx:id="table" editable="true" prefHeight="415.0" prefWidth="1055.0">
                     <columns>
-                        <TableColumn fx:id="addressIdColumn" maxWidth="55.0" minWidth="55.0" prefWidth="55.0" resizable="false" text="Address Id" />
+                        <TableColumn fx:id="addressIdColumn" maxWidth="55.0" minWidth="55.0" prefWidth="55.0" resizable="false" text="Addr Id" />
                         <TableColumn fx:id="addressColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Address" />
                         <TableColumn fx:id="address2Column" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Address 2" />
                         <TableColumn fx:id="cityColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="City" />
-                        <TableColumn fx:id="postalCodeColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Postal Code" />
-                        <TableColumn fx:id="phoneColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Phone" />
+                        <TableColumn fx:id="postalCodeColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Postal Code" />
+                        <TableColumn fx:id="phoneColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Phone" />
                         <TableColumn fx:id="createDateColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Create Date" />
-                        <TableColumn fx:id="createdByColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Created By" />
+                        <TableColumn fx:id="createdByColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Created By" />
                         <TableColumn fx:id="lastUpdateColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Last Update" />
                         <TableColumn fx:id="lastUpdateByColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Last Update By" />
                     </columns>
@@ -49,31 +49,31 @@
                 <Insets bottom="10.0" left="25.0" />
             </VBox.margin>
             <children>
-                <TextField fx:id="txtAddressId" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" promptText="Address Id">
+                <TextField fx:id="txtAddressId" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" promptText="Id">
                 <HBox.margin>
                     <Insets right="5.0" />
                 </HBox.margin></TextField>
-                <TextField fx:id="txtAddress" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="145.0" promptText="Address">
+                <TextField fx:id="txtAddress" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" promptText="Address">
                     <HBox.margin>
                         <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
-                <TextField fx:id="txtAddress2" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="145.0" promptText="Address 2">
+                <TextField fx:id="txtAddress2" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" promptText="Address 2">
                     <HBox.margin>
                         <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
-                <ComboBox fx:id="cboCity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="145.0" promptText="-- Select --">
+                <ComboBox fx:id="cboCity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" promptText="-- Select --">
                     <HBox.margin>
                         <Insets right="5.0" />
                     </HBox.margin>
                 </ComboBox>
-                <TextField fx:id="txtPostalCode" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="145.0" promptText="Postal Code">
+                <TextField fx:id="txtPostalCode" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" promptText="Postal Code">
                     <HBox.margin>
                         <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
-                <TextField fx:id="txtPhone" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="145.0" promptText="Phone">
+                <TextField fx:id="txtPhone" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" promptText="Phone">
                     <HBox.margin>
                         <Insets right="5.0" />
                     </HBox.margin>
@@ -100,7 +100,7 @@
                 <TextField fx:id="txtLastUpdateBy" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" promptText="Last Update By" />
          </children>
       </HBox>
-        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="975.0" styleClass="buttonsContainer">
+        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="1075.0" styleClass="buttonsContainer">
             <VBox.margin>
                 <Insets right="20.0" top="5.0" />
             </VBox.margin>
