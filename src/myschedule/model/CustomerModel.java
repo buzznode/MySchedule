@@ -23,141 +23,153 @@
  */
 package myschedule.model;
 
-import java.time.LocalDateTime;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  * @author bradd
  * @version 0.5.0
  */
 public class CustomerModel {
-
-    private int customerId;
-    private String customerName;
-    private int addressId;
-    private boolean active;
-    private LocalDateTime createDate;
-    private String createdBy;
-    private LocalDateTime lastUpdate;
-    private String lastUpdateBy;
+    private final SimpleIntegerProperty customerId;
+    private final SimpleStringProperty customerName;
+    private final SimpleBooleanProperty active;
+    private final SimpleStringProperty createDate;
+    private final SimpleStringProperty createdBy;
+    private final SimpleStringProperty lastUpdate;
+    private final SimpleStringProperty lastUpdateBy;
     
-    /**
-     * @return customerId
-     */
-    public int customerId() {
-        return customerId;
+    public CustomerModel() {
+        this.customerId = new SimpleIntegerProperty(0);
+        this.customerName = new SimpleStringProperty("");
+        this.active = new SimpleBooleanProperty(true);
+        this.createDate = new SimpleStringProperty("");
+        this.createdBy = new SimpleStringProperty("");
+        this.lastUpdate = new SimpleStringProperty("");
+        this.lastUpdateBy = new SimpleStringProperty("");
+    }
+    
+    public CustomerModel(int _customerId, String _customerName, boolean _active, String _createDate, 
+            String _createdBy, String _lastUpdate, String _lastUpdateBy) {
+        this.customerId = new SimpleIntegerProperty(_customerId);
+        this.customerName = new SimpleStringProperty(_customerName);
+        this.active = new SimpleBooleanProperty(_active);
+        this.createDate = new SimpleStringProperty(_createDate);
+        this.createdBy = new SimpleStringProperty(_createdBy);
+        this.lastUpdate = new SimpleStringProperty(_lastUpdate);
+        this.lastUpdateBy = new SimpleStringProperty(_lastUpdateBy);
     }
     
     /**
-     * @param _customerId
-     * @return customerId
+     * Get customerId value
+     * @return customerId value
      */
-    public int customerId(int _customerId) {
-        return customerId = _customerId;
+    public int getCustomerId() {
+        return customerId.get();
     }
     
     /**
-     * @return customerName
+     * Set customerId value
+     * @param _customerId 
      */
-    public String customerName() {
-        return customerName;
-    }
-    
-    /**
-     * @param _customerName
-     * @return customerName
-     */
-    public String customerName(String _customerName) {
-        return customerName = _customerName;
-    }
-    
-    /**
-     * @return addressId
-     */
-    public int addressId() {
-        return addressId;
-    }
-    
-    /**
-     * @param _addressId
-     * @return addressId
-     */
-    public int addressId(int _addressId) {
-        return addressId = _addressId;
+    public void setCustomerId(int _customerId) {
+        customerId.set(_customerId);
     }
 
     /**
-     * @return active
+     * Get customerName value
+     * @return customerName value
      */
-    public boolean active() {
-        return active;
-    }
-    
-    /**
-     * @param _active
-     * @return active
-     */
-    public boolean active(boolean _active) {
-        return active = _active;
+    public String getCustomerName() {
+        return customerName.get();
     }
 
     /**
-     * @return createDate
+     * Set customerName value
+     * @param _customerName 
      */
-    public LocalDateTime createDate() {
-        return createDate;
+    public void setCustomerName(String _customerName) {
+        customerName.set(_customerName);
     }
     
     /**
-     * @param _createDate
-     * @return createDate
+     * Get active value
+     * @return active value
      */
-    public LocalDateTime createDate(LocalDateTime _createDate) {
-        return createDate = _createDate;
-    }
-    
-    
-    /**
-     * @return createdBy
-     */
-    public String createdBy() {
-        return createdBy;
-    }
-    
-    /**
-     * @param _createdBy
-     * @return createdBy
-     */
-    public String createBy(String _createdBy) {
-        return createdBy = _createdBy;
-    }
-    
-    /**
-     * @return lastUpdate
-     */
-    public LocalDateTime lastUpdate() {
-        return lastUpdate;
+    public boolean getActive() {
+        return active.get();
     }
 
-/**
- * @param _lastUpdate
- * @return lastUpdate
- */    
-    public LocalDateTime lastUpdate(LocalDateTime _lastUpdate) {
-        return lastUpdate = _lastUpdate;
+    /**
+     * Set active value
+     * @param _active 
+     */
+    public void setActive(boolean _active) {
+        active.set(_active);
     }
     
     /**
-     * @return lastUpdateBy
+     * Get createDate value
+     * @return createDate value
      */
-    public String lastUpdateBy() {
-        return lastUpdateBy;
+    public String getCreateDate() {
+        return createDate.get();
     }
-    
+
     /**
-     * @param _lastUpdateBy
-     * @return lastUpdateBy
+     * Set createDate value
+     * @param _createDate 
      */
-    public String lastUpdateBy(String _lastUpdateBy) {
-        return lastUpdateBy = _lastUpdateBy;
+    public void setCreateDate(String _createDate) {
+        createDate.set(_createDate);
+    }
+
+    /**
+     * Get createdBy value
+     * @return createdBy value
+     */
+    public String getCreatedBy() {
+        return createdBy.get();
+    }
+
+    /**
+     * Get createdBy value
+     * @param _createdBy 
+     */
+    public void setCreatedBy(String _createdBy) {
+        createdBy.set(_createdBy);
+    }
+
+    /**
+     * Get lastUpdate value
+     * @return lastUpdate value
+     */
+    public String getLastUpdate() {
+        return lastUpdate.get();
+    }
+
+    /**
+     * Set lastUpdate value
+     * @param _lastUpdate 
+     */
+    public void setLastUpdate(String _lastUpdate) {
+        lastUpdate.set(_lastUpdate);
+    }
+
+    /**
+     * Get lastUpdateBy value
+     * @return lastUpdateBy value
+     */
+    public String getLastUpdateBy() {
+        return lastUpdateBy.get();
+    }
+
+    /**
+     * Set lastUpdateBy value
+     * @param _lastUpdateBy 
+     */
+    public void setLastUpdateBy(String _lastUpdateBy) {
+        lastUpdateBy.set(_lastUpdateBy);
     }
 }

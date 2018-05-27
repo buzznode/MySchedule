@@ -69,10 +69,6 @@ public class AddressController {
     @FXML private ComboBox cboCity;
     @FXML private TextField txtPostalCode;
     @FXML private TextField txtPhone;
-//    @FXML private TextField txtCreateDate;
-//    @FXML private TextField txtCreatedBy;
-//    @FXML private TextField txtLastUpdate;
-//    @FXML private TextField txtLastUpdateBy;
     @FXML private Button btnAdd;
     @FXML private Button btnRemove;
     @FXML private Button btnClose;
@@ -151,19 +147,13 @@ public class AddressController {
     @SuppressWarnings("unchecked")
     private void createActionListeners() {
         btnAdd.setOnAction((ae) -> {
+            String now = app.common.now();
+            String user = app.userName();
+            
             if (validateAddressRecord()) {
                 addressList.add(new AddressModel(
-                    Integer.parseInt(txtAddressId.getText()),
-                    txtAddress.getText(),
-                    txtAddress2.getText(),
-                    (String) cboCity.getValue(),
-                    txtPostalCode.getText(),
-                    txtPhone.getText(),
-                    txtCreateDate.getText(),
-                    txtCreatedBy.getText(),
-                    txtLastUpdate.getText(),
-                    txtLastUpdateBy.getText())
-                );
+                    Integer.parseInt(txtAddressId.getText()), txtAddress.getText(), txtAddress2.getText(),
+                    (String) cboCity.getValue(), txtPostalCode.getText(), txtPhone.getText(), now, user, now, user));
                 
                 unsavedChanges = true;
                 initializeForm();
@@ -221,8 +211,6 @@ public class AddressController {
     @SuppressWarnings("unchecked")
     private void initializeForm() {
         int nextAddressId = getNextAddressId(addressList);
-        String now = app.common.now();
-        String user = app.userName();
 
         txtAddressId.setText(Integer.toString(nextAddressId));
         txtAddress.setText("");
@@ -230,10 +218,6 @@ public class AddressController {
         cboCity.getItems().addAll(cityNameList);
         txtPostalCode.setText("");
         txtPhone.setText("");
-        txtCreateDate.setText(now);
-        txtCreatedBy.setText(user);
-        txtLastUpdate.setText(now);
-        txtLastUpdateBy.setText(user);
         
         txtAddressId.setDisable(true);
         txtAddress.setDisable(false);
@@ -241,14 +225,6 @@ public class AddressController {
         cboCity.setDisable(false);
         txtPostalCode.setDisable(false);
         txtPhone.setDisable(false);
-        txtCreateDate.setDisable(true);
-        txtCreateDate.setVisible(false);
-        txtCreatedBy.setDisable(true);
-        txtCreatedBy.setVisible(false);
-        txtLastUpdate.setDisable(true);
-        txtLastUpdate.setVisible(false);
-        txtLastUpdateBy.setDisable(true);
-        txtLastUpdateBy.setVisible(false);
     }
     
     /**
@@ -387,10 +363,6 @@ public class AddressController {
               && app.common.isString(txtAddress2.getText())
               && app.common.isString((String) cboCity.getValue())
               && app.common.isString(txtPostalCode.getText())
-              && app.common.isString(txtPhone.getText())
-              && app.common.isString(txtCreateDate.getText())   
-              && app.common.isString(txtCreatedBy.getText())
-              && app.common.isString(txtLastUpdate.getText())  
-              && app.common.isString(txtLastUpdateBy.getText());
+              && app.common.isString(txtPhone.getText());
     }
 }

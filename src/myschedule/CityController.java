@@ -63,10 +63,6 @@ public class CityController {
     @FXML private TextField txtCityId;
     @FXML private TextField txtCity;
     @FXML private ComboBox cboCountry;
-    @FXML private TextField txtCreateDate;
-    @FXML private TextField txtCreatedBy;
-    @FXML private TextField txtLastUpdate;
-    @FXML private TextField txtLastUpdateBy;
     @FXML private Button btnAdd;
     @FXML private Button btnRemove;
     @FXML private Button btnClose;
@@ -146,15 +142,13 @@ public class CityController {
     private void createActionListeners() {
         
         btnAdd.setOnAction((ae) -> {
+            String now = app.common.now();
+            String user = app.userName();
+
             if (validateCityRecord()) {
                 cityList.add(new CityModel(
-                    Integer.parseInt(txtCityId.getText()),
-                    txtCity.getText(),
-                    (String) cboCountry.getValue(),
-                    txtCreateDate.getText(),
-                    txtCreatedBy.getText(),
-                    txtLastUpdate.getText(),
-                    txtLastUpdateBy.getText())
+                    Integer.parseInt(txtCityId.getText()), txtCity.getText(), (String) cboCountry.getValue(),
+                    now, user, now, user)
                 );
                 
                 unsavedChanges = true;
@@ -180,7 +174,6 @@ public class CityController {
             }
         });
 
-        
         btnRemove.setOnAction((ae) -> {
             ObservableList<CityModel> citySelected, allCities;
             allCities = table.getItems();
@@ -220,18 +213,10 @@ public class CityController {
         txtCityId.setText(Integer.toString(nextCityId));
         txtCity.setText("");
         cboCountry.getItems().addAll(countryNameList);
-        txtCreateDate.setText(now);
-        txtCreatedBy.setText(user);
-        txtLastUpdate.setText(now);
-        txtLastUpdateBy.setText(user);
         
         txtCityId.setDisable(true);
         txtCity.setDisable(false);
         cboCountry.setDisable(false);
-        txtCreateDate.setDisable(true);
-        txtCreatedBy.setDisable(true);
-        txtLastUpdate.setDisable(true);
-        txtLastUpdateBy.setDisable(true);
     }
     
     /**
@@ -329,10 +314,6 @@ public class CityController {
     private boolean validateCityRecord() {
         return app.common.isNumber(txtCityId.getText())
               && app.common.isString(txtCity.getText())
-              && app.common.isString((String) cboCountry.getValue())
-              && app.common.isString(txtCreateDate.getText())   
-              && app.common.isString(txtCreatedBy.getText())
-              && app.common.isString(txtLastUpdate.getText())  
-              && app.common.isString(txtLastUpdateBy.getText());
+              && app.common.isString((String) cboCountry.getValue());
     }
 }
