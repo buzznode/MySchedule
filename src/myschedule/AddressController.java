@@ -242,9 +242,13 @@ public class AddressController {
         txtPostalCode.setDisable(false);
         txtPhone.setDisable(false);
         txtCreateDate.setDisable(true);
+        txtCreateDate.setVisible(false);
         txtCreatedBy.setDisable(true);
+        txtCreatedBy.setVisible(false);
         txtLastUpdate.setDisable(true);
+        txtLastUpdate.setVisible(false);
         txtLastUpdateBy.setDisable(true);
+        txtLastUpdateBy.setVisible(false);
     }
     
     /**
