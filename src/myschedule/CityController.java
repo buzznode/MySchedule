@@ -306,8 +306,15 @@ public class CityController {
     public void start() {
         createActionListeners();
         lblTitle.setText(app.localize("cities"));
-        cityList = app.db.getCities();
-        countryNameList = app.db.getCountryNames();
+        
+        try {
+            cityList = app.db.getCities();
+            countryNameList = app.db.getCountryNames();
+        }
+        catch (SQLException ex) {
+            app.log.write(Level.SEVERE, ex.getMessage());
+        }
+        
         initializeForm();
         initializeTableViewColumns();
         table.setEditable(true);

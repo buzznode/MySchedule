@@ -268,12 +268,18 @@ public class CountryController {
 
         createActionListeners();
         lblTitle.setText(app.localize("countries"));
-        countryList = app.db.getCountries();
+        
+        try {
+            countryList = app.db.getCountries();
+        }
+        catch (SQLException ex) {
+            app.log.write(Level.SEVERE, ex.getMessage());
+        }
+        
         initializeForm();
         initializeTableViewColumns();
         table.setEditable(true);
         table.setItems(countryList);
-
     }
     
     /**

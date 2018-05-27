@@ -135,14 +135,6 @@ public class AddressModel {
     }
     
     /**
-     * Get city object
-     * @return city object
-     */
-    public StringProperty cityProperty() {
-        return city;
-    }
-    
-    /**
      * Get postal code value
      * @return postal code value
      */
