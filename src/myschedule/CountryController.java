@@ -58,10 +58,6 @@ public class CountryController {
     @FXML private TableColumn<CountryModel, String> lastUpdateByColumn;
     @FXML private TextField txtCountryId;
     @FXML private TextField txtCountry;
-    @FXML private TextField txtCreateDate;
-    @FXML private TextField txtCreatedBy;
-    @FXML private TextField txtLastUpdate;
-    @FXML private TextField txtLastUpdateBy;
     @FXML private Button btnAdd;
     @FXML private Button btnRemove;
     @FXML private Button btnClose;
@@ -129,14 +125,12 @@ public class CountryController {
      */
     private void createActionListeners() {
         btnAdd.setOnAction((ae) -> {
+            String now = app.common.now();
+            String user = app.userName();
+            
             if (validateCountryRecord()) {
                 countryList.add(new CountryModel(
-                    Integer.parseInt(txtCountryId.getText()),
-                    txtCountry.getText(),
-                    txtCreateDate.getText(),
-                    txtCreatedBy.getText(),
-                    txtLastUpdate.getText(),
-                    txtLastUpdateBy.getText())
+                    Integer.parseInt(txtCountryId.getText()), txtCountry.getText(), now, user, now, user)
                 );
                 
                 unsavedChanges = true;
@@ -198,17 +192,9 @@ public class CountryController {
         
         txtCountryId.setText(Integer.toString(nextCountryId));
         txtCountry.setText("");
-        txtCreateDate.setText(now);
-        txtCreatedBy.setText(user);
-        txtLastUpdate.setText(now);
-        txtLastUpdateBy.setText(user);
 
         txtCountryId.setDisable(true);
         txtCountry.setDisable(false);
-        txtCreateDate.setDisable(true);
-        txtCreatedBy.setDisable(true);
-        txtLastUpdate.setDisable(true);
-        txtLastUpdateBy.setDisable(true);
     }
     
     /**
@@ -288,11 +274,6 @@ public class CountryController {
      */
     private boolean validateCountryRecord() {
         return app.common.isNumber(txtCountryId.getText())
-              && app.common.isString(txtCountry.getText())
-              && app.common.isString(txtCreateDate.getText())   
-              && app.common.isString(txtCreatedBy.getText())
-              && app.common.isString(txtLastUpdate.getText())  
-              && app.common.isString(txtLastUpdateBy.getText());
-
+              && app.common.isString(txtCountry.getText());
     }
 }

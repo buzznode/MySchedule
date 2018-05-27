@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="address" fx:id="address" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" styleClass="address" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.AddressController">
+<VBox id="address" fx:id="address" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" styleClass="address" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.AddressController">
     <children>
         <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="1096.0" styleClass="header-bar" />
         <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="1000.0">
@@ -35,11 +35,11 @@
                         <TableColumn fx:id="address2Column" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Address 2" />
                         <TableColumn fx:id="cityColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="City" />
                         <TableColumn fx:id="postalCodeColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Postal Code" />
-                        <TableColumn fx:id="phoneColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Phone" />
+                        <TableColumn fx:id="phoneColumn" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" text="Phone" />
                         <TableColumn fx:id="createDateColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Create Date" />
                         <TableColumn fx:id="createdByColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Created By" />
                         <TableColumn fx:id="lastUpdateColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Last Update" />
-                        <TableColumn fx:id="lastUpdateByColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Last Update By" />
+                        <TableColumn fx:id="lastUpdateByColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Update By" />
                     </columns>
                 </TableView>
             </children>
@@ -80,26 +80,6 @@
                 </TextField>
             </children>
         </HBox>
-      <HBox prefWidth="200.0">
-         <children>
-                <TextField fx:id="txtCreateDate" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="145.0" promptText="Create Date">
-                    <HBox.margin>
-                        <Insets right="5.0" />
-                    </HBox.margin>
-                </TextField>
-                <TextField fx:id="txtCreatedBy" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="145.0" promptText="Created By">
-                    <HBox.margin>
-                        <Insets right="5.0" />
-                    </HBox.margin>
-                </TextField>
-                <TextField fx:id="txtLastUpdate" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="145.0" promptText="Last Update">
-                    <HBox.margin>
-                        <Insets right="5.0" />
-                    </HBox.margin>
-                </TextField>
-                <TextField fx:id="txtLastUpdateBy" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" promptText="Last Update By" />
-         </children>
-      </HBox>
         <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="1075.0" styleClass="buttonsContainer">
             <VBox.margin>
                 <Insets right="20.0" top="5.0" />

@@ -52,6 +52,7 @@ public class MainController {
     protected MenuItem miEditDelete;
     protected MenuItem miMaintAddress;
     protected MenuItem miMaintCity;
+    protected MenuItem miMaintCustomer;
     protected MenuItem miMaintCountry;
     protected MenuItem miUserLogin;
     protected MenuItem miUserLogout;
@@ -86,6 +87,14 @@ public class MainController {
                 startCountryMaint();
             }
             catch(Exception ex) {
+            }
+        });
+        
+        miMaintCustomer.setOnAction((ae) -> {
+            try {
+                startCustomerMaint();
+            }
+            catch (Exception ex) {
             }
         });
         
@@ -195,12 +204,14 @@ public class MainController {
         miFileSaveAs = new MenuItem(app.localize("save_as"));
         // [0.4]
         miFileExit = new MenuItem(app.localize("exit"));
+
         menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
 
         // Edit menu [1]
         Menu menuEdit = new Menu(app.localize("edit"));
         // [1.0]
         miEditDelete = new MenuItem(app.localize("delete"));
+
         menuEdit.getItems().addAll(miEditDelete); 
 
         // Maintenance menu [2]
@@ -211,7 +222,10 @@ public class MainController {
         miMaintCity = new MenuItem(app.localize("city"));
         // [2.2]
         miMaintCountry = new MenuItem(app.localize("country"));
-        menuMaint.getItems().addAll(miMaintAddress, miMaintCity, miMaintCountry);
+        // [2.3]
+        miMaintCustomer = new MenuItem(app.localize("customer"));
+        
+        menuMaint.getItems().addAll(miMaintAddress, miMaintCity, miMaintCountry, miMaintCustomer);
         
         // User menu [3]
         Menu menuUser = new Menu(app.localize("user"));
@@ -219,12 +233,14 @@ public class MainController {
         miUserLogin = new MenuItem(app.localize("login"));
         // [3.1]
         miUserLogout = new MenuItem(app.localize("logout"));
+
         menuUser.getItems().addAll(miUserLogin, miUserLogout);
 
         // Help menu [4]
         Menu menuHelp = new Menu(app.localize("help"));
         // [4.0]
         miHelpAbout = new MenuItem(app.localize("about"));
+
         menuHelp.getItems().addAll(miHelpAbout);
 
         createActionListeners();
@@ -292,5 +308,14 @@ public class MainController {
         mainContainer.setCenter(node);
         controller.start();
     }
+    
+    private void startCustomerMaint() throws Exception {
+        FXMLLoader loader = new FXMLLoader(CustomerController.this.getClass().getResource("Customer.fxml"));
+        Node node = loader.load();
+        CustomerController controller = loader.getController();
+        controller.injectMainController(this);
+        controller.injectApp(app);
+        mainContainer.setCenter(node);
+        controller.start();
+    }
 }
-

@@ -492,6 +492,45 @@ public class DB {
         return list;
     }
     
+    @SuppressWarnings("unchecked")
+    public List getCustomers() throws SQLException {
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List getFullAddresses() throws SQLException {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT a.address, a.address2, b.city, c.country, a.postalCode, a.phone",
+            "  FROM address a",
+            "  JOIN city b ON a.cityId = b.cityId",
+            "  JOIN country c ON b.countryId = c.countryId",
+            " ORDER BY a.address, a.address2, b.city"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(rs.getString("address") + " " + rs.getString("address2") + " " + rs.getString("city") + " " +
+                    rs.getString("country") + " " + rs.getString("postalCode") + " " + rs.getString("phone"));
+            }
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        
+        return list;
+    }
+    
     /**
      * Execute query without result set
      * @param sql
