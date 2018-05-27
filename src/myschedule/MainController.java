@@ -64,13 +64,20 @@ public class MainController {
         miFileExit.setOnAction((ea) -> {
             System.exit(0);
         });
+        
+        miMaintAddress.setOnAction((ae) -> {
+            try {
+                startAddressMaint();
+            }
+            catch (Exception ex) {
+            }
+        });
 
         miMaintCity.setOnAction((ae) -> {
             try {
                 startCityMaint();
             }
             catch (Exception ex) {
-                
             }
         });
         
@@ -79,7 +86,6 @@ public class MainController {
                 startCountryMaint();
             }
             catch(Exception ex) {
-                
             }
         });
         
@@ -255,6 +261,16 @@ public class MainController {
         login.injectApp(app);
         mainContainer.setCenter(node);
         login.start();
+    }
+
+    private void startAddressMaint() throws Exception {
+        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Address.fxml"));
+        Node node = loader.load();
+        AddressController controller = loader.getController();
+        controller.injectMainController(this);
+        controller.injectApp(app);
+        mainContainer.setCenter(node);
+        controller.start();
     }
     
     private void startCityMaint() throws Exception {
