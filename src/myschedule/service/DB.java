@@ -25,8 +25,10 @@ package myschedule.service;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -532,13 +534,14 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<String, String>> getCustomerNamesMap() throws SQLException {
-        List<Map<String, String>> list = new ArrayList<>();
+    public ArrayList getCustomerNamesMap() throws SQLException {
+        ArrayList<Entry<String, String>> array = new ArrayList<>();
+        HashMap<String, String> hash = new HashMap<>();
         String sql;
         connect();
         
         sql = String.join(" ",
-            "SELECT customerName",
+            "SELECT customerId, customerName",
             "  FROM customer",
             "ORDER BY customerName"
         );
@@ -548,8 +551,10 @@ public class DB {
             rs.beforeFirst();
             
             while (rs.next()) {
-                list.add(rs.getString("customerName"));
+                hash.put(rs.getString("customerName"), Integer.toString(rs.getInt("customerId")));
             }
+            
+            array.addAll(hash.entrySet());
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
@@ -560,7 +565,7 @@ public class DB {
             throw new SQLException(msg);
         }
         
-        return list;
+        return array;
     }
     
 
