@@ -24,7 +24,9 @@
 package myschedule.service;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -493,8 +495,75 @@ public class DB {
     }
     
     @SuppressWarnings("unchecked")
-    public List getCustomers() throws SQLException {
+    public List getCustomerNames() throws SQLException {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT customerName",
+            "  FROM customer",
+            "ORDER BY customerName"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(rs.getString("customerName"));
+            }
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        
+        return list;
     }
+
+    /**
+     * 
+     * @return List Map integer, String
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, String>> getCustomerNamesMap() throws SQLException {
+        List<Map<String, String>> list = new ArrayList<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT customerName",
+            "  FROM customer",
+            "ORDER BY customerName"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(rs.getString("customerName"));
+            }
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        
+        return list;
+    }
+    
+
     
     @SuppressWarnings("unchecked")
     public List getFullAddresses() throws SQLException {
