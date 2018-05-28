@@ -310,7 +310,7 @@ public class MainController {
     }
     
     private void startCustomerMaint() throws Exception {
-        FXMLLoader loader = new FXMLLoader(CustomerController.this.getClass().getResource("Customer.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Customer.fxml"));
         Node node = loader.load();
         CustomerController controller = loader.getController();
         controller.injectMainController(this);

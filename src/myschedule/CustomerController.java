@@ -24,13 +24,9 @@
 package myschedule;
 
 import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -40,11 +36,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import myschedule.model.AddressModel;
-import myschedule.model.CustomerModel;
 
 /**
  * @author bradd
@@ -69,13 +60,14 @@ public class CustomerController {
     @FXML private Button btnCancel;
 
     private App app;
-    private ObservableList<CustomerModel> addressList = FXCollections.observableArrayList();
+    private List customerNameList;
+//    private ObservableList<CustomerModel> addressList = FXCollections.observableArrayList();
     private List addressList;
     private List cityNameList;
     private List countryNameList;
         
     private MainController main;
-    private boolean unsavedChanges = false;
+    private final boolean unsavedChanges = false;
 
     /**
      * Alert status
@@ -145,12 +137,21 @@ public class CustomerController {
         btnCancel.setOnMouseClicked((ea) -> {
             closeCustomerMaint();
         });
-        
-        btnSave.setOnAction((ea) -> {
+
+//        btnSave.setOnAction((ea) -> {
+//            try {
+//                app.db.upsertCustomer(addressList);
+//                unsavedChanges = false;
+//                alertStatus(1);
+//            }
+//            catch (SQLException ex) {
+//                alertStatus(0);
+//            }
+//        });
+
+        cboCustomer.setOnAction((ea) -> {
             try {
-                app.db.upsertCustomer(addressList);
-                unsavedChanges = false;
-                alertStatus(1);
+                loadCustomerData();
             }
             catch (SQLException ex) {
                 alertStatus(0);
@@ -163,18 +164,18 @@ public class CustomerController {
      * @param clist
      * @return 
      */
-    @SuppressWarnings("unchecked")
-    private int getNextAddressId(ObservableList<AddressModel> alist) {
-        if (alist.size() > 0) {
-            Optional<AddressModel> a = alist
-                .stream()
-                .max(Comparator.comparing(AddressModel::getAddressId));
-            return a.get().getAddressId() + 1;
-        }
-        else {
-            return 1;
-        }
-    }
+//    @SuppressWarnings("unchecked")
+//    private int getNextAddressId(ObservableList<AddressModel> alist) {
+//        if (alist.size() > 0) {
+//            Optional<AddressModel> a = alist
+//                .stream()
+//                .max(Comparator.comparing(AddressModel::getAddressId));
+//            return a.get().getAddressId() + 1;
+//        }
+//        else {
+//            return 1;
+//        }
+//    }
 
     /**
      * Initialize "add record" form elements
@@ -183,7 +184,7 @@ public class CustomerController {
     private void initializeForm() {
 //        int nextAddressId = getNextAddressId(addressList);
 
-        chkActive.setSelected(true);
+        chkActive.setSelected(false);
         txtCustomer.setText("");
         txtAddress.setText("");
         txtAddress2.setText("");
@@ -194,9 +195,10 @@ public class CustomerController {
         txtCity.setVisible(false);
         txtCountry.setVisible(false);
 
-        cboAddress.getItems().addAll();
+        cboAddress.getItems().addAll(addressList);
         cboCity.getItems().addAll(cityNameList);
-        cboCountry.getItems().addAll();
+        cboCountry.getItems().addAll(countryNameList);
+        cboCustomer.getItems().addAll(customerNameList);
     }
     
     /**
@@ -217,38 +219,43 @@ public class CustomerController {
         main = _main;
     }
 
+    @SuppressWarnings("unchecked")
+    public void loadCustomerData() throws SQLException {
+        
+    }
+    
     /**
      * Start address maintenance
      */
     @SuppressWarnings("unchecked")
     public void start() {
         createActionListeners();
-        lblTitle.setText(app.localize("addresses"));
-        
+        lblTitle.setText(app.localize("customers"));
+
         try {
-            addressList = app.db.getAddresses();
+            addressList = app.db.getFullAddresses();
             cityNameList = app.db.getCityNames();
+            countryNameList = app.db.getCountryNames();
+            customerNameList = app.db.getCustomerNames();
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
         }
+
         initializeForm();
-        initializeTableViewColumns();
-        table.setEditable(true);
-        table.setItems(addressList);
     }
     
     /**
      * Validate new record data
      * @return 
      */
-    @SuppressWarnings("unchecked")
-    private boolean validateAddressRecord() {
-        return app.common.isNumber(txtAddressId.getText())
-              && app.common.isString(txtAddress.getText())
-              && app.common.isString(txtAddress2.getText())
-              && app.common.isString((String) cboCity.getValue())
-              && app.common.isString(txtPostalCode.getText())
-              && app.common.isString(txtPhone.getText());
-    }
+//    @SuppressWarnings("unchecked")
+//    private boolean validateAddressRecord() {
+//        return app.common.isNumber(txtAddressId.getText())
+//              && app.common.isString(txtAddress.getText())
+//              && app.common.isString(txtAddress2.getText())
+//              && app.common.isString((String) cboCity.getValue())
+//              && app.common.isString(txtPostalCode.getText())
+//              && app.common.isString(txtPhone.getText());
+//    }
 }
