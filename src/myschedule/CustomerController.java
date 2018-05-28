@@ -24,7 +24,10 @@
 package myschedule;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.logging.Level;
 import javafx.fxml.FXML;
@@ -61,6 +64,8 @@ public class CustomerController {
 
     private App app;
     private List customerNameList;
+    private List<Map<String, String>> customerNamesMap = new ArrayList<>();
+    
 //    private ObservableList<CustomerModel> addressList = FXCollections.observableArrayList();
     private List addressList;
     private List cityNameList;
@@ -198,6 +203,11 @@ public class CustomerController {
         cboAddress.getItems().addAll(addressList);
         cboCity.getItems().addAll(cityNameList);
         cboCountry.getItems().addAll(countryNameList);
+
+        for (Entry<String, String> entry : app.db.getCustomerNamesMap()) {
+            
+        }
+        
         cboCustomer.getItems().addAll(customerNameList);
     }
     
