@@ -190,6 +190,46 @@ public class DB {
         }
         return list;
     }
+
+    /**
+     * Get City to City ID map array
+     * @return List Map string, integer
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Integer>> getCityCityMap() throws SQLException {
+        List<Map<String, Integer>> list = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT city, cityId",
+            "  FROM city",
+            "ORDER BY city"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                map.put(rs.getString("city"), rs.getInt("cityId"));
+            }
+            
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
     
     /**
      * Get City list
@@ -266,6 +306,48 @@ public class DB {
         }
         return cityId;
     }
+
+    /**
+     * Get City ID to City map array
+     * @return List Map integer, string
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<Integer, String>> getCityIdMap() throws SQLException {
+        List<Map<Integer, String>> list = new ArrayList<>();
+        Map<Integer, String> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT cityId, city",
+            "  FROM city",
+            "ORDER BY cityId"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                map.put(rs.getInt("cityId"), rs.getString("city"));
+            }
+            
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+
     
     /**
      * @param cityId
@@ -517,12 +599,12 @@ public class DB {
     }
 
     /**
-     * Get array of customer id to customer name maps
+     * Get Customer ID to Customer Name map array
      * @return List Map integer, string
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<Integer, String>> getCustomerIdNameMap() throws SQLException {
+    public List<Map<Integer, String>> getCustomerIdMap() throws SQLException {
         List<Map<Integer, String>> list = new ArrayList<>();
         Map<Integer, String> map = new HashMap<>();
         String sql;
@@ -557,12 +639,12 @@ public class DB {
     }
     
     /**
-     * Get array of customer name to customer id maps
+     * Get Customer Name to Customer ID map array
      * @return List Map string, integer
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<String, Integer>> getCustomerNameIdMap() throws SQLException {
+    public List<Map<String, Integer>> getCustomerNameMap() throws SQLException {
         List<Map<String, Integer>> list = new ArrayList<>();
         Map<String, Integer> map = new HashMap<>();
         String sql;
