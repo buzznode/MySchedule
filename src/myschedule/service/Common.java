@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -57,8 +58,49 @@ public class Common  {
     }
 
     /**
+     * Converts a list map (String, Integer) to list
+     * @param listMap
+     * @param list
+     * @return list
+     */
+    @SuppressWarnings("unchecked")
+    public List convertSIArrayMapToList(List<Map<String, Integer>> listMap, List list) {
+        list.clear();
+        listMap.forEach((entry) -> {
+            entry.keySet().stream().map((key) -> {
+                Integer value = entry.get(key);
+                return key;
+            }).forEachOrdered((key) -> {
+                list.add(key);
+            });
+        });
+        return list;
+    }
+    
+    /**
+     * Converts a list map (String, String) to list
+     * @param listMap
+     * @param list
+     * @return list
+     */
+    @SuppressWarnings("unchecked")
+    public List convertSSArrayMapToList(List<Map<String, String>> listMap, List list) {
+        list.clear();
+        listMap.forEach((entry) -> {
+            entry.keySet().stream().map((key) -> {
+                String value = entry.get(key);
+                return key;
+            }).forEachOrdered((key) -> {
+                list.add(key);
+            });
+        });
+        return list;
+    }
+    
+    /**
      * Load users from database
      */
+    @SuppressWarnings("unchecked")
     public void loadUsers() {
         if (USERS.size() > 0) {
             return;
@@ -85,11 +127,10 @@ public class Common  {
             log.write(Level.SEVERE, "VendorError: {0}", e.getErrorCode());
         }
     }
-    
+
+    @SuppressWarnings("unchecked")
     public String now() {
-        
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-        
     }
     
     
@@ -110,9 +151,9 @@ public class Common  {
 //            }
 //        });
 //    }
-    
-    public boolean validateUser(String user, String password) {
 
+    @SuppressWarnings("unchecked")
+    public boolean validateUser(String user, String password) {
         if (!USERS.containsKey(user)) {
             return false;
         }
@@ -121,6 +162,7 @@ public class Common  {
         }
     }
     
+    @SuppressWarnings("unchecked")
     public boolean isNumber(String str) throws NumberFormatException {
         try {
             Integer.parseInt(str);
@@ -131,26 +173,23 @@ public class Common  {
         }
     }
     
+    @SuppressWarnings("unchecked")
     public boolean isNumber(String str, boolean zeroOK) {
         try {
             int result = Integer.parseInt(str);
-            
-            if (result == 0 && zeroOK) {
-                return true;
-            }
-            else {
-                return false;
-            }
+            return result == 0 && zeroOK;
         }
         catch (NumberFormatException ex) {
             throw new NumberFormatException("Error parsing " + str + "; " + ex.getMessage());
         }
     }
-    
+
+    @SuppressWarnings("unchecked")
     public boolean isString(String str) {
         return str.length() > 0;
     }
     
+    @SuppressWarnings("unchecked")
     public boolean isString(String str, boolean emptyNullOK) {
         if (str.length() > 0) {
             return true;
@@ -159,5 +198,4 @@ public class Common  {
             return !str.isEmpty();
         }
     }
-    
 }

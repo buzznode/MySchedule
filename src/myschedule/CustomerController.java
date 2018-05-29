@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.logging.Level;
 import javafx.fxml.FXML;
@@ -64,7 +63,7 @@ public class CustomerController {
 
     private App app;
     private List customerNameList;
-    private List<Map<String, Integer>> customerNamesMap = new ArrayList<>();
+    private List<Map<String, Integer>> customerNameMap = new ArrayList<>();
     
 //    private ObservableList<CustomerModel> addressList = FXCollections.observableArrayList();
     private List addressList;
@@ -205,23 +204,14 @@ public class CustomerController {
         cboCountry.getItems().addAll(countryNameList);
 
         try {
-            customerNamesMap = app.db.getCustomerNameIdMap();
-            customerNameList.clear();
-            
-            customerNamesMap.forEach((entry) -> {
-                entry.keySet().stream().map((key) -> {
-                    Integer value = entry.get(key);
-                    return key;
-                }).forEachOrdered((key) -> {
-                    customerNameList.add(key);
-                });
-            });
+            customerNameMap = app.db.getCustomerNameMap();
+            customerNameList = app.common.convertSIArrayMapToList(customerNameMap, customerNameList);
+            cboCustomer.getItems().addAll(customerNameList);
         }
         catch (SQLException ex) {
             alertStatus(0);
         }
         
-        cboCustomer.getItems().addAll(customerNameList);
     }
     
     /**
