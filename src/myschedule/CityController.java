@@ -165,7 +165,7 @@ public class CityController {
         
         btnCommit.setOnAction((ea) -> {
             try {
-                app.db.updateCities(cityList);
+                app.db.updateCityTable(cityList);
                 unsavedChanges = false;
                 alertStatus(1);
             }
@@ -293,8 +293,8 @@ public class CityController {
         lblTitle.setText(app.localize("cities"));
         
         try {
-            cityList = app.db.getCities();
-            countryNameList = app.db.getCountryNames();
+            cityList = app.db.getCityList();
+            countryNameList = app.db.getCountryNameList();
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());

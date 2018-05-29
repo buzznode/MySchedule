@@ -169,7 +169,7 @@ public class AddressController {
         
         btnCommit.setOnAction((ea) -> {
             try {
-                app.db.updateAddresses(addressList);
+                app.db.updateAddressTable(addressList);
                 unsavedChanges = false;
                 alertStatus(1);
             }
@@ -340,8 +340,8 @@ public class AddressController {
         lblTitle.setText(app.localize("addresses"));
         
         try {
-            addressList = app.db.getAddresses();
-            cityNameList = app.db.getCityNames();
+            addressList = app.db.getAddressList();
+            cityNameList = app.db.getCityNameList();
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
