@@ -147,7 +147,7 @@ public class CountryController {
         
         btnCommit.setOnAction((ea) -> {
             try {
-                app.db.updateCountries(countryList);
+                app.db.updateCountryTable(countryList);
                 unsavedChanges = false;
                 alertStatus(1);
             }
@@ -256,7 +256,7 @@ public class CountryController {
         lblTitle.setText(app.localize("countries"));
         
         try {
-            countryList = app.db.getCountries();
+            countryList = app.db.getCountryList();
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());

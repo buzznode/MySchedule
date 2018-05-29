@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -157,7 +156,7 @@ public class DB {
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AddressModel> getAddresses() throws SQLException {
+    public ObservableList<AddressModel> getAddressList() throws SQLException {
         ObservableList<AddressModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -189,10 +188,8 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return list;
     }
-    
     
     /**
      * Get City list
@@ -200,7 +197,7 @@ public class DB {
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<CityModel> getCities() throws SQLException {
+    public ObservableList<CityModel> getCityList() throws SQLException {
         ObservableList<CityModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -231,7 +228,6 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return list;
     }
 
@@ -268,7 +264,6 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return cityId;
     }
     
@@ -305,7 +300,6 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return city;
     }
 
@@ -314,7 +308,7 @@ public class DB {
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public List getCityNames() throws SQLException {
+    public List getCityNameList() throws SQLException {
         ObservableList<String> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -341,7 +335,6 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return list;
     }
     
@@ -351,7 +344,7 @@ public class DB {
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<CountryModel> getCountries() throws SQLException {
+    public ObservableList<CountryModel> getCountryList() throws SQLException {
         ObservableList<CountryModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -382,7 +375,6 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return list;
     }
 
@@ -419,7 +411,6 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return countryId;
     }
     
@@ -456,7 +447,6 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return country;
     }
 
@@ -465,7 +455,7 @@ public class DB {
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public List getCountryNames() throws SQLException {
+    public List getCountryNameList() throws SQLException {
         ObservableList<String> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -492,12 +482,11 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return list;
     }
     
     @SuppressWarnings("unchecked")
-    public List getCustomerNames() throws SQLException {
+    public List getCustomerNameList() throws SQLException {
         ObservableList<String> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -524,19 +513,18 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return list;
     }
 
     /**
-     * 
-     * @return List Map integer, String
+     * Get array of customer id to customer name maps
+     * @return List Map integer, string
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ArrayList getCustomerNamesMap() throws SQLException {
-        ArrayList<Entry<String, String>> array = new ArrayList<>();
-        HashMap<String, String> hash = new HashMap<>();
+    public List<Map<Integer, String>> getCustomerIdNameMap() throws SQLException {
+        List<Map<Integer, String>> list = new ArrayList<>();
+        Map<Integer, String> map = new HashMap<>();
         String sql;
         connect();
         
@@ -551,10 +539,11 @@ public class DB {
             rs.beforeFirst();
             
             while (rs.next()) {
-                hash.put(rs.getString("customerName"), Integer.toString(rs.getInt("customerId")));
+                map.clear();
+                map.put(rs.getInt("customerId"), rs.getString("customerName"));
             }
             
-            array.addAll(hash.entrySet());
+            list.add(map);
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
@@ -564,14 +553,51 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
-        return array;
+        return list;
     }
     
-
+    /**
+     * Get array of customer name to customer id maps
+     * @return List Map string, integer
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Integer>> getCustomerNameIdMap() throws SQLException {
+        List<Map<String, Integer>> list = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT customerId, customerName",
+            "  FROM customer",
+            "ORDER BY customerName"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                map.put(rs.getString("customerName"), rs.getInt("customerId"));
+            }
+            
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
     
     @SuppressWarnings("unchecked")
-    public List getFullAddresses() throws SQLException {
+    public List getFullAddressList() throws SQLException {
         ObservableList<String> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -601,7 +627,6 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        
         return list;
     }
     
@@ -636,7 +661,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public boolean updateAddresses(ObservableList<AddressModel> list) throws SQLException{
+    public boolean updateAddressTable(ObservableList<AddressModel> list) throws SQLException{
         int cityId;
         String sql;
         String lookup;
@@ -677,7 +702,6 @@ public class DB {
                 pstmt.setString(10, a.getLastUpdateBy());
                 pstmt.executeUpdate();
             }
-            
             return true;
         }
         catch (SQLException ex) {
@@ -697,7 +721,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public boolean updateCities(ObservableList<CityModel> list) throws SQLException{
+    public boolean updateCityTable(ObservableList<CityModel> list) throws SQLException{
         int countryId;
         String sql;
         String lookup;
@@ -735,7 +759,6 @@ public class DB {
                 pstmt.setString(7, c.getLastUpdateBy());
                 pstmt.executeUpdate();
             }
-            
             return true;
         }
         catch (SQLException ex) {
@@ -755,7 +778,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public boolean updateCountries(ObservableList<CountryModel> list) throws SQLException{
+    public boolean updateCountryTable(ObservableList<CountryModel> list) throws SQLException{
         String sql;
         connect();
         
@@ -781,7 +804,6 @@ public class DB {
                 pstmt.setString(6, c.getLastUpdateBy());
                 pstmt.executeUpdate();
             }
-            
             return true;
         }
         catch (SQLException ex) {

@@ -64,7 +64,7 @@ public class CustomerController {
 
     private App app;
     private List customerNameList;
-    private List<Map<String, String>> customerNamesMap = new ArrayList<>();
+    private List<Map<String, Integer>> customerNamesMap = new ArrayList<>();
     
 //    private ObservableList<CustomerModel> addressList = FXCollections.observableArrayList();
     private List addressList;
@@ -204,8 +204,21 @@ public class CustomerController {
         cboCity.getItems().addAll(cityNameList);
         cboCountry.getItems().addAll(countryNameList);
 
-        for (Entry<String, String> entry : app.db.getCustomerNamesMap()) {
+        try {
+            customerNamesMap = app.db.getCustomerNameIdMap();
+            customerNameList.clear();
             
+            customerNamesMap.forEach((entry) -> {
+                entry.keySet().stream().map((key) -> {
+                    Integer value = entry.get(key);
+                    return key;
+                }).forEachOrdered((key) -> {
+                    customerNameList.add(key);
+                });
+            });
+        }
+        catch (SQLException ex) {
+            alertStatus(0);
         }
         
         cboCustomer.getItems().addAll(customerNameList);
@@ -243,10 +256,10 @@ public class CustomerController {
         lblTitle.setText(app.localize("customers"));
 
         try {
-            addressList = app.db.getFullAddresses();
-            cityNameList = app.db.getCityNames();
-            countryNameList = app.db.getCountryNames();
-            customerNameList = app.db.getCustomerNames();
+            addressList = app.db.getFullAddressList();
+            cityNameList = app.db.getCityNameList();
+            countryNameList = app.db.getCountryNameList();
+            customerNameList = app.db.getCustomerNameList();
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
