@@ -256,7 +256,7 @@ public class CountryController {
         lblTitle.setText(app.localize("countries"));
         
         try {
-            countryList = app.db.getCountryList();
+            countryList = app.db.getCountryModelList();
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
