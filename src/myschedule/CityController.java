@@ -293,7 +293,7 @@ public class CityController {
         lblTitle.setText(app.localize("cities"));
         
         try {
-            cityList = app.db.getCityList();
+            cityList = app.db.getCityModelList();
             countryNameList = app.db.getCountryNameList();
         }
         catch (SQLException ex) {
