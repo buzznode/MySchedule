@@ -58,6 +58,26 @@ public class Common  {
     }
 
     /**
+     * Converts a list map (Integer, String) to list
+     * @param listMap
+     * @param list
+     * @return list
+     */
+    @SuppressWarnings("unchecked")
+    public List convertISArrayMapToList(List<Map<Integer, String>> listMap, List list) {
+        list.clear();
+        listMap.forEach((entry) -> {
+            entry.keySet().stream().map((key) -> {
+                String value = entry.get(key);
+                return key;
+            }).forEachOrdered((key) -> {
+                list.add(key);
+            });
+        });
+        return list;
+    }
+    
+    /**
      * Converts a list map (String, Integer) to list
      * @param listMap
      * @param list

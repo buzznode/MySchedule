@@ -204,7 +204,7 @@ public class CustomerController {
         cboCountry.getItems().addAll(countryNameList);
 
         try {
-            customerNameMap = app.db.getCustomerNameMap();
+            customerNameMap = app.db.getCustomerToCustomerIdMap();
             customerNameList = app.common.convertSIArrayMapToList(customerNameMap, customerNameList);
             cboCustomer.getItems().addAll(customerNameList);
         }
