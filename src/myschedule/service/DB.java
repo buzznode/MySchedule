@@ -34,6 +34,7 @@ import javafx.collections.ObservableList;
 import myschedule.model.AddressModel;
 import myschedule.model.CityModel;
 import myschedule.model.CountryModel;
+import myschedule.model.CustomerModel;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 
@@ -149,23 +150,24 @@ public class DB {
             super.finalize();
         }
     }
-    
+
     /**
-     * Get list of addresses
+     * Get an AddressModel list
      * @return AddressModel ObservableList
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AddressModel> getAddressList() throws SQLException {
+    public ObservableList<AddressModel> getAddressModelList() throws SQLException {
         ObservableList<AddressModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
         
         sql = String.join(" ",
-            "SELECT a.addressId, a.address, a.address2, b.city, a.postalCode, a.phone, a.createDate,",
-            "               a.createdBy, a.lastUpdate, a.lastUpdateBy",
+            "SELECT a.addressId, a.address, a.address2, b.city, a.postalCode, a.phone,",
+            "       a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
             "  FROM address a",
-            "  JOIN city b ON a.cityId = b.cityId"
+            "  JOIN city b ON a.cityId = b.cityId",
+            " ORDER BY a.address, a.address2"
         );
         
         try {
@@ -192,61 +194,22 @@ public class DB {
     }
 
     /**
-     * Get City to City ID map array
-     * @return List Map string, integer
-     * @throws SQLException 
-     */
-    @SuppressWarnings("unchecked")
-    public List<Map<String, Integer>> getCityCityMap() throws SQLException {
-        List<Map<String, Integer>> list = new ArrayList<>();
-        Map<String, Integer> map = new HashMap<>();
-        String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT city, cityId",
-            "  FROM city",
-            "ORDER BY city"
-        );
-        
-        try {
-            rs = stmt.executeQuery(sql);
-            rs.beforeFirst();
-            
-            while (rs.next()) {
-                map.clear();
-                map.put(rs.getString("city"), rs.getInt("cityId"));
-            }
-            
-            list.add(map);
-        }
-        catch (SQLException ex) {
-            log.write(Level.SEVERE, ex.toString(), ex);
-            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
-            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
-            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
-            throw new SQLException(msg);
-        }
-        return list;
-    }
-    
-    /**
-     * Get City list
+     * Get a CityModel list
      * @return CityModel OberservableList
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<CityModel> getCityList() throws SQLException {
+    public ObservableList<CityModel> getCityModelList() throws SQLException {
         ObservableList<CityModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
 
         sql = String.join(" ",
             "SELECT a.cityId, a.city, b.country, a.createDate, a.createdBy, a.lastUpdate, ",
-            "               a.lastUpdateBy",
+            "       a.lastUpdateBy",
             "  FROM city a",
-            "  JOIN country b ON a.countryId = b.countryId"
+            "  JOIN country b ON a.countryId = b.countryId",
+            " ORDER BY a.city"
         );
         
         try {
@@ -270,14 +233,344 @@ public class DB {
         }
         return list;
     }
-
+    
     /**
+     * Get a CountryModel list
+     * @return CountrtyModel OberservableList
+     * @throws SQLException
+     */
+    @SuppressWarnings("unchecked")
+    public ObservableList<CountryModel> getCountryModelList() throws SQLException {
+        ObservableList<CountryModel> list = FXCollections.observableArrayList();
+        String sql;
+        connect();
+
+        sql = String.join(" ",
+            "SELECT countryId, country, createDate, createdBy, lastUpdate, ",
+            "       lastUpdateBy",
+            "  FROM country",
+            " ORDER BY country"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new CountryModel(
+                    rs.getInt("countryId"), rs.getString("country"), rs.getString("createDate"), 
+                    rs.getString("createdBy"), rs.getString("lastUpdate"), rs.getString("lastUpdateBy")
+                ));
+            }
+        }
+        catch(SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get a CustomerModel list
+     * @return CustomerModel OberservableList
+     * @throws SQLException
+     */
+    @SuppressWarnings("unchecked")
+    public ObservableList<CustomerModel> getCustomerModelList() throws SQLException {
+        ObservableList<CustomerModel> list = FXCollections.observableArrayList();
+        String sql;
+        connect();
+
+        sql = String.join(" ",
+            "SELECT customerId, customerName, active, createDate, createdBy, lastUpdate, ",
+            "       lastUpdateBy",
+            "  FROM customer",
+            " ORDER BY customerName"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new CustomerModel(
+                    rs.getInt("customerId"), rs.getString("customerName"), rs.getBoolean("active"), 
+                    rs.getString("createDate"), rs.getString("createdBy"), rs.getString("lastUpdate"), 
+                    rs.getString("lastUpdateBy")
+                ));
+            }
+        }
+        catch(SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get address to address id map array
+     * @return List Map String, Integer
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Integer>> getAddressToAddressIdMap() throws SQLException {
+        List<Map<String, Integer>> list = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        String a1;
+        String a2;
+        String key;
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT addressId, address, address2",
+            "  FROM address",
+            " ORDER BY address, address2"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                a1 = rs.getString("address");
+                a2 = rs.getString("address2");
+                key  = (a1 != null && !a1.isEmpty()) ? a1 : "";
+                key += (a2 != null && !a2.isEmpty()) ? " " + a2 : "";
+                map.put(key, rs.getInt("cityId"));
+            }
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get address id to address map array
+     * @return List Map Integer, String
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<Integer, String>> getAddressIdToAddressMap() throws SQLException {
+        List<Map<Integer, String>> list = new ArrayList<>();
+        Map<Integer, String> map = new HashMap<>();
+        String a1;
+        String a2;
+        String sql;
+        String value;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT addressId, address, address2",
+            "  FROM address",
+            " ORDER BY addressId"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                a1 = rs.getString("address");
+                a2 = rs.getString("address2");
+                value  = (a1 != null && !a1.isEmpty()) ? a1 : "";
+                value += (a2 != null && !a2.isEmpty()) ? " " + a2 : "";
+                map.put(rs.getInt("addressId"), value);
+            }
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get City to Id map array
+     * @return List Map string, integer
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Integer>> getCityToCityIdMap() throws SQLException {
+        List<Map<String, Integer>> list = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT cityId, city",
+            "  FROM city",
+            " ORDER BY city"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                map.put(rs.getString("city"), rs.getInt("cityId"));
+            }
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get city id to city map array
+     * @return List Map string, integer
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<Integer, String>> getCityIdToCityMap() throws SQLException {
+        List<Map<Integer, String>> list = new ArrayList<>();
+        Map<Integer, String> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT cityId, city",
+            "  FROM city",
+            " ORDER BY cityId"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                map.put(rs.getInt("cityId"), rs.getString("city"));
+            }
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get country to country id map array
+     * @return List Map string, integer
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Integer>> getCountryToCountryIdMap() throws SQLException {
+        List<Map<String, Integer>> list = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT countryId, country",
+            "  FROM country",
+            " ORDER BY country"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                map.put(rs.getString("country"), rs.getInt("countryId"));
+            }
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get country id to country map array
+     * @return List Map string, integer
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<Integer, String>> getCountryIdToCountryMap() throws SQLException {
+        List<Map<Integer, String>> list = new ArrayList<>();
+        Map<Integer, String> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT countryId, country",
+            "  FROM country",
+            " ORDER BY countryId"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                map.put(rs.getInt("countryId"), rs.getString("country"));
+            }
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get id using city string
      * @param city
      * @return cityId
      * @throws SQLException
      */    
     @SuppressWarnings("unchecked")
-    public int getCityId(String city) throws SQLException {
+    public int getACityId(String city) throws SQLException {
         int cityId = 0;
         String sql;
         connect();
@@ -285,7 +578,7 @@ public class DB {
         sql = String.join(" ",
             "SELECT cityId",
             "  FROM city",
-            "WHERE city = '?'"
+            " WHERE city = '?'"
         );
             
         try {
@@ -308,83 +601,42 @@ public class DB {
     }
 
     /**
-     * Get City ID to City map array
-     * @return List Map integer, string
-     * @throws SQLException 
-     */
-    @SuppressWarnings("unchecked")
-    public List<Map<Integer, String>> getCityIdMap() throws SQLException {
-        List<Map<Integer, String>> list = new ArrayList<>();
-        Map<Integer, String> map = new HashMap<>();
-        String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT cityId, city",
-            "  FROM city",
-            "ORDER BY cityId"
-        );
-        
-        try {
-            rs = stmt.executeQuery(sql);
-            rs.beforeFirst();
-            
-            while (rs.next()) {
-                map.clear();
-                map.put(rs.getInt("cityId"), rs.getString("city"));
-            }
-            
-            list.add(map);
-        }
-        catch (SQLException ex) {
-            log.write(Level.SEVERE, ex.toString(), ex);
-            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
-            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
-            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
-            throw new SQLException(msg);
-        }
-        return list;
-    }
-    
-
-    
-    /**
      * @param cityId
      * @return city
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
-    public String getCityName(int cityId) throws SQLException {
-        String city = "";
-        String sql;
-        connect();
-
-        sql = String.join(" ",
-            "SELECT city",
-            "  FROM city",
-            "WHERE cityId = ?"
-        );
-        
-        try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, cityId);
-            rs = pstmt.executeQuery(sql);
-            rs.beforeFirst();
-            rs.next();
-            city = rs.getString("city");
-        }
-        catch (SQLException ex) {
-            log.write(Level.SEVERE, ex.toString(), ex);
-            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
-            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
-            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
-            throw new SQLException(msg);
-        }
-        return city;
-    }
-
+//    @SuppressWarnings("unchecked")
+//    public String getCityName(int cityId) throws SQLException {
+//        String city = "";
+//        String sql;
+//        connect();
+//
+//        sql = String.join(" ",
+//            "SELECT city",
+//            "  FROM city",
+//            " WHERE cityId = ?",
+//            " ORDER BY city"
+//        );
+//        
+//        try {
+//            pstmt = conn.prepareStatement(sql);
+//            pstmt.setInt(1, cityId);
+//            rs = pstmt.executeQuery(sql);
+//            rs.beforeFirst();
+//            rs.next();
+//            city = rs.getString("city");
+//        }
+//        catch (SQLException ex) {
+//            log.write(Level.SEVERE, ex.toString(), ex);
+//            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+//            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+//            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+//            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+//            throw new SQLException(msg);
+//        }
+//        return city;
+//    }
+    
     /**
      * @return City names list
      * @throws SQLException
@@ -410,46 +662,6 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            log.write(Level.SEVERE, ex.toString(), ex);
-            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
-            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
-            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
-            throw new SQLException(msg);
-        }
-        return list;
-    }
-    
-    /**
-     * Get Country list
-     * @return CountryModel OberservableList
-     * @throws SQLException
-     */
-    @SuppressWarnings("unchecked")
-    public ObservableList<CountryModel> getCountryList() throws SQLException {
-        ObservableList<CountryModel> list = FXCollections.observableArrayList();
-        String sql;
-        connect();
-
-        sql = String.join(" ",
-            "SELECT countryId, country, createDate, createdBy, lastUpdate,",
-            "       lastUpdateBy",
-            "  FROM country"
-        );
-        
-        try {
-            rs = stmt.executeQuery(sql);
-            rs.beforeFirst();
-            
-            while (rs.next()) {
-                list.add(new CountryModel(
-                    rs.getInt("countryId"), rs.getString("country"),
-                    rs.getString("createDate"), rs.getString("createdBy"),
-                    rs.getString("lastUpdate"), rs.getString("lastUpdateBy")
-                ));
-            }
-        }
-        catch(SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
@@ -497,31 +709,36 @@ public class DB {
     }
     
     /**
-     * @param countryId
-     * @return country
+     * Get Country list
+     * @return CountryModel OberservableList
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public String getCountryName(int countryId) throws SQLException {
-        String country = "";
+    public ObservableList<CountryModel> getCountryList() throws SQLException {
+        ObservableList<CountryModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
 
         sql = String.join(" ",
-            "SELECT country",
+            "SELECT countryId, country, createDate, createdBy, lastUpdate,",
+            "       lastUpdateBy",
             "  FROM country",
-            "WHERE countryId = ?"
+            " ORDER BY country"
         );
         
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, countryId);
-            rs = pstmt.executeQuery(sql);
+            rs = stmt.executeQuery(sql);
             rs.beforeFirst();
-            rs.next();
-            country = rs.getString("country");
+            
+            while (rs.next()) {
+                list.add(new CountryModel(
+                    rs.getInt("countryId"), rs.getString("country"),
+                    rs.getString("createDate"), rs.getString("createdBy"),
+                    rs.getString("lastUpdate"), rs.getString("lastUpdateBy")
+                ));
+            }
         }
-        catch (SQLException ex) {
+        catch(SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
@@ -529,7 +746,7 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        return country;
+        return list;
     }
 
     /**
@@ -554,37 +771,6 @@ public class DB {
             
             while (rs.next()) {
                 list.add(rs.getString("country"));
-            }
-        }
-        catch (SQLException ex) {
-            log.write(Level.SEVERE, ex.toString(), ex);
-            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
-            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
-            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
-            throw new SQLException(msg);
-        }
-        return list;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public List getCustomerNameList() throws SQLException {
-        ObservableList<String> list = FXCollections.observableArrayList();
-        String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT customerName",
-            "  FROM customer",
-            "ORDER BY customerName"
-        );
-        
-        try {
-            rs = stmt.executeQuery(sql);
-            rs.beforeFirst();
-            
-            while (rs.next()) {
-                list.add(rs.getString("customerName"));
             }
         }
         catch (SQLException ex) {
@@ -638,6 +824,37 @@ public class DB {
         return list;
     }
     
+    @SuppressWarnings("unchecked")
+    public List getCustomerNameList() throws SQLException {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT customerName",
+            "  FROM customer",
+            "ORDER BY customerName"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(rs.getString("customerName"));
+            }
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+
     /**
      * Get Customer Name to Customer ID map array
      * @return List Map string, integer
@@ -665,6 +882,45 @@ public class DB {
                 map.put(rs.getString("customerName"), rs.getInt("customerId"));
             }
             
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get Customer to Id map array
+     * @return List Map string, integer
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Integer>> getCustomerToIdMap() throws SQLException {
+        List<Map<String, Integer>> list = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT customerId, customerName",
+            "  FROM customer",
+            " ORDER BY customerName"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                map.put(rs.getString("customerName"), rs.getInt("cityId"));
+            }
             list.add(map);
         }
         catch (SQLException ex) {
@@ -713,6 +969,91 @@ public class DB {
     }
     
     /**
+     * Get address to id map array
+     * @return List Map String, Integer
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<Integer, String>> getIdToAddressMap() throws SQLException {
+        List<Map<Integer, String>> list = new ArrayList<>();
+        Map<Integer, String> map = new HashMap<>();
+        String a1;
+        String a2;
+        String sql;
+        String value;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT addressId, address, address2",
+            "  FROM address",
+            " ORDER BY addressId"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                a1 = rs.getString("address");
+                a2 = rs.getString("address2");
+                value  = (a1 != null && !a1.isEmpty()) ? a1 : "";
+                value += (a2 != null && !a2.isEmpty()) ? " " + a2 : "";
+                map.put(rs.getInt("addressId"), value);
+            }
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+    
+    /**
+     * Get id to city map array
+     * @return List Map integer, string
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<Integer, String>> getIdToCityMap() throws SQLException {
+        List<Map<Integer, String>> list = new ArrayList<>();
+        Map<Integer, String> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT cityId, city",
+            "  FROM city",
+            " ORDER BY cityId"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                map.clear();
+                map.put(rs.getInt("cityId"), rs.getString("city"));
+            }
+            list.add(map);
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return list;
+    }
+
+    /**
      * Execute query without result set
      * @param sql
      * @throws SQLException 
@@ -732,7 +1073,6 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-
         stmt.execute(sql);
     }
 
@@ -795,7 +1135,7 @@ public class DB {
             throw new SQLException(msg);
         }
     }
-    
+
     /**
      * Update city
      * @param list
@@ -898,3 +1238,15 @@ public class DB {
         }
     }
 }  
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+    

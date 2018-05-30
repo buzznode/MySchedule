@@ -340,7 +340,7 @@ public class AddressController {
         lblTitle.setText(app.localize("addresses"));
         
         try {
-            addressList = app.db.getAddressList();
+            addressList = app.db.getAddressModelList();
             cityNameList = app.db.getCityNameList();
         }
         catch (SQLException ex) {
