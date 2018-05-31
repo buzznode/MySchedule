@@ -261,7 +261,7 @@ public class DB {
             "SELECT countryId, country, createDate, createdBy, lastUpdate, ",
             "       lastUpdateBy",
             "  FROM country",
-            " ORDER BY country"
+            " ORDER BY countryId"
         );
         
         try {
