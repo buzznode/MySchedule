@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -187,9 +188,6 @@ public class CountryController {
      */
     private void initializeForm() {
         int nextCountryId = getNextCountryId(countryList);
-        String now = app.common.now();
-        String user = app.userName();
-        
         txtCountryId.setText(Integer.toString(nextCountryId));
         txtCountry.setText("");
 
@@ -247,11 +245,20 @@ public class CountryController {
     }
 
     /**
+     * Sort passed ObservableList by countryId
+     * @param clist
+     * @return 
+     */
+//    private ObservableList<CountryModel> sortCountryById(ObservableList<CountryModel> lin) {
+//    }
+
+    
+    
+    /**
      * Start country maintenance
      */
     @SuppressWarnings("unchecked")
     public void start() {
-
         createActionListeners();
         lblTitle.setText(app.localize("countries"));
         
