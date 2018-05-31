@@ -190,7 +190,6 @@ public class CountryController {
         int nextCountryId = getNextCountryId(countryList);
         txtCountryId.setText(Integer.toString(nextCountryId));
         txtCountry.setText("");
-
         txtCountryId.setDisable(true);
         txtCountry.setDisable(false);
     }
@@ -249,10 +248,17 @@ public class CountryController {
      * @param clist
      * @return 
      */
-//    private ObservableList<CountryModel> sortCountryById(ObservableList<CountryModel> lin) {
-//    }
-
+    private ObservableList<CountryModel> sortCountryById(ObservableList<CountryModel> list) {
+        Comparator<CountryModel> comparator = Comparator.comparingInt(CountryModel::getCountryId); 
+        FXCollections.sort(list, comparator);
+        return list;
+    }
     
+    private ObservableList<CountryModel> sortCountryByName(ObservableList<CountryModel> list) {
+        Comparator<CountryModel> comparator = Comparator.comparing(CountryModel::getCountry);
+        FXCollections.sort(list, comparator);
+        return list;
+    }
     
     /**
      * Start country maintenance
@@ -272,6 +278,7 @@ public class CountryController {
         initializeForm();
         initializeTableViewColumns();
         table.setEditable(true);
+        countryList = sortCountryByName(countryList);
         table.setItems(countryList);
     }
     
