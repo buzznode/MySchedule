@@ -81,27 +81,27 @@ public class AddressController {
     private MainController main;
     private boolean unsavedChanges = false;
 
-    /**
-     * Alert status
-     * @param status 
-     */
-    @SuppressWarnings("unchecked")
-    private void alertStatus(int status) {
-        if (status == 1) {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("Database commit was successful. Record(s) added.");
-            alert.showAndWait();
-        }
-        else {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error Dialog");
-            alert.setHeaderText("Error processing request.");
-            alert.setContentText("There was an error processing your request. Please try again.");
-            alert.showAndWait();
-        }
-    }
+//    /**
+//     * Alert status
+//     * @param status 
+//     */
+//    @SuppressWarnings("unchecked")
+//    private void alertStatus(int status) {
+//        if (status == 1) {
+//            Alert alert = new Alert(AlertType.INFORMATION);
+//            alert.setTitle("Information Dialog");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Database commit was successful. Record(s) added.");
+//            alert.showAndWait();
+//        }
+//        else {
+//            Alert alert = new Alert(AlertType.ERROR);
+//            alert.setTitle("Error Dialog");
+//            alert.setHeaderText("Error processing request.");
+//            alert.setContentText("There was an error processing your request. Please try again.");
+//            alert.showAndWait();
+//        }
+//    }
     
     /**
      * Check for un-saved changes; display warning message
@@ -171,10 +171,11 @@ public class AddressController {
             try {
                 app.db.updateAddressTable(addressList);
                 unsavedChanges = false;
-                alertStatus(1);
+                app.common.alertStatus(1);
+                refreshTableView();
             }
             catch (SQLException ex) {
-                alertStatus(0);
+                app.common.alertStatus(0);
             }
         });
 
@@ -332,6 +333,20 @@ public class AddressController {
     }
 
     /**
+     * Refresh Address TableView
+     */
+    @SuppressWarnings("unchecked")
+    private void refreshTableView() {
+        try {
+            addressList = app.db.getAddressModelList("address", "asc");
+            table.setItems(addressList);
+        }
+        catch (SQLException ex) {
+            app.log.write(Level.SEVERE, ex.getMessage());
+        }
+    }
+    
+    /**
      * Start address maintenance
      */
     @SuppressWarnings("unchecked")
@@ -340,7 +355,7 @@ public class AddressController {
         lblTitle.setText(app.localize("addresses"));
         
         try {
-            addressList = app.db.getAddressModelList();
+            addressList = app.db.getAddressModelList("address", "asc");
             cityNameList = app.db.getCityNameList();
         }
         catch (SQLException ex) {

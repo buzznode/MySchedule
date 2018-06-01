@@ -62,38 +62,43 @@ public class CustomerController {
     @FXML private Button btnCancel;
 
     private App app;
-    private List customerNameList;
-    private List<Map<String, Integer>> customerNameMap = new ArrayList<>();
     
-//    private ObservableList<CustomerModel> addressList = FXCollections.observableArrayList();
+    // Maps
+    private List<Map<String, Integer>> addressToAddressIdMap = new ArrayList<>();
+    private List<Map<String, Integer>> cityToCityIdMap = new ArrayList<>();
+    private List<Map<String, Integer>> countryToCountryIdMap = new ArrayList<>();
+    private List<Map<String, Integer>> customerToCustomerIdMap = new ArrayList<>();
+
+    // Lists
     private List addressList;
-    private List cityNameList;
-    private List countryNameList;
+    private List cityList;
+    private List countryList;
+    private List customerList;
         
     private MainController main;
     private final boolean unsavedChanges = false;
 
-    /**
-     * Alert status
-     * @param status 
-     */
-    @SuppressWarnings("unchecked")
-    private void alertStatus(int status) {
-        if (status == 1) {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("Database commit was successful. Record(s) added.");
-            alert.showAndWait();
-        }
-        else {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error Dialog");
-            alert.setHeaderText("Error processing request.");
-            alert.setContentText("There was an error processing your request. Please try again.");
-            alert.showAndWait();
-        }
-    }
+//    /**
+//     * Alert status
+//     * @param status 
+//     */
+//    @SuppressWarnings("unchecked")
+//    private void alertStatus(int status) {
+//        if (status == 1) {
+//            Alert alert = new Alert(AlertType.INFORMATION);
+//            alert.setTitle("Information Dialog");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Database commit was successful. Record(s) added.");
+//            alert.showAndWait();
+//        }
+//        else {
+//            Alert alert = new Alert(AlertType.ERROR);
+//            alert.setTitle("Error Dialog");
+//            alert.setHeaderText("Error processing request.");
+//            alert.setContentText("There was an error processing your request. Please try again.");
+//            alert.showAndWait();
+//        }
+//    }
     
     /**
      * Check for un-saved changes; display warning message
@@ -146,10 +151,10 @@ public class CustomerController {
 //            try {
 //                app.db.upsertCustomer(addressList);
 //                unsavedChanges = false;
-//                alertStatus(1);
+//                app.common.alertStatus(1);
 //            }
 //            catch (SQLException ex) {
-//                alertStatus(0);
+//                app.common.alertStatus(0);
 //            }
 //        });
 
@@ -158,14 +163,14 @@ public class CustomerController {
                 loadCustomerData();
             }
             catch (SQLException ex) {
-                alertStatus(0);
+                app.common.alertStatus(0);
             }
         });
     }
 
     /**
      * Get next available Address Id to be use for add
-     * @param clist
+     * @param list
      * @return 
      */
 //    @SuppressWarnings("unchecked")
@@ -188,6 +193,21 @@ public class CustomerController {
     private void initializeForm() {
 //        int nextAddressId = getNextAddressId(addressList);
 
+        try {
+            addressToAddressIdMap = app.db.getAddressToAddressIdMap();
+            cityToCityIdMap = app.db.getCityToCityIdMap();
+            countryToCountryIdMap = app.db.getCountryToCountryIdMap();
+            customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
+            
+            addressList = app.common.convertSIArrayMapToList(addressToAddressIdMap, addressList);
+            cityList = app.common.convertSIArrayMapToList(cityToCityIdMap, cityList);
+            countryList = app.common.convertSIArrayMapToList(countryToCountryIdMap, countryList);
+            customerList = app.common.convertSIArrayMapToList(customerToCustomerIdMap, customerList);
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
+        
         chkActive.setSelected(false);
         txtCustomer.setText("");
         txtAddress.setText("");
@@ -200,18 +220,9 @@ public class CustomerController {
         txtCountry.setVisible(false);
 
         cboAddress.getItems().addAll(addressList);
-        cboCity.getItems().addAll(cityNameList);
-        cboCountry.getItems().addAll(countryNameList);
-
-        try {
-            customerNameMap = app.db.getCustomerToCustomerIdMap();
-            customerNameList = app.common.convertSIArrayMapToList(customerNameMap, customerNameList);
-            cboCustomer.getItems().addAll(customerNameList);
-        }
-        catch (SQLException ex) {
-            alertStatus(0);
-        }
-        
+        cboCity.getItems().addAll(cityList);
+        cboCountry.getItems().addAll(countryList);
+        cboCustomer.getItems().addAll(customerList);
     }
     
     /**
@@ -244,17 +255,6 @@ public class CustomerController {
     public void start() {
         createActionListeners();
         lblTitle.setText(app.localize("customers"));
-
-        try {
-            addressList = app.db.getFullAddressList();
-            cityNameList = app.db.getCityNameList();
-            countryNameList = app.db.getCountryNameList();
-            customerNameList = app.db.getCustomerNameList();
-        }
-        catch (SQLException ex) {
-            app.log.write(Level.SEVERE, ex.getMessage());
-        }
-
         initializeForm();
     }
     

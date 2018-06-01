@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import javafx.scene.control.Alert;
 
 /**
  * @author bradd
@@ -57,6 +58,28 @@ public class Common  {
         log = _log;
     }
 
+    /**
+     * Alert status
+     * @param status 
+     */
+    @SuppressWarnings("unchecked")
+    public void alertStatus(int status) {
+        if (status == 1) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Database commit was successful. Record(s) added.");
+            alert.showAndWait();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait();
+        }
+    }
+    
     /**
      * Converts a list map (Integer, String) to list
      * @param listMap

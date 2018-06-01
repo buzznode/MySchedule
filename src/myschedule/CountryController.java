@@ -69,26 +69,27 @@ public class CountryController {
     private MainController main;
     private boolean unsavedChanges = false;
     
-    private void alertStatus(int status) {
-        if (status == 1) {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("Database commit was successful. Record(s) added.");
-            alert.showAndWait();
-        }
-        else {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error Dialog");
-            alert.setHeaderText("Error processing request.");
-            alert.setContentText("There was an error processing your request. Please try again.");
-            alert.showAndWait();
-        }
-    }
+//    private void alertStatus(int status) {
+//        if (status == 1) {
+//            Alert alert = new Alert(AlertType.INFORMATION);
+//            alert.setTitle("Information Dialog");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Database commit was successful. Record(s) added.");
+//            alert.showAndWait();
+//        }
+//        else {
+//            Alert alert = new Alert(AlertType.ERROR);
+//            alert.setTitle("Error Dialog");
+//            alert.setHeaderText("Error processing request.");
+//            alert.setContentText("There was an error processing your request. Please try again.");
+//            alert.showAndWait();
+//        }
+//    }
     
     /**
      * Close country maintenance 
      */
+    @SuppressWarnings("unchecked")
     private void closeCountryMaint() {
         if (unsavedChanges) {
             if (confirmUnsaved()) {
@@ -104,6 +105,7 @@ public class CountryController {
      * Confirm closing when unsaved data exists
      * @return boolean
      */
+    @SuppressWarnings("unchecked")
     private boolean confirmUnsaved() {
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle("Unsaved Changes");
@@ -124,6 +126,7 @@ public class CountryController {
     /**
      *  Create action event listeners
      */
+    @SuppressWarnings("unchecked")
     private void createActionListeners() {
         btnAdd.setOnAction((ae) -> {
             String now = app.common.now();
@@ -150,10 +153,11 @@ public class CountryController {
             try {
                 app.db.updateCountryTable(countryList);
                 unsavedChanges = false;
-                alertStatus(1);
+                app.common.alertStatus(1);
+                refreshTableView();
             }
             catch (SQLException ex) {
-                alertStatus(0);
+                app.common.alertStatus(0);
             }
         });
 
@@ -171,6 +175,7 @@ public class CountryController {
      * @param clist
      * @return 
      */
+    @SuppressWarnings("unchecked")
     private int getNextCountryId(ObservableList<CountryModel> clist) {
         if (clist.size() > 0) {
             Optional<CountryModel> country = clist
@@ -186,6 +191,7 @@ public class CountryController {
     /**
      * Set default values for new record
      */
+    @SuppressWarnings("unchecked")
     private void initializeForm() {
         int nextCountryId = getNextCountryId(countryList);
         txtCountryId.setText(Integer.toString(nextCountryId));
@@ -197,6 +203,7 @@ public class CountryController {
     /**
      * Initialize Cell Factories and Cell Value Factories
      */
+    @SuppressWarnings("unchecked")
     private void initializeTableViewColumns() {
         // Country Id column
         countryIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCountryId()));
@@ -231,6 +238,7 @@ public class CountryController {
      * Inject App object
      * @param _app 
      */
+    @SuppressWarnings("unchecked")
     public void injectApp(App _app) {
         this.app = _app;
     }
@@ -239,25 +247,23 @@ public class CountryController {
      * Inject MainController object
      * @param _main 
      */
+    @SuppressWarnings("unchecked")
     public void injectMainController(MainController _main) {
         main = _main;
     }
 
     /**
-     * Sort passed ObservableList by countryId
-     * @param clist
-     * @return 
+     * Refresh Country TableView
      */
-    private ObservableList<CountryModel> sortCountryById(ObservableList<CountryModel> list) {
-        Comparator<CountryModel> comparator = Comparator.comparingInt(CountryModel::getCountryId); 
-        FXCollections.sort(list, comparator);
-        return list;
-    }
-    
-    private ObservableList<CountryModel> sortCountryByName(ObservableList<CountryModel> list) {
-        Comparator<CountryModel> comparator = Comparator.comparing(CountryModel::getCountry);
-        FXCollections.sort(list, comparator);
-        return list;
+    @SuppressWarnings("unchecked")
+    private void refreshTableView() {
+        try {
+            countryList = app.db.getCountryModelList("country", "asc");
+            table.setItems(countryList);
+        }
+        catch (SQLException ex) {
+            app.log.write(Level.SEVERE, ex.getMessage());
+        }
     }
     
     /**
@@ -269,7 +275,8 @@ public class CountryController {
         lblTitle.setText(app.localize("countries"));
         
         try {
-            countryList = app.db.getCountryModelList();
+            countryList = app.db.getCountryModelList("country", "asc");
+//            countryList = sortCountryByName(countryList);
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
@@ -278,7 +285,6 @@ public class CountryController {
         initializeForm();
         initializeTableViewColumns();
         table.setEditable(true);
-        countryList = sortCountryByName(countryList);
         table.setItems(countryList);
     }
     
@@ -286,6 +292,7 @@ public class CountryController {
      * Validate new record data
      * @return 
      */
+    @SuppressWarnings("unchecked")
     private boolean validateCountryRecord() {
         return app.common.isNumber(txtCountryId.getText())
               && app.common.isString(txtCountry.getText());
