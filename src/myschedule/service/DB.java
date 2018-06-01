@@ -153,11 +153,13 @@ public class DB {
 
     /**
      * Get list of Addresses
+     * @param sortColumn
+     * @param direction
      * @return ObservableList (AddressModel)
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AddressModel> getAddressModelList() throws SQLException {
+    public ObservableList<AddressModel> getAddressModelList(String sortColumn, String direction) throws SQLException {
         ObservableList<AddressModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -167,7 +169,9 @@ public class DB {
             "       a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
             "  FROM address a",
             "  JOIN city b ON a.cityId = b.cityId",
-            " ORDER BY a.address, a.address2"
+            "ORDER BY",
+            sortColumn,
+            direction
         );
         
         try {
@@ -202,21 +206,25 @@ public class DB {
 
     /**
      * Get list of Cities
+     * @param sortColumn
+     * @param direction
      * @return ObservableList (CityModel)
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<CityModel> getCityModelList() throws SQLException {
+    public ObservableList<CityModel> getCityModelList(String sortColumn, String direction) throws SQLException {
         ObservableList<CityModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
 
         sql = String.join(" ",
             "SELECT a.cityId, a.city, b.country, a.createDate, a.createdBy, a.lastUpdate, ",
-            "       a.lastUpdateBy",
+            "               a.lastUpdateBy",
             "  FROM city a",
             "  JOIN country b ON a.countryId = b.countryId",
-            " ORDER BY a.city"
+            "ORDER BY",
+            sortColumn,
+            direction
         );
         
         try {
@@ -248,11 +256,13 @@ public class DB {
     
     /**
      * Get list of Countries
+     * @param sortColumn
+     * @param direction
      * @return OberservableList (CountryModel)
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<CountryModel> getCountryModelList() throws SQLException {
+    public ObservableList<CountryModel> getCountryModelList(String sortColumn, String direction) throws SQLException {
         ObservableList<CountryModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -261,7 +271,9 @@ public class DB {
             "SELECT countryId, country, createDate, createdBy, lastUpdate, ",
             "       lastUpdateBy",
             "  FROM country",
-            " ORDER BY countryId"
+            "ORDER BY",
+            sortColumn,
+            direction
         );
         
         try {
@@ -292,11 +304,13 @@ public class DB {
     
     /**
      * Get list of Customers
+     * @param sortColumn
+     * @param direction
      * @return OberservableList (CustomerModel)
      * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<CustomerModel> getCustomerModelList() throws SQLException {
+    public ObservableList<CustomerModel> getCustomerModelList(String sortColumn, String direction) throws SQLException {
         ObservableList<CustomerModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
@@ -305,7 +319,9 @@ public class DB {
             "SELECT customerId, customerName, active, createDate, createdBy, lastUpdate, ",
             "       lastUpdateBy",
             "  FROM customer",
-            " ORDER BY customerName"
+            " ORDER BY",
+            sortColumn,
+            direction
         );
         
         try {
@@ -366,9 +382,9 @@ public class DB {
                 a2 = rs.getString("address2");
                 key  = (a1 != null && !a1.isEmpty()) ? a1 : "";
                 key += (a2 != null && !a2.isEmpty()) ? " " + a2 : "";
-                map.put(key, rs.getInt("cityId"));
+                map.put(key, rs.getInt("addressId"));
+                list.add(map);
             }
-            list.add(map);
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
@@ -413,8 +429,8 @@ public class DB {
                 value  = (a1 != null && !a1.isEmpty()) ? a1 : "";
                 value += (a2 != null && !a2.isEmpty()) ? " " + a2 : "";
                 map.put(rs.getInt("addressId"), value);
+                list.add(map);
             }
-            list.add(map);
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
@@ -452,8 +468,8 @@ public class DB {
             while (rs.next()) {
                 map.clear();
                 map.put(rs.getString("city"), rs.getInt("cityId"));
+                list.add(map);
             }
-            list.add(map);
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
@@ -491,8 +507,8 @@ public class DB {
             while (rs.next()) {
                 map.clear();
                 map.put(rs.getInt("cityId"), rs.getString("city"));
+                list.add(map);
             }
-            list.add(map);
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
@@ -530,8 +546,8 @@ public class DB {
             while (rs.next()) {
                 map.clear();
                 map.put(rs.getString("country"), rs.getInt("countryId"));
+                list.add(map);
             }
-            list.add(map);
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
@@ -569,8 +585,8 @@ public class DB {
             while (rs.next()) {
                 map.clear();
                 map.put(rs.getInt("countryId"), rs.getString("country"));
+                list.add(map);
             }
-            list.add(map);
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
@@ -608,8 +624,8 @@ public class DB {
             while (rs.next()) {
                 map.clear();
                 map.put(rs.getString("customerName"), rs.getInt("customerId"));
+                list.add(map);
             }
-            list.add(map);
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
@@ -647,8 +663,8 @@ public class DB {
             while (rs.next()) {
                 map.clear();
                 map.put(rs.getInt("customerId"), rs.getString("customerName"));
+                list.add(map);
             }
-            list.add(map);
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);

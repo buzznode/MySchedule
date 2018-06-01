@@ -75,27 +75,27 @@ public class CityController {
     private MainController main;
     private boolean unsavedChanges = false;
 
-    /**
-     * Alert status
-     * @param status 
-     */
-    @SuppressWarnings("unchecked")
-    private void alertStatus(int status) {
-        if (status == 1) {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("Database commit was successful. Record(s) added.");
-            alert.showAndWait();
-        }
-        else {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error Dialog");
-            alert.setHeaderText("Error processing request.");
-            alert.setContentText("There was an error processing your request. Please try again.");
-            alert.showAndWait();
-        }
-    }
+//    /**
+//     * Alert status
+//     * @param status 
+//     */
+//    @SuppressWarnings("unchecked")
+//    private void alertStatus(int status) {
+//        if (status == 1) {
+//            Alert alert = new Alert(AlertType.INFORMATION);
+//            alert.setTitle("Information Dialog");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Database commit was successful. Record(s) added.");
+//            alert.showAndWait();
+//        }
+//        else {
+//            Alert alert = new Alert(AlertType.ERROR);
+//            alert.setTitle("Error Dialog");
+//            alert.setHeaderText("Error processing request.");
+//            alert.setContentText("There was an error processing your request. Please try again.");
+//            alert.showAndWait();
+//        }
+//    }
     
     /**
      * Check for un-saved changes; display warning message
@@ -167,10 +167,11 @@ public class CityController {
             try {
                 app.db.updateCityTable(cityList);
                 unsavedChanges = false;
-                alertStatus(1);
+                app.common.alertStatus(1);
+                refreshTableView();
             }
             catch (SQLException ex) {
-                alertStatus(0);
+                app.common.alertStatus(0);
             }
         });
 
@@ -185,13 +186,13 @@ public class CityController {
 
     /**
      * Get next available Country Id to be use for add
-     * @param clist
+     * @param list
      * @return 
      */
     @SuppressWarnings("unchecked")
-    private int getNextCityId(ObservableList<CityModel> clist) {
-        if (clist.size() > 0) {
-            Optional<CityModel> c = clist
+    private int getNextCityId(ObservableList<CityModel> list) {
+        if (list.size() > 0) {
+            Optional<CityModel> c = list
                 .stream()
                 .max(Comparator.comparing(CityModel::getCityId));
             return c.get().getCityId() + 1;
@@ -285,6 +286,20 @@ public class CityController {
     }
 
     /**
+     * Refresh City TableView
+     */
+    @SuppressWarnings("unchecked")
+    private void refreshTableView() {
+        try {
+            cityList = app.db.getCityModelList("city", "asc");
+            table.setItems(cityList);
+        }
+        catch (SQLException ex) {
+            app.log.write(Level.SEVERE, ex.getMessage());
+        }
+    }
+    
+    /**
      * Start country maintenance
      */
     @SuppressWarnings("unchecked")
@@ -293,7 +308,7 @@ public class CityController {
         lblTitle.setText(app.localize("cities"));
         
         try {
-            cityList = app.db.getCityModelList();
+            cityList = app.db.getCityModelList("city", "asc");
             countryNameList = app.db.getCountryNameList();
         }
         catch (SQLException ex) {
