@@ -25,10 +25,10 @@ package myschedule;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -64,10 +64,10 @@ public class CustomerController {
     private App app;
     
     // Maps
-    private List<Map<String, Integer>> addressToAddressIdMap = new ArrayList<>();
-    private List<Map<String, Integer>> cityToCityIdMap = new ArrayList<>();
-    private List<Map<String, Integer>> countryToCountryIdMap = new ArrayList<>();
-    private List<Map<String, Integer>> customerToCustomerIdMap = new ArrayList<>();
+    private Map<String, Integer> addressToAddressIdMap = new HashMap<>();
+    private Map<String, Integer> cityToCityIdMap = new HashMap<>();
+    private Map<String, Integer> countryToCountryIdMap = new HashMap<>();
+    private Map<String, Integer> customerToCustomerIdMap = new HashMap<>();
 
     // Lists
     private List addressList;
@@ -78,28 +78,6 @@ public class CustomerController {
     private MainController main;
     private final boolean unsavedChanges = false;
 
-//    /**
-//     * Alert status
-//     * @param status 
-//     */
-//    @SuppressWarnings("unchecked")
-//    private void alertStatus(int status) {
-//        if (status == 1) {
-//            Alert alert = new Alert(AlertType.INFORMATION);
-//            alert.setTitle("Information Dialog");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Database commit was successful. Record(s) added.");
-//            alert.showAndWait();
-//        }
-//        else {
-//            Alert alert = new Alert(AlertType.ERROR);
-//            alert.setTitle("Error Dialog");
-//            alert.setHeaderText("Error processing request.");
-//            alert.setContentText("There was an error processing your request. Please try again.");
-//            alert.showAndWait();
-//        }
-//    }
-    
     /**
      * Check for un-saved changes; display warning message
      * as needed; close city maintenance function.
@@ -199,10 +177,10 @@ public class CustomerController {
             countryToCountryIdMap = app.db.getCountryToCountryIdMap();
             customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
             
-            addressList = app.common.convertSIArrayMapToList(addressToAddressIdMap, addressList);
-            cityList = app.common.convertSIArrayMapToList(cityToCityIdMap, cityList);
-            countryList = app.common.convertSIArrayMapToList(countryToCountryIdMap, countryList);
-            customerList = app.common.convertSIArrayMapToList(customerToCustomerIdMap, customerList);
+            addressList = app.common.convertSIMapToList(addressToAddressIdMap);
+            cityList = app.common.convertSIMapToList(cityToCityIdMap);
+            countryList = app.common.convertSIMapToList(countryToCountryIdMap);
+            customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);

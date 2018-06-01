@@ -26,11 +26,14 @@ package myschedule.service;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import javafx.collections.FXCollections;
 import javafx.scene.control.Alert;
 
 /**
@@ -81,62 +84,38 @@ public class Common  {
     }
     
     /**
-     * Converts a list map (Integer, String) to list
-     * @param listMap
-     * @param list
+     * Convert Map (Integer, String) to list
+     * @param map
      * @return list
      */
     @SuppressWarnings("unchecked")
-    public List convertISArrayMapToList(List<Map<Integer, String>> listMap, List list) {
-        list.clear();
-        listMap.forEach((entry) -> {
-            entry.keySet().stream().map((key) -> {
-                String value = entry.get(key);
-                return key;
-            }).forEachOrdered((key) -> {
-                list.add(key);
-            });
-        });
+    public List convertISMapToList(Map<Integer, String> map) {
+        List list = new ArrayList(map.keySet());
+        Collections.sort(list);
         return list;
     }
     
     /**
-     * Converts a list map (String, Integer) to list
-     * @param listMap
-     * @param list
+     * Convert Map (String, Integer) to list
+     * @param map
      * @return list
      */
     @SuppressWarnings("unchecked")
-    public List convertSIArrayMapToList(List<Map<String, Integer>> listMap, List list) {
-        list.clear();
-        listMap.forEach((entry) -> {
-            entry.keySet().stream().map((key) -> {
-                Integer value = entry.get(key);
-                return key;
-            }).forEachOrdered((key) -> {
-                list.add(key);
-            });
-        });
+    public List convertSIMapToList(Map<String, Integer> map) {
+        List list = new ArrayList(map.keySet());
+        Collections.sort(list);
         return list;
     }
     
     /**
-     * Converts a list map (String, String) to list
-     * @param listMap
-     * @param list
+     * Convert Map (String, String) to list
+     * @param map
      * @return list
      */
     @SuppressWarnings("unchecked")
-    public List convertSSArrayMapToList(List<Map<String, String>> listMap, List list) {
-        list.clear();
-        listMap.forEach((entry) -> {
-            entry.keySet().stream().map((key) -> {
-                String value = entry.get(key);
-                return key;
-            }).forEachOrdered((key) -> {
-                list.add(key);
-            });
-        });
+    public List convertSSMapToList(Map<String, String> map) {
+        List list = new ArrayList(map.keySet());
+        Collections.sort(list);
         return list;
     }
     
