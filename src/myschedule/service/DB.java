@@ -352,13 +352,12 @@ public class DB {
     }
     
     /**
-     * Get list map of Addresses to Address Id's
+     * Create map of Addresses to Address Id's
      * @return ListMap Address (String) to Address Id (Integer)
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<String, Integer>> getAddressToAddressIdMap() throws SQLException {
-        List<Map<String, Integer>> list = new ArrayList<>();
+    public Map<String, Integer> getAddressToAddressIdMap() throws SQLException {
         Map<String, Integer> map = new HashMap<>();
         String a1;
         String a2;
@@ -375,15 +374,14 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
+            map.clear();
             
             while (rs.next()) {
-                map.clear();
                 a1 = rs.getString("address");
                 a2 = rs.getString("address2");
                 key  = (a1 != null && !a1.isEmpty()) ? a1 : "";
                 key += (a2 != null && !a2.isEmpty()) ? " " + a2 : "";
                 map.put(key, rs.getInt("addressId"));
-                list.add(map);
             }
         }
         catch (SQLException ex) {
@@ -394,17 +392,16 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        return list;
+        return map;
     }
     
     /**
-     * Get list map of Address Id's to Addresses
+     * Create map of Address Id's to Addresses
      * @return ListMap Address Id (Integer) to Address (String)
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<Integer, String>> getAddressIdToAddressMap() throws SQLException {
-        List<Map<Integer, String>> list = new ArrayList<>();
+    public Map<Integer, String> getAddressIdToAddressMap() throws SQLException {
         Map<Integer, String> map = new HashMap<>();
         String a1;
         String a2;
@@ -421,15 +418,14 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
+            map.clear();
             
             while (rs.next()) {
-                map.clear();
                 a1 = rs.getString("address");
                 a2 = rs.getString("address2");
                 value  = (a1 != null && !a1.isEmpty()) ? a1 : "";
                 value += (a2 != null && !a2.isEmpty()) ? " " + a2 : "";
                 map.put(rs.getInt("addressId"), value);
-                list.add(map);
             }
         }
         catch (SQLException ex) {
@@ -440,17 +436,16 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        return list;
+        return map;
     }
     
     /**
-     * Get list map of Cities to City Id's
+     * Create map of Cities to City Id's
      * @return ListMap City (String) to City Id (Integer)
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<String, Integer>> getCityToCityIdMap() throws SQLException {
-        List<Map<String, Integer>> list = new ArrayList<>();
+    public Map<String, Integer> getCityToCityIdMap() throws SQLException {
         Map<String, Integer> map = new HashMap<>();
         String sql;
         connect();
@@ -464,11 +459,10 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
+            map.clear();
             
             while (rs.next()) {
-                map.clear();
                 map.put(rs.getString("city"), rs.getInt("cityId"));
-                list.add(map);
             }
         }
         catch (SQLException ex) {
@@ -479,17 +473,16 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        return list;
+        return map;
     }
     
     /**
-     * Get list map of City Id's to Cities
+     * Create map of City Id's to Cities
      * @return ListMap City Id (Integer) to City (String)
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<Integer, String>> getCityIdToCityMap() throws SQLException {
-        List<Map<Integer, String>> list = new ArrayList<>();
+    public Map<Integer, String> getCityIdToCityMap() throws SQLException {
         Map<Integer, String> map = new HashMap<>();
         String sql;
         connect();
@@ -503,11 +496,10 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
+            map.clear();
             
             while (rs.next()) {
-                map.clear();
                 map.put(rs.getInt("cityId"), rs.getString("city"));
-                list.add(map);
             }
         }
         catch (SQLException ex) {
@@ -518,17 +510,16 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        return list;
+        return map;
     }
     
     /**
-     * Get list map of Countries to Country Id's
+     * Create map of Countries to Country Id's
      * @return ListMap Country (String) to Country Id (Integer)
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<String, Integer>> getCountryToCountryIdMap() throws SQLException {
-        List<Map<String, Integer>> list = new ArrayList<>();
+    public Map<String, Integer> getCountryToCountryIdMap() throws SQLException {
         Map<String, Integer> map = new HashMap<>();
         String sql;
         connect();
@@ -542,11 +533,10 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
+            map.clear();
             
             while (rs.next()) {
-                map.clear();
                 map.put(rs.getString("country"), rs.getInt("countryId"));
-                list.add(map);
             }
         }
         catch (SQLException ex) {
@@ -557,17 +547,16 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        return list;
+        return map;
     }
     
     /**
-     * Get list map of Country Id's to Countries
+     * Create map of Country Id's to Countries
      * @return ListMap Country Id (Integer) to Country (String)
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<Integer, String>> getCountryIdToCountryMap() throws SQLException {
-        List<Map<Integer, String>> list = new ArrayList<>();
+    public Map<Integer, String> getCountryIdToCountryMap() throws SQLException {
         Map<Integer, String> map = new HashMap<>();
         String sql;
         connect();
@@ -581,11 +570,10 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
+            map.clear();
             
             while (rs.next()) {
-                map.clear();
                 map.put(rs.getInt("countryId"), rs.getString("country"));
-                list.add(map);
             }
         }
         catch (SQLException ex) {
@@ -596,17 +584,16 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        return list;
+        return map;
     }
 
     /**
-     * Get list map of Customers to Customer Id's
+     * Create map of Customers to Customer Id's
      * @return ListMap Customer Name (String) to Customer Id (Integer)
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<String, Integer>> getCustomerToCustomerIdMap() throws SQLException {
-        List<Map<String, Integer>> list = new ArrayList<>();
+    public Map<String, Integer> getCustomerToCustomerIdMap() throws SQLException {
         Map<String, Integer> map = new HashMap<>();
         String sql;
         connect();
@@ -620,11 +607,10 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
+            map.clear();
             
             while (rs.next()) {
-                map.clear();
                 map.put(rs.getString("customerName"), rs.getInt("customerId"));
-                list.add(map);
             }
         }
         catch (SQLException ex) {
@@ -635,17 +621,16 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        return list;
+        return map;
     }
 
     /**
-     * Get list map of Customer Id's to Customers
+     * Create map of Customer Id's to Customers
      * @return ListMap Customer Id (Integer) to Customer Name (String)
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public List<Map<Integer, String>> getCustomerIdToCustomerMap() throws SQLException {
-        List<Map<Integer, String>> list = new ArrayList<>();
+    public Map<Integer, String> getCustomerIdToCustomerMap() throws SQLException {
         Map<Integer, String> map = new HashMap<>();
         String sql;
         connect();
@@ -659,11 +644,10 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
+            map.clear();
             
             while (rs.next()) {
-                map.clear();
                 map.put(rs.getInt("customerId"), rs.getString("customerName"));
-                list.add(map);
             }
         }
         catch (SQLException ex) {
@@ -674,7 +658,7 @@ public class DB {
             String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
             throw new SQLException(msg);
         }
-        return list;
+        return map;
     }
     
     /**

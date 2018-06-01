@@ -33,7 +33,7 @@
             </VBox.margin>
             <children>
             <Label fx:id="lblCustomer" text="Customer" />
-            <ComboBox fx:id="cboCustomer" prefWidth="250.0">
+            <ComboBox fx:id="cboCustomer" prefWidth="250.0" promptText="-- Select Customer --">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
