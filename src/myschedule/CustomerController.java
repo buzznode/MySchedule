@@ -24,7 +24,6 @@
 package myschedule;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,7 +152,7 @@ public class CustomerController {
      * @param customerName 
      */
     private void editCustomer(String customerName) {
-        System.out.println("Editing customer: " + customerName);
+        cboCountry.setValue("Canada");
     }
     
     /**
