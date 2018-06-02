@@ -79,6 +79,13 @@ public class CustomerController {
     private final boolean unsavedChanges = false;
 
     /**
+     * Add new Customer 
+     */
+    private void addNewCustomer() {
+        System.out.println("Adding a new customer record");
+    }
+    
+    /**
      * Check for un-saved changes; display warning message
      * as needed; close city maintenance function.
      */
@@ -137,13 +144,30 @@ public class CustomerController {
 //        });
 
         cboCustomer.setOnAction((ea) -> {
-            try {
-                loadCustomerData();
-            }
-            catch (SQLException ex) {
-                app.common.alertStatus(0);
-            }
+            handleCustomerChange();
         });
+    }
+    
+    /**
+     * Edit existing Customer
+     * @param customerName 
+     */
+    private void editCustomer(String customerName) {
+        System.out.println("Editing customer: " + customerName);
+    }
+    
+    /**
+     * Handle Customer ComboBox onChange
+     */
+    private void handleCustomerChange() {
+        String value = cboCustomer.getValue().toString();
+        
+        if (value.equals("-- Add New --")) {
+            addNewCustomer();
+        }
+        else {
+            editCustomer(value);
+        }
     }
 
     /**
@@ -172,15 +196,23 @@ public class CustomerController {
 //        int nextAddressId = getNextAddressId(addressList);
 
         try {
+            // Load Maps
             addressToAddressIdMap = app.db.getAddressToAddressIdMap();
             cityToCityIdMap = app.db.getCityToCityIdMap();
             countryToCountryIdMap = app.db.getCountryToCountryIdMap();
             customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
             
+            // Load Lists from Maps
             addressList = app.common.convertSIMapToList(addressToAddressIdMap);
             cityList = app.common.convertSIMapToList(cityToCityIdMap);
             countryList = app.common.convertSIMapToList(countryToCountryIdMap);
             customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
+            
+            // Put "Add New" options into Lists
+            addressList.add(0, "-- Add New --");
+            cityList.add(0, "-- Add New --");
+            countryList.add(0, "-- Add New --");
+            customerList.add(0, "-- Add New --");
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);
