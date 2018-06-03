@@ -23,11 +23,15 @@
  */
 package myschedule;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -64,9 +68,13 @@ public class CustomerController {
     
     // Maps
     private Map<String, Integer> addressToAddressIdMap = new HashMap<>();
+    private Map<Integer, String> addressIdToAddressMap = new HashMap<>();
     private Map<String, Integer> cityToCityIdMap = new HashMap<>();
+    private Map<Integer, String> cityIdToCityMap = new HashMap<>();
     private Map<String, Integer> countryToCountryIdMap = new HashMap<>();
+    private Map<Integer, String> countryIdToCountryMap = new HashMap<>();
     private Map<String, Integer> customerToCustomerIdMap = new HashMap<>();
+    private Map<Integer, String> customerIdToCustomerMap = new HashMap<>();
 
     // Lists
     private List addressList;
@@ -127,7 +135,7 @@ public class CustomerController {
      */
     @SuppressWarnings("unchecked")
     private void createActionListeners() {
-        btnCancel.setOnMouseClicked((ea) -> {
+        btnCancel.setOnMouseClicked((ae) -> {
             closeCustomerMaint();
         });
 
@@ -142,8 +150,19 @@ public class CustomerController {
 //            }
 //        });
 
-        cboCustomer.setOnAction((ea) -> {
+
+        cboAddress.setOnAction((ae) -> {
+            handleAddressChange(ae);
+        });
+        
+        cboCity.setOnAction((ae) -> {
+            handleCityChange();
+            ae.consume();
+        });
+        
+        cboCustomer.setOnAction((ae) -> {
             handleCustomerChange();
+            ae.consume();
         });
     }
     
@@ -152,7 +171,82 @@ public class CustomerController {
      * @param customerName 
      */
     private void editCustomer(String customerName) {
-        cboCountry.setValue("Canada");
+        int customerId;
+        ResultSet rs;
+        
+        customerId = customerToCustomerIdMap.get(customerName);
+        
+        try {
+            rs = app.db.getCustomerData(customerId);
+            chkActive.setSelected(rs.getBoolean("active"));
+            txtCustomer.setText(rs.getString("customerName"));
+        }
+        catch (SQLException ex) {
+            app.log.write(Level.SEVERE, ex.getMessage());
+        }
+    }
+    
+    /**
+     * Handle Address ComboBox onChange
+     */
+    private void handleAddressChange(Event e) {
+        String value = cboAddress.getValue().toString();
+        
+        e.consume();
+        
+        if (value.equals("----  Select Address  ----")) {
+            return;
+        }
+        
+        if (value.equals("----  Add New  ----")) {
+            String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
+            String msg = "Are you sure you wish to continue?";
+            
+            if (app.common.displayConfirmation(hdr, msg)) {
+                main.endProcess("addressMaint");
+            }
+            else {
+                cboAddress.setValue("----  Select Address  ----");
+            }
+        }
+    }
+    
+    /**
+     * Handle City ComboBox onChange
+     */
+    private void handleCityChange() {
+        String value = cboCity.getValue().toString();
+        
+        if (value.equals("----  Add New  ----")) {
+            String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
+            String msg = "Are you sure you wish to continue?";
+            
+            if (app.common.displayConfirmation(hdr, msg)) {
+                main.endProcess("cityMaint");
+            }
+            else {
+                cboCity.setValue("----  Select City  ----");
+            }
+        }
+    }
+    
+    /**
+     * Handle Country ComboBox onChange
+     */
+    private void handleCountryChange() {
+        String value = cboCountry.getValue().toString();
+        
+        if (value.equals("----  Add New  ----")) {
+            String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
+            String msg = "Are you sure you wish to continue?";
+            
+            if (app.common.displayConfirmation(hdr, msg)) {
+                main.endProcess("countryMaint");
+            }
+            else {
+                cboCountry.setValue("----  Select Country  ----");
+            }
+        }
     }
     
     /**
@@ -161,7 +255,7 @@ public class CustomerController {
     private void handleCustomerChange() {
         String value = cboCustomer.getValue().toString();
         
-        if (value.equals("-- Add New --")) {
+        if (value.equals("----  Add New  ----")) {
             addNewCustomer();
         }
         else {
@@ -197,9 +291,13 @@ public class CustomerController {
         try {
             // Load Maps
             addressToAddressIdMap = app.db.getAddressToAddressIdMap();
+            addressIdToAddressMap = app.db.getAddressIdToAddressMap();
             cityToCityIdMap = app.db.getCityToCityIdMap();
+            cityIdToCityMap = app.db.getCityIdToCityMap();
             countryToCountryIdMap = app.db.getCountryToCountryIdMap();
+            countryIdToCountryMap = app.db.getCountryIdToCountryMap();
             customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
+            customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
             
             // Load Lists from Maps
             addressList = app.common.convertSIMapToList(addressToAddressIdMap);
@@ -208,10 +306,10 @@ public class CustomerController {
             customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
             
             // Put "Add New" options into Lists
-            addressList.add(0, "-- Add New --");
-            cityList.add(0, "-- Add New --");
-            countryList.add(0, "-- Add New --");
-            customerList.add(0, "-- Add New --");
+            addressList.add(0, "----  Add New  ----");
+            cityList.add(0, "----  Add New  ----");
+            countryList.add(0, "----  Add New  ----");
+            customerList.add(0, "----  Add New  ----");
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);
@@ -232,6 +330,11 @@ public class CustomerController {
         cboCity.getItems().addAll(cityList);
         cboCountry.getItems().addAll(countryList);
         cboCustomer.getItems().addAll(customerList);
+        
+        cboAddress.setValue("----  Select Address  ----");
+        cboCity.setValue("----  Select City  ----");
+        cboCountry.setValue("----  Select Country  ----");
+        cboCustomer.setValue("----  Select Customer  ----");
     }
     
     /**

@@ -32,9 +32,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
-import javafx.collections.FXCollections;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  * @author bradd
@@ -117,6 +118,23 @@ public class Common  {
         List list = new ArrayList(map.keySet());
         Collections.sort(list);
         return list;
+    }
+    
+    /**
+     * Display Confirmation Dialog using passed header and message
+     * and wait for user's response then return result
+     * @param hdr
+     * @param msg
+     * @return Boolean
+     */
+    @SuppressWarnings("unchecked")
+    public boolean displayConfirmation(String hdr, String msg) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText(hdr);
+        alert.setContentText(msg);
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.get() == ButtonType.OK;
     }
     
     /**
