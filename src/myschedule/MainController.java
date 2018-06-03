@@ -178,6 +178,30 @@ public class MainController {
         Node node = mainContainer.getCenter();
         mainContainer.getChildren().removeAll(node);
     }
+    
+    
+    protected void endProcess(String nextAction) {
+        Node node = mainContainer.getCenter();
+        mainContainer.getChildren().removeAll(node);
+        
+        try {
+            switch (nextAction) {
+                case "addressMaint":
+                    startAddressMaint();
+                    break;
+                case "cityMaint":
+                    startCityMaint();
+                    break;
+                case "countryMaint":
+                    startCountryMaint();
+                    break;
+                default:
+                    break;
+            }
+        }
+        catch (Exception ex) {
+        }
+    }
 
     /**
      * Inject App object

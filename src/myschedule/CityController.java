@@ -159,11 +159,11 @@ public class CityController {
             }
         });
         
-        btnClose.setOnMouseClicked((ea) -> {
+        btnClose.setOnMouseClicked((ae) -> {
             closeCityMaint();
         });
         
-        btnCommit.setOnAction((ea) -> {
+        btnCommit.setOnAction((ae) -> {
             try {
                 app.db.updateCityTable(cityList);
                 unsavedChanges = false;

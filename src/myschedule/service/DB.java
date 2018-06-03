@@ -24,7 +24,6 @@
 package myschedule.service;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,9 +165,9 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT a.addressId, a.address, a.address2, b.city, a.postalCode, a.phone,",
-            "       a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
-            "  FROM address a",
-            "  JOIN city b ON a.cityId = b.cityId",
+            "   a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
+            "FROM address a",
+            "JOIN city b ON a.cityId = b.cityId",
             "ORDER BY",
             sortColumn,
             direction
@@ -219,9 +218,9 @@ public class DB {
 
         sql = String.join(" ",
             "SELECT a.cityId, a.city, b.country, a.createDate, a.createdBy, a.lastUpdate, ",
-            "               a.lastUpdateBy",
-            "  FROM city a",
-            "  JOIN country b ON a.countryId = b.countryId",
+            "   a.lastUpdateBy",
+            "FROM city a",
+            "JOIN country b ON a.countryId = b.countryId",
             "ORDER BY",
             sortColumn,
             direction
@@ -268,9 +267,8 @@ public class DB {
         connect();
 
         sql = String.join(" ",
-            "SELECT countryId, country, createDate, createdBy, lastUpdate, ",
-            "       lastUpdateBy",
-            "  FROM country",
+            "SELECT countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy",
+            "FROM country",
             "ORDER BY",
             sortColumn,
             direction
@@ -301,6 +299,42 @@ public class DB {
         }
         return list;
     }
+
+    /**
+     * Get Customer Data for maintenance
+     * @param customerId
+     * @return ResultSet
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public ResultSet getCustomerData(int customerId) throws SQLException {
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT a.customerName, a.active, b.address, b.address2, c.city, b.postalCode, b.phone, d.country",
+            "FROM customer a",
+            "JOIN address b ON b.addressId = a.addressId",
+            "JOIN city c ON c.cityId = b.cityId",
+            "JOIN country d ON d.countryId = c.countryId",
+            "WHERE a.customerId = " + customerId
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            rs.next();
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return rs;
+    }
     
     /**
      * Get list of Customers
@@ -316,10 +350,9 @@ public class DB {
         connect();
 
         sql = String.join(" ",
-            "SELECT customerId, customerName, active, createDate, createdBy, lastUpdate, ",
-            "       lastUpdateBy",
-            "  FROM customer",
-            " ORDER BY",
+            "SELECT customerId, customerName, active, createDate, createdBy, lastUpdate, lastUpdateBy",
+            "FROM customer",
+            "ORDER BY",
             sortColumn,
             direction
         );
@@ -367,8 +400,8 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT addressId, address, address2",
-            "  FROM address",
-            " ORDER BY address, address2"
+            "FROM address",
+            "ORDER BY address, address2"
         );
         
         try {
@@ -411,8 +444,8 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT addressId, address, address2",
-            "  FROM address",
-            " ORDER BY addressId"
+            "FROM address",
+            "ORDER BY addressId"
         );
         
         try {
@@ -452,8 +485,8 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT cityId, city",
-            "  FROM city",
-            " ORDER BY city"
+            "FROM city",
+            "ORDER BY city"
         );
         
         try {
@@ -489,8 +522,8 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT cityId, city",
-            "  FROM city",
-            " ORDER BY cityId"
+            "FROM city",
+            "ORDER BY cityId"
         );
         
         try {
@@ -526,8 +559,8 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT countryId, country",
-            "  FROM country",
-            " ORDER BY country"
+            "FROM country",
+            "ORDER BY country"
         );
         
         try {
@@ -563,8 +596,8 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT countryId, country",
-            "  FROM country",
-            " ORDER BY countryId"
+            "FROM country",
+            "ORDER BY countryId"
         );
         
         try {
@@ -600,8 +633,8 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT customerId, customerName",
-            "  FROM customer",
-            " ORDER BY customerName"
+            "FROM customer",
+            "ORDER BY customerName"
         );
         
         try {
@@ -637,8 +670,8 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT customerId, customerName",
-            "  FROM customer",
-            " ORDER BY customerId"
+            "FROM customer",
+            "ORDER BY customerId"
         );
         
         try {
@@ -675,8 +708,8 @@ public class DB {
 
         sql = String.join(" ",
             "SELECT cityId",
-            "  FROM city",
-            " WHERE city = '?'"
+            "FROM city",
+            "WHERE city = '?'"
         );
             
         try {
@@ -712,9 +745,9 @@ public class DB {
 
         sql = String.join(" ",
             "SELECT city",
-            "  FROM city",
-            " WHERE cityId = ?",
-            " ORDER BY city"
+            "FROM city",
+            "WHERE cityId = ?",
+            "ORDER BY city"
         );
         
         try {
@@ -749,8 +782,8 @@ public class DB {
 
         sql = String.join(" ",
             "SELECT city",
-            "  FROM city",
-            " ORDER BY city"
+            "FROM city",
+            "ORDER BY city"
         );
         
         try {
@@ -785,8 +818,8 @@ public class DB {
 
         sql = String.join(" ",
             "SELECT country",
-            "  FROM country",
-            " ORDER BY country"
+            "FROM country",
+            "ORDER BY country"
         );
         
         try {
@@ -821,8 +854,8 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT customerName",
-            "  FROM customer",
-            " ORDER BY customerName"
+            "FROM customer",
+            "ORDER BY customerName"
         );
         
         try {
@@ -857,10 +890,10 @@ public class DB {
         
         sql = String.join(" ",
             "SELECT a.address, a.address2, b.city, c.country, a.postalCode, a.phone",
-            "  FROM address a",
-            "  JOIN city b ON a.cityId = b.cityId",
-            "  JOIN country c ON b.countryId = c.countryId",
-            " ORDER BY a.address, a.address2, b.city"
+            "FROM address a",
+            "JOIN city b ON a.cityId = b.cityId",
+            "JOIN country c ON b.countryId = c.countryId",
+            "ORDER BY a.address, a.address2, b.city"
         );
         
         try {
@@ -932,9 +965,9 @@ public class DB {
             run(sql);
             
             sql = String.join(" ", 
-                "INSERT ",
-                "  INTO address (addressId, address, address2, cityId, postalCode, ",
-                "                phone, createDate, createdBy, lastUpdate, lastUpdateBy)",
+                "INSERT",
+                "INTO address (addressId, address, address2, cityId, postalCode, ",
+                "   phone, createDate, createdBy, lastUpdate, lastUpdateBy)",
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
 
@@ -943,8 +976,8 @@ public class DB {
             for (AddressModel a : list) {
                 lookup = String.join(" ",
                     "SELECT cityId",
-                    "  FROM city",
-                    " WHERE city = \"" + a.getCity()+ "\""
+                    "FROM city",
+                    "WHERE city = \"" + a.getCity()+ "\""
                 );
                 rs = stmt.executeQuery(lookup);
                 rs.beforeFirst();
@@ -992,9 +1025,8 @@ public class DB {
             run(sql);
             
             sql = String.join(" ", 
-                "INSERT ",
-                "  INTO city (cityId, city, countryId, createDate, createdBy,",
-                "             lastUpdate, lastUpdateBy)",
+                "INSERT",
+                "INTO city (cityId, city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy)",
                 "VALUES (?, ?, ?, ?, ?, ?, ?)"
             );
 
@@ -1003,8 +1035,8 @@ public class DB {
             for (CityModel c : list) {
                 lookup = String.join(" ",
                     "SELECT countryId",
-                    "  FROM country",
-                    " WHERE country = \"" + c.getCountry() + "\""
+                    "FROM country",
+                    "WHERE country = \"" + c.getCountry() + "\""
                 );
                 rs = stmt.executeQuery(lookup);
                 rs.beforeFirst();
@@ -1048,9 +1080,8 @@ public class DB {
             run(sql);
             
             sql = String.join(" ", 
-                "INSERT ",
-                "  INTO country (countryId, country, createDate, createdBy,",
-                "                lastUpdate, lastUpdateBy)",
+                "INSERT",
+                "INTO country (countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy)",
                 "VALUES (?, ?, ?,?, ?, ?)"
             );
             
