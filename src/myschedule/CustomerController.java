@@ -150,10 +150,13 @@ public class CustomerController {
 //            }
 //        });
 
-
-        cboAddress.setOnAction((ae) -> {
-            handleAddressChange(ae);
+        cboAddress.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> {
+            System.out.println("v: " + v + "; oldVluae: " + oldValue + "; newValue: " + newValue);
         });
+
+//        cboAddress.setOnAction((ae) -> {
+//            handleAddressChange(ae);
+//        });
         
         cboCity.setOnAction((ae) -> {
             handleCityChange();
