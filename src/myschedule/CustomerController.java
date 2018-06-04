@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
-import javafx.event.ActionEvent;
+import javafx.beans.Observable;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -150,10 +150,10 @@ public class CustomerController {
 //            }
 //        });
 
-        cboAddress.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> {
-            System.out.println("v: " + v + "; oldVluae: " + oldValue + "; newValue: " + newValue);
+        cboAddress.getSelectionModel().selectedItemProperty().addListener(e -> {
+            handleIt(e);
         });
-
+        
 //        cboAddress.setOnAction((ae) -> {
 //            handleAddressChange(ae);
 //        });
@@ -187,6 +187,12 @@ public class CustomerController {
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
         }
+    }
+    
+    private void handleIt(Observable e) {
+        System.out.println("inside handleIt");
+        System.out.println("setting value");
+        cboAddress.setValue("Hello?");
     }
     
     /**
@@ -257,7 +263,7 @@ public class CustomerController {
      */
     private void handleCustomerChange() {
         String value = cboCustomer.getValue().toString();
-        
+
         if (value.equals("----  Add New  ----")) {
             addNewCustomer();
         }
