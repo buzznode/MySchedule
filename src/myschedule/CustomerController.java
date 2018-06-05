@@ -139,10 +139,16 @@ public class CustomerController {
      */
     @SuppressWarnings("unchecked")
     private void createActionListeners() {
-        // USE BUTTONS TO ADD NEW (ADDRESS< CITY< COUNTRY, etc
-        
         btnAddAddress.setOnAction(e -> {
-            handleAddAddress();
+            handleAdd("addressMaint");
+        });
+        
+        btnAddCity.setOnAction(e -> {
+            handleAdd("cityMaint");
+        });
+        
+        btnAddCountry.setOnAction(e -> {
+            handleAdd("countryMaint");
         });
         
         btnCancel.setOnMouseClicked(e -> {
@@ -160,28 +166,24 @@ public class CustomerController {
 //            }
 //        });
 
-        cboAddress.setOnAction(e -> {
-            handleAddressChange();
-            e.consume();
-        });
-
-//        cboAddress.getSelectionModel().selectedItemProperty().addListener(e -> {
-//            handleIt(e);
+//        cboAddress.setOnAction(e -> {
+//            handleAddressChange();
+//            e.consume();
 //        });
-        
+
 //        cboAddress.setOnAction((ae) -> {
 //            handleAddressChange(ae);
 //        });
         
-        cboCity.setOnAction((ae) -> {
-            handleCityChange();
-            ae.consume();
-        });
+//        cboCity.setOnAction((ae) -> {
+//            handleCityChange();
+//            ae.consume();
+//        });
         
-        cboCustomer.setOnAction((ae) -> {
-            handleCustomerChange();
-            ae.consume();
-        });
+//        cboCustomer.setOnAction((ae) -> {
+//            handleCustomerChange();
+//            ae.consume();
+//        });
     }
     
     /**
@@ -205,13 +207,17 @@ public class CustomerController {
         }
     }
     
+    /**
+     * Fires off other Maintenance routines
+     * @param routine 
+     */
     @SuppressWarnings("unchecked")
-    private void handleAddAddress() {
+    private void handleAdd(String routine) {
         String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
         String msg = "Are you sure you want to continue?";
 
         if (app.common.displayConfirmation(hdr, msg)) {
-            main.endProcess("addressMaint");
+            main.endProcess(routine);
         }
     }
     
@@ -340,12 +346,6 @@ public class CustomerController {
             cityList = app.common.convertSIMapToList(cityToCityIdMap);
             countryList = app.common.convertSIMapToList(countryToCountryIdMap);
             customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
-            
-            // Put "Add New" options into Lists
-            addressList.add(0, "----  Add New  ----");
-            cityList.add(0, "----  Add New  ----");
-            countryList.add(0, "----  Add New  ----");
-            customerList.add(0, "----  Add New  ----");
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);
@@ -353,10 +353,8 @@ public class CustomerController {
         
         chkActive.setSelected(false);
         txtCustomer.setText("");
-        txtAddress.setText("");
         txtPostalCode.setText("");
         txtPhone.setText("");
-        txtAddress.setText("");
 
         cboAddress.getItems().addAll(addressList);
         cboCity.getItems().addAll(cityList);
