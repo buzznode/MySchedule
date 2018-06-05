@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
-import javafx.beans.Observable;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -88,6 +86,7 @@ public class CustomerController {
     /**
      * Add new Customer 
      */
+    @SuppressWarnings("unchecked")
     private void addNewCustomer() {
         System.out.println("Adding a new customer record");
     }
@@ -135,6 +134,8 @@ public class CustomerController {
      */
     @SuppressWarnings("unchecked")
     private void createActionListeners() {
+        // USE BUTTONS TO ADD NEW (ADDRESS< CITY< COUNTRY, etc
+        
         btnCancel.setOnMouseClicked((ae) -> {
             closeCustomerMaint();
         });
@@ -150,9 +151,13 @@ public class CustomerController {
 //            }
 //        });
 
-        cboAddress.getSelectionModel().selectedItemProperty().addListener(e -> {
-            handleIt(e);
+        cboAddress.setOnAction(e -> {
+            handleAddressChange();
         });
+
+//        cboAddress.getSelectionModel().selectedItemProperty().addListener(e -> {
+//            handleIt(e);
+//        });
         
 //        cboAddress.setOnAction((ae) -> {
 //            handleAddressChange(ae);
@@ -173,6 +178,7 @@ public class CustomerController {
      * Edit existing Customer
      * @param customerName 
      */
+    @SuppressWarnings("unchecked")
     private void editCustomer(String customerName) {
         int customerId;
         ResultSet rs;
@@ -189,19 +195,12 @@ public class CustomerController {
         }
     }
     
-    private void handleIt(Observable e) {
-        System.out.println("inside handleIt");
-        System.out.println("setting value");
-        cboAddress.setValue("Hello?");
-    }
-    
     /**
      * Handle Address ComboBox onChange
      */
-    private void handleAddressChange(Event e) {
+    @SuppressWarnings("unchecked")
+    private void handleAddressChange() {
         String value = cboAddress.getValue().toString();
-        
-        e.consume();
         
         if (value.equals("----  Select Address  ----")) {
             return;
@@ -215,7 +214,12 @@ public class CustomerController {
                 main.endProcess("addressMaint");
             }
             else {
-                cboAddress.setValue("----  Select Address  ----");
+                cboAddress.setOnAction(null);
+                cboAddress.setValue(null);
+                cboAddress.setOnAction(e -> {
+                    e.consume();
+                    handleAddressChange();
+                });
             }
         }
     }
@@ -223,6 +227,7 @@ public class CustomerController {
     /**
      * Handle City ComboBox onChange
      */
+    @SuppressWarnings("unchecked")
     private void handleCityChange() {
         String value = cboCity.getValue().toString();
         
@@ -242,6 +247,7 @@ public class CustomerController {
     /**
      * Handle Country ComboBox onChange
      */
+    @SuppressWarnings("unchecked")
     private void handleCountryChange() {
         String value = cboCountry.getValue().toString();
         
@@ -261,6 +267,7 @@ public class CustomerController {
     /**
      * Handle Customer ComboBox onChange
      */
+    @SuppressWarnings("unchecked")
     private void handleCustomerChange() {
         String value = cboCustomer.getValue().toString();
 
