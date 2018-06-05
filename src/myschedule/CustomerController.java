@@ -45,22 +45,27 @@ import javafx.scene.control.TextField;
  * @version 0.5.0
  */
 public class CustomerController {
-    @FXML private Label lblTitle;
-    @FXML private Label lblCustomer;
-    @FXML private ComboBox cboCustomer;
-    @FXML private CheckBox chkActive;
-    @FXML private TextField txtCustomer;
-    @FXML private ComboBox cboAddress;
-    @FXML private TextField txtAddress;
-    @FXML private TextField txtAddress2;
-    @FXML private ComboBox cboCity;
-    @FXML private TextField txtCity;
-    @FXML private TextField txtPostalCode;
-    @FXML private TextField txtPhone;
-    @FXML private ComboBox cboCountry;
-    @FXML private TextField txtCountry;
-    @FXML private Button btnSave;
+    @FXML private Button btnAddAddress;
+    @FXML private Button btnAddCity;
+    @FXML private Button btnAddCountry;
     @FXML private Button btnCancel;
+    @FXML private Button btnSave;
+    @FXML private ComboBox cboCustomer;
+    @FXML private ComboBox cboAddress;
+    @FXML private ComboBox cboCity;
+    @FXML private ComboBox cboCountry;
+    @FXML private CheckBox chkActive;
+    @FXML private Label lblAddress;
+    @FXML private Label lblCity;
+    @FXML private Label lblCountry;
+    @FXML private Label lblCustomer;
+    @FXML private Label lblPhone;
+    @FXML private Label lblPostalCode;
+    @FXML private Label lblTitle;
+    @FXML private TextField txtAddress;
+    @FXML private TextField txtCustomer;
+    @FXML private TextField txtPhone;
+    @FXML private TextField txtPostalCode;
 
     private App app;
     
@@ -136,7 +141,11 @@ public class CustomerController {
     private void createActionListeners() {
         // USE BUTTONS TO ADD NEW (ADDRESS< CITY< COUNTRY, etc
         
-        btnCancel.setOnMouseClicked((ae) -> {
+        btnAddAddress.setOnAction(e -> {
+            handleAddAddress();
+        });
+        
+        btnCancel.setOnMouseClicked(e -> {
             closeCustomerMaint();
         });
 
@@ -153,6 +162,7 @@ public class CustomerController {
 
         cboAddress.setOnAction(e -> {
             handleAddressChange();
+            e.consume();
         });
 
 //        cboAddress.getSelectionModel().selectedItemProperty().addListener(e -> {
@@ -192,6 +202,16 @@ public class CustomerController {
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void handleAddAddress() {
+        String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
+        String msg = "Are you sure you want to continue?";
+
+        if (app.common.displayConfirmation(hdr, msg)) {
+            main.endProcess("addressMaint");
         }
     }
     
@@ -334,13 +354,9 @@ public class CustomerController {
         chkActive.setSelected(false);
         txtCustomer.setText("");
         txtAddress.setText("");
-        txtAddress2.setText("");
         txtPostalCode.setText("");
         txtPhone.setText("");
         txtAddress.setText("");
-        txtAddress2.setText("");
-        txtCity.setVisible(false);
-        txtCountry.setVisible(false);
 
         cboAddress.getItems().addAll(addressList);
         cboCity.getItems().addAll(cityList);
