@@ -143,6 +143,10 @@ public class CustomerController {
             handleAdd("addressMaint");
         });
         
+        btnCancel.setOnMouseClicked(e -> {
+            closeCustomerMaint();
+        });
+
         btnAddCity.setOnAction(e -> {
             handleAdd("cityMaint");
         });
@@ -150,11 +154,11 @@ public class CustomerController {
         btnAddCountry.setOnAction(e -> {
             handleAdd("countryMaint");
         });
-        
-        btnCancel.setOnMouseClicked(e -> {
-            closeCustomerMaint();
-        });
 
+        cboCustomer.setOnAction(e -> {
+            handleCustomerChange();
+        });
+        
 //        btnSave.setOnAction((ea) -> {
 //            try {
 //                app.db.upsertCustomer(addressList);
@@ -166,20 +170,6 @@ public class CustomerController {
 //            }
 //        });
 
-//        cboAddress.setOnAction(e -> {
-//            handleAddressChange();
-//            e.consume();
-//        });
-
-//        cboAddress.setOnAction((ae) -> {
-//            handleAddressChange(ae);
-//        });
-        
-//        cboCity.setOnAction((ae) -> {
-//            handleCityChange();
-//            ae.consume();
-//        });
-        
 //        cboCustomer.setOnAction((ae) -> {
 //            handleCustomerChange();
 //            ae.consume();
@@ -188,19 +178,42 @@ public class CustomerController {
     
     /**
      * Edit existing Customer
-     * @param customerName 
      */
     @SuppressWarnings("unchecked")
-    private void editCustomer(String customerName) {
+    private void editCustomer() {
+        String address;
+        String city;
+        String country;
         int customerId;
+        String customerName;
+        String phone;
+        String postalCode;
         ResultSet rs;
         
+        customerName = cboCustomer.getValue().toString();
         customerId = customerToCustomerIdMap.get(customerName);
         
         try {
             rs = app.db.getCustomerData(customerId);
+            address = String.join(" ",
+                rs.getString("address"),
+                rs.getString("address2")
+            );
+            city = rs.getString("city");
+            country = rs.getString("country");
+            postalCode = rs.getString("postalCode");
+            phone = rs.getString("phone");
+            
             chkActive.setSelected(rs.getBoolean("active"));
             txtCustomer.setText(rs.getString("customerName"));
+            cboAddress.setEditable(false);
+            cboAddress.setValue(address);
+            cboCity.setEditable(false);
+            cboCity.setValue(city);
+            cboCountry.setEditable(false);
+            cboCountry.setValue(country);
+            txtPhone.setText(phone);
+            txtPostalCode.setText(postalCode);
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
@@ -222,87 +235,11 @@ public class CustomerController {
     }
     
     /**
-     * Handle Address ComboBox onChange
-     */
-    @SuppressWarnings("unchecked")
-    private void handleAddressChange() {
-        String value = cboAddress.getValue().toString();
-        
-        if (value.equals("----  Select Address  ----")) {
-            return;
-        }
-        
-        if (value.equals("----  Add New  ----")) {
-            String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
-            String msg = "Are you sure you wish to continue?";
-            
-            if (app.common.displayConfirmation(hdr, msg)) {
-                main.endProcess("addressMaint");
-            }
-            else {
-                cboAddress.setOnAction(null);
-                cboAddress.setValue(null);
-                cboAddress.setOnAction(e -> {
-                    e.consume();
-                    handleAddressChange();
-                });
-            }
-        }
-    }
-    
-    /**
-     * Handle City ComboBox onChange
-     */
-    @SuppressWarnings("unchecked")
-    private void handleCityChange() {
-        String value = cboCity.getValue().toString();
-        
-        if (value.equals("----  Add New  ----")) {
-            String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
-            String msg = "Are you sure you wish to continue?";
-            
-            if (app.common.displayConfirmation(hdr, msg)) {
-                main.endProcess("cityMaint");
-            }
-            else {
-                cboCity.setValue("----  Select City  ----");
-            }
-        }
-    }
-    
-    /**
-     * Handle Country ComboBox onChange
-     */
-    @SuppressWarnings("unchecked")
-    private void handleCountryChange() {
-        String value = cboCountry.getValue().toString();
-        
-        if (value.equals("----  Add New  ----")) {
-            String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
-            String msg = "Are you sure you wish to continue?";
-            
-            if (app.common.displayConfirmation(hdr, msg)) {
-                main.endProcess("countryMaint");
-            }
-            else {
-                cboCountry.setValue("----  Select Country  ----");
-            }
-        }
-    }
-    
-    /**
      * Handle Customer ComboBox onChange
      */
     @SuppressWarnings("unchecked")
     private void handleCustomerChange() {
-        String value = cboCustomer.getValue().toString();
-
-        if (value.equals("----  Add New  ----")) {
-            addNewCustomer();
-        }
-        else {
-            editCustomer(value);
-        }
+        editCustomer();
     }
 
     /**
