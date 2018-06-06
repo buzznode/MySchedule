@@ -39,6 +39,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import myschedule.model.CustomerModel;
 
 /**
  * @author bradd
@@ -266,7 +267,31 @@ public class CustomerController {
      */
     @SuppressWarnings("unchecked")
     private void handleSave() {
-       // upsert record 
+        boolean active;
+        int addressId;
+        String customer;
+        int customerId;
+        String customerName;
+        
+        active = chkActive.isSelected();
+        addressId = addressToAddressIdMap.get(cboAddress.getValue().toString());
+        customer = cboCustomer.getValue().toString();
+        customerId = customer.equals("----  Add New Customer  ----") ? 
+            0 : customerToCustomerIdMap.get(customer);
+        customerName = txtCustomer.getText();
+        
+        CustomerModel record = new CustomerModel();
+        record.setActive(active);
+        record.setCustomerId(customerId);
+        record.setCustomerName(customerName);
+        record.setAddressId(addressId);
+        
+        try {
+            app.db.upsertCustomer(record, app.userName());
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
     }
     
     /**
