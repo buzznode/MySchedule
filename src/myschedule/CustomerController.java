@@ -140,26 +140,27 @@ public class CustomerController {
     @SuppressWarnings("unchecked")
     private void createActionListeners() {
         btnAddAddress.setOnAction(e -> {
-            handleAdd("addressMaint");
+            handleAddOther("addressMaint");
         });
         
-        btnCancel.setOnMouseClicked(e -> {
-            closeCustomerMaint();
-        });
-
         btnAddCity.setOnAction(e -> {
-            handleAdd("cityMaint");
+            handleAddOther("cityMaint");
         });
         
         btnAddCountry.setOnAction(e -> {
-            handleAdd("countryMaint");
+            handleAddOther("countryMaint");
+        });
+
+        btnCancel.setOnMouseClicked(e -> {
+            closeCustomerMaint();
         });
 
         cboCustomer.setOnAction(e -> {
             handleCustomerChange();
         });
         
-//        btnSave.setOnAction((ea) -> {
+        btnSave.setOnAction(e -> {
+            handleSave();
 //            try {
 //                app.db.upsertCustomer(addressList);
 //                unsavedChanges = false;
@@ -168,7 +169,7 @@ public class CustomerController {
 //            catch (SQLException ex) {
 //                app.common.alertStatus(0);
 //            }
-//        });
+        });
 
 //        cboCustomer.setOnAction((ae) -> {
 //            handleCustomerChange();
@@ -225,7 +226,7 @@ public class CustomerController {
      * @param routine 
      */
     @SuppressWarnings("unchecked")
-    private void handleAdd(String routine) {
+    private void handleAddOther(String routine) {
         String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
         String msg = "Are you sure you want to continue?";
 
@@ -260,6 +261,14 @@ public class CustomerController {
 //        }
 //    }
 
+    /**
+     * Handle Customer Save
+     */
+    @SuppressWarnings("unchecked")
+    private void handleSave() {
+       // upsert record 
+    }
+    
     /**
      * Initialize "add record" form elements
      */
