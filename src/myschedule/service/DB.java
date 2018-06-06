@@ -350,7 +350,7 @@ public class DB {
         connect();
 
         sql = String.join(" ",
-            "SELECT customerId, customerName, active, createDate, createdBy, lastUpdate, lastUpdateBy",
+            "SELECT customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy",
             "FROM customer",
             "ORDER BY",
             sortColumn,
@@ -365,6 +365,7 @@ public class DB {
                 list.add(new CustomerModel(
                     rs.getInt("customerId"), 
                     rs.getString("customerName"), 
+                    rs.getInt("addressId"),
                     rs.getBoolean("active"), 
                     rs.getString("createDate"), 
                     rs.getString("createdBy"), 
@@ -641,6 +642,7 @@ public class DB {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
+            map.put("----  Add New Customer  ----", 0);
             
             while (rs.next()) {
                 map.put(rs.getString("customerName"), rs.getInt("customerId"));
@@ -678,6 +680,7 @@ public class DB {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
+            map.put(0, "----  Add New Customer  ----");
             
             while (rs.next()) {
                 map.put(rs.getInt("customerId"), rs.getString("customerName"));
@@ -1082,7 +1085,7 @@ public class DB {
             sql = String.join(" ", 
                 "INSERT",
                 "INTO country (countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy)",
-                "VALUES (?, ?, ?,?, ?, ?)"
+                "VALUES (?, ?, ?, ?, ?, ?)"
             );
             
             pstmt = conn.prepareStatement(sql);
@@ -1095,6 +1098,90 @@ public class DB {
                 pstmt.setString(5, c.getLastUpdate());
                 pstmt.setString(6, c.getLastUpdateBy());
                 pstmt.executeUpdate();
+            }
+            return true;
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+    }
+
+    /**
+     * Insert / Update Customer table
+     * @param record (CustomerModel)
+     * @param userName (String)
+     * @return boolean result
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public boolean upsertCustomer(CustomerModel record, String userName) throws SQLException{
+        int id;
+        String sql;
+        connect();
+        
+        try {
+            sql = String.join(" ",
+                "SELECT COUNT(*) AS cnt",
+                "FROM customer",
+                "WHERE customerId = ?"
+            );
+
+            rs = stmt.executeQuery(sql);
+            rs.first();
+            id = rs.getInt("cnt");
+            
+            if (id > 0) {
+                // update record
+                sql = String.join(" ",
+                    "UPDATE customer",
+                    "SET customerName = ?",
+                    "   addressId = ?",
+                    "   active = ?",
+                    "   lastUpdate = NOW(),",
+                    "   lastUpdateBy = ?",
+                    "WHERE customerId = ?"
+                );
+                
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, record.getCustomerName());
+                pstmt.setInt(2, record.getAddressId());
+                pstmt.setBoolean(3, record.getActive());
+                pstmt.setString(4, userName);
+                pstmt.setInt(5, record.getCustomerId());
+                pstmt.execute();
+            }
+            else {
+                // insert record
+                sql = String.join(" ",
+                    "SELECT MAX(id) AS id",
+                    "FROM customer"
+                );
+
+                rs = stmt.executeQuery(sql);
+                rs.first();
+                id = rs.getInt("id");
+                
+                
+                sql = String.join(" ", 
+                    "INSERT",
+                    "INTO customer (customerId, customerName, addressId, active, createDate, createdBy",
+                    "   lastUpdate, lastUpdateBy",
+                    "VALUES (?, ?, ?, ?, NOW(), ?, NOW(), ?)"
+                );
+                
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, id);
+                pstmt.setString(2, record.getCustomerName());
+                pstmt.setInt(3, record.getAddressId());
+                pstmt.setBoolean(4, record.getActive());
+                pstmt.setString(5, userName);
+                pstmt.setString(6, userName);
+                pstmt.execute();
             }
             return true;
         }

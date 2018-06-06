@@ -34,6 +34,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class CustomerModel {
     private final SimpleIntegerProperty customerId;
     private final SimpleStringProperty customerName;
+    private final SimpleIntegerProperty addressId;
     private final SimpleBooleanProperty active;
     private final SimpleStringProperty createDate;
     private final SimpleStringProperty createdBy;
@@ -43,6 +44,7 @@ public class CustomerModel {
     public CustomerModel() {
         this.customerId = new SimpleIntegerProperty(0);
         this.customerName = new SimpleStringProperty("");
+        this.addressId = new SimpleIntegerProperty(0);
         this.active = new SimpleBooleanProperty(true);
         this.createDate = new SimpleStringProperty("");
         this.createdBy = new SimpleStringProperty("");
@@ -50,10 +52,11 @@ public class CustomerModel {
         this.lastUpdateBy = new SimpleStringProperty("");
     }
     
-    public CustomerModel(int _customerId, String _customerName, boolean _active, String _createDate, 
-            String _createdBy, String _lastUpdate, String _lastUpdateBy) {
+    public CustomerModel(int _customerId, String _customerName, int _addressId, boolean _active, 
+            String _createDate, String _createdBy, String _lastUpdate, String _lastUpdateBy) {
         this.customerId = new SimpleIntegerProperty(_customerId);
         this.customerName = new SimpleStringProperty(_customerName);
+        this.addressId = new SimpleIntegerProperty(_addressId);
         this.active = new SimpleBooleanProperty(_active);
         this.createDate = new SimpleStringProperty(_createDate);
         this.createdBy = new SimpleStringProperty(_createdBy);
@@ -91,6 +94,22 @@ public class CustomerModel {
      */
     public void setCustomerName(String _customerName) {
         customerName.set(_customerName);
+    }
+    
+    /**
+     * Get addressId value
+     * @return addressId value
+     */
+    public int getAddressId() {
+        return addressId.get();
+    }
+    
+    /**
+     * Set addressId value
+     * @param _addressId 
+     */
+    public void setAddressId(int _addressId) {
+        addressId.set(_addressId);
     }
     
     /**
