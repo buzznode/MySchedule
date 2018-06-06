@@ -2,14 +2,114 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-06-06T06:15:56</date>
-  <millis>1528283756058</millis>
+  <date>2018-06-06T12:04:22</date>
+  <millis>1528304662411</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
   <class>myschedule.service.Logging</class>
   <method>write</method>
-  <thread>14</thread>
+  <thread>17</thread>
   <message>Starting application...</message>
 </record>
-</log>
+<record>
+  <date>2018-06-06T12:04:34</date>
+  <millis>1528304674460</millis>
+  <sequence>1</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>Illegal operation on empty result set.</message>
+</record>
+<record>
+  <date>2018-06-06T12:05:33</date>
+  <millis>1528304733123</millis>
+  <sequence>2</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1</message>
+  <param>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1</param>
+</record>
+<record>
+  <date>2018-06-06T12:05:33</date>
+  <millis>1528304733127</millis>
+  <sequence>3</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>SQLException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1</message>
+</record>
+<record>
+  <date>2018-06-06T12:05:33</date>
+  <millis>1528304733132</millis>
+  <sequence>4</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>SQLState: 42000</message>
+</record>
+<record>
+  <date>2018-06-06T12:05:33</date>
+  <millis>1528304733135</millis>
+  <sequence>5</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>VendorError: 1,064</message>
+</record>
+<record>
+  <date>2018-06-06T12:14:19</date>
+  <millis>1528305259469</millis>
+  <sequence>6</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1</message>
+  <param>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1</param>
+</record>
+<record>
+  <date>2018-06-06T12:14:19</date>
+  <millis>1528305259470</millis>
+  <sequence>7</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>SQLException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1</message>
+</record>
+<record>
+  <date>2018-06-06T12:14:19</date>
+  <millis>1528305259471</millis>
+  <sequence>8</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>SQLState: 42000</message>
+</record>
+<record>
+  <date>2018-06-06T12:14:19</date>
+  <millis>1528305259472</millis>
+  <sequence>9</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>VendorError: 1,064</message>
+</record>

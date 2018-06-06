@@ -1131,12 +1131,14 @@ public class DB {
                 "WHERE customerId = ?"
             );
 
-            rs = stmt.executeQuery(sql);
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, record.getCustomerId());
+            rs = stmt.
             rs.first();
             id = rs.getInt("cnt");
             
             if (id > 0) {
-                // update record
+                // update existing record
                 sql = String.join(" ",
                     "UPDATE customer",
                     "SET customerName = ?",
@@ -1156,7 +1158,7 @@ public class DB {
                 pstmt.execute();
             }
             else {
-                // insert record
+                // insert new record
                 sql = String.join(" ",
                     "SELECT MAX(id) AS id",
                     "FROM customer"
@@ -1165,7 +1167,7 @@ public class DB {
                 rs = stmt.executeQuery(sql);
                 rs.first();
                 id = rs.getInt("id");
-                
+                id++;
                 
                 sql = String.join(" ", 
                     "INSERT",
