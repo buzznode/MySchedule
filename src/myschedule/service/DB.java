@@ -887,6 +887,42 @@ public class DB {
     }
 
     /**
+     * Get a Country Name using a City Name
+     * @param city
+     * @return Country (String)
+     * @throws java.sql.SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public String getCountryNameViaCity(String city) throws SQLException {
+        String country = "";
+        String sql;
+        
+        try {
+            connect();
+            sql = String.join(" ",
+                "SELECT b.country",
+                "FROM city a",
+                "JOIN country b ON b.countryId = a.countryId",
+                "WHERE a.city=?"
+            );
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, city);
+            rs = pstmt.executeQuery();
+            rs.first();
+            country = rs.getString("country");
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return country;
+    }
+    
+    /**
      * Get a list of Countries
      * @return List Country (String)
      * @throws SQLException

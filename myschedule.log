@@ -2,13 +2,59 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-06-07T06:13:53</date>
-  <millis>1528370033871</millis>
+  <date>2018-06-07T12:28:30</date>
+  <millis>1528392510464</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
   <class>myschedule.service.Logging</class>
   <method>write</method>
-  <thread>17</thread>
+  <thread>14</thread>
   <message>Starting application...</message>
 </record>
+<record>
+  <date>2018-06-07T12:28:39</date>
+  <millis>1528392519944</millis>
+  <sequence>1</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>java.sql.SQLException: Column '' not found.</message>
+  <param>java.sql.SQLException: Column '' not found.</param>
+</record>
+<record>
+  <date>2018-06-07T12:28:39</date>
+  <millis>1528392519946</millis>
+  <sequence>2</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>SQLException: Column '' not found.</message>
+</record>
+<record>
+  <date>2018-06-07T12:28:39</date>
+  <millis>1528392519947</millis>
+  <sequence>3</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>SQLState: S0022</message>
+</record>
+<record>
+  <date>2018-06-07T12:28:39</date>
+  <millis>1528392519948</millis>
+  <sequence>4</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>VendorError: 0</message>
+</record>
+</log>
