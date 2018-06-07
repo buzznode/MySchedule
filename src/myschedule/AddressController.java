@@ -70,6 +70,7 @@ public class AddressController {
     @FXML private ComboBox cboCity;
     @FXML private TextField txtPostalCode;
     @FXML private TextField txtPhone;
+    @FXML private TextField txtCountry;
     @FXML private Button btnAdd;
     @FXML private Button btnRemove;
     @FXML private Button btnClose;
@@ -125,22 +126,8 @@ public class AddressController {
      */
     @SuppressWarnings("unchecked")
     private void createActionListeners() {
-        btnAdd.setOnAction((ae) -> {
-            String now = app.common.now();
-            String user = app.userName();
-            
-            if (validateAddressRecord()) {
-                addressList.add(new AddressModel(
-                    Integer.parseInt(txtAddressId.getText()), txtAddress.getText(), 
-                    txtAddress2.getText(), (String) cboCity.getValue(), txtPostalCode.getText(), 
-                    txtPhone.getText(), txtCountry.getText(), now, user, now, user));
-                
-                unsavedChanges = true;
-                initializeForm();
-            }
-            else {
-                app.log.write(Level.SEVERE, "Error parsing new city record");
-            }
+        btnAdd.setOnAction(e -> {
+            handleAddAddress();
         });
         
         btnClose.setOnMouseClicked((ea) -> {
@@ -186,6 +173,35 @@ public class AddressController {
         }
     }
 
+    private void handleAddAddress() {
+        int cityId = 0;
+        int countryId = 0;
+        String now = app.common.now();
+        String user = app.userName();
+
+        try {
+            cityId = app.db.getACityId(cboCity.getValue().toString());
+            countryId = app.db.getACountryId(txtCountry.getText());
+        }
+        catch (SQLException ex) {
+            
+        }
+        
+        if (validateAddressRecord()) {
+            addressList.add(new AddressModel(
+                Integer.parseInt(txtAddressId.getText()), txtAddress.getText(), 
+                txtAddress2.getText(), cboCity.getValue().toString(), cityId, 
+                txtPostalCode.getText(), txtPhone.getText(), txtCountry.getText(), 
+                countryId, now, user, now, user));
+
+            unsavedChanges = true;
+            initializeForm();
+        }
+        else {
+            app.log.write(Level.SEVERE, "Error parsing new city record");
+        }
+    }
+    
     /**
      * Initialize "add record" form elements
      */
@@ -199,6 +215,7 @@ public class AddressController {
         cboCity.getItems().addAll(cityNameList);
         txtPostalCode.setText("");
         txtPhone.setText("");
+        txtCountry.setText("");
         
         txtAddressId.setDisable(true);
         txtAddress.setDisable(false);
@@ -206,6 +223,7 @@ public class AddressController {
         cboCity.setDisable(false);
         txtPostalCode.setDisable(false);
         txtPhone.setDisable(false);
+        txtCountry.setDisable(true);
     }
     
     /**
@@ -281,17 +299,8 @@ public class AddressController {
             }
         );
         
-        // Create Date column
-        createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
-
-        // Created By column
-        createdByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreatedBy()));
-
-        // Last Update column
-        lastUpdateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdate()));
-
-        // Last Update By column
-        lastUpdateByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdateBy()));
+        // Country column
+        countryColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCountry()));
     }
     
     /**
