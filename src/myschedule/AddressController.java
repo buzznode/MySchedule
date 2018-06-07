@@ -83,6 +83,45 @@ public class AddressController {
     private MainController main;
     private boolean unsavedChanges = false;
 
+        /**
+     *  Create action event listeners
+     */
+    @SuppressWarnings("unchecked")
+    private void addListeners() {
+        btnAdd.setOnAction(e -> {
+            handleAddAddress();
+        });
+        
+        btnClose.setOnMouseClicked((ea) -> {
+            closeAddressMaint();
+        });
+        
+        btnCommit.setOnAction((ea) -> {
+            try {
+                app.db.upsertAddress(addressList, app.userName());
+                unsavedChanges = false;
+                app.common.alertStatus(1);
+                refreshTableView();
+            }
+            catch (SQLException ex) {
+                app.common.alertStatus(0);
+            }
+        });
+
+        btnRemove.setOnAction((ae) -> {
+            ObservableList<AddressModel> addressSelected, allAddresses;
+            allAddresses = table.getItems();
+            addressSelected = table.getSelectionModel().getSelectedItems();
+            addressSelected.forEach(allAddresses::remove);
+            unsavedChanges = true;
+        });
+        
+        cboCity.setOnAction(e -> {
+            handleCityChange();
+        });
+    }
+
+
     /**
      * Check for un-saved changes; display warning message
      * as needed; close city maintenance function.
@@ -121,44 +160,6 @@ public class AddressController {
         return result.get() == btnYes;
     }
     
-    /**
-     *  Create action event listeners
-     */
-    @SuppressWarnings("unchecked")
-    private void createActionListeners() {
-        btnAdd.setOnAction(e -> {
-            handleAddAddress();
-        });
-        
-        btnClose.setOnMouseClicked((ea) -> {
-            closeAddressMaint();
-        });
-        
-        btnCommit.setOnAction((ea) -> {
-            try {
-                app.db.upsertAddress(addressList, app.userName());
-                unsavedChanges = false;
-                app.common.alertStatus(1);
-                refreshTableView();
-            }
-            catch (SQLException ex) {
-                app.common.alertStatus(0);
-            }
-        });
-
-        btnRemove.setOnAction((ae) -> {
-            ObservableList<AddressModel> addressSelected, allAddresses;
-            allAddresses = table.getItems();
-            addressSelected = table.getSelectionModel().getSelectedItems();
-            addressSelected.forEach(allAddresses::remove);
-            unsavedChanges = true;
-        });
-        
-        cboCity.setOnAction(e -> {
-            handleCityChange();
-        });
-    }
-
     /**
      * Get next available Address Id to be use for add
      * @param clist
@@ -288,9 +289,15 @@ public class AddressController {
         cityColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<AddressModel, String> t) -> {
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
-                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(app.db.getCountryNameViaCity(t.getNewValue()));
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
+                try {
+                  final String country = app.db.getCountryNameViaCity(t.getNewValue());
+                  ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(country);
+                }
+                catch (SQLException ex) {
+                    
+                }
                 table.refresh();
                 unsavedChanges = true;
             }
@@ -363,7 +370,7 @@ public class AddressController {
      */
     @SuppressWarnings("unchecked")
     public void start() {
-        createActionListeners();
+        addListeners();
         lblTitle.setText(app.localize("addresses"));
         
         try {
