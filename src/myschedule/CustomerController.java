@@ -272,6 +272,7 @@ public class CustomerController {
         String customer;
         int customerId;
         String customerName;
+        int rows;
         
         active = chkActive.isSelected();
         addressId = addressToAddressIdMap.get(cboAddress.getValue().toString());
@@ -287,7 +288,13 @@ public class CustomerController {
         record.setAddressId(addressId);
         
         try {
-            app.db.upsertCustomer(record, app.userName());
+            rows = app.db.upsertCustomer(record, app.userName());
+            if (rows > 0) {
+                app.common.alertStatus(1);
+            }
+            else {
+                app.common.alertStatus(0);
+            }
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);

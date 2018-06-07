@@ -1119,8 +1119,9 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public boolean upsertCustomer(CustomerModel record, String userName) throws SQLException{
+    public int upsertCustomer(CustomerModel record, String userName) throws SQLException{
         int id;
+        int rows;
         String sql;
         connect();
         
@@ -1128,12 +1129,11 @@ public class DB {
             sql = String.join(" ",
                 "SELECT COUNT(*) AS cnt",
                 "FROM customer",
-                "WHERE customerId = ?"
+                "WHERE customerId = " + record.getCustomerId()
             );
 
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, record.getCustomerId());
-            rs = stmt.
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery(sql);
             rs.first();
             id = rs.getInt("cnt");
             
@@ -1141,12 +1141,12 @@ public class DB {
                 // update existing record
                 sql = String.join(" ",
                     "UPDATE customer",
-                    "SET customerName = ?",
-                    "   addressId = ?",
-                    "   active = ?",
-                    "   lastUpdate = NOW(),",
-                    "   lastUpdateBy = ?",
-                    "WHERE customerId = ?"
+                    "SET customerName=?,",
+                    "   addressId=?,",
+                    "   active=?,",
+                    "   lastUpdate=NOW(),",
+                    "   lastUpdateBy=?",
+                    "WHERE customerId=?"
                 );
                 
                 pstmt = conn.prepareStatement(sql);
@@ -1155,7 +1155,7 @@ public class DB {
                 pstmt.setBoolean(3, record.getActive());
                 pstmt.setString(4, userName);
                 pstmt.setInt(5, record.getCustomerId());
-                pstmt.execute();
+                rows = pstmt.executeUpdate();
             }
             else {
                 // insert new record
@@ -1183,9 +1183,9 @@ public class DB {
                 pstmt.setBoolean(4, record.getActive());
                 pstmt.setString(5, userName);
                 pstmt.setString(6, userName);
-                pstmt.execute();
+                rows = pstmt.executeUpdate();
             }
-            return true;
+            return rows;
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);
