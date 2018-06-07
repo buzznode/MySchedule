@@ -136,7 +136,7 @@ public class AddressController {
         
         btnCommit.setOnAction((ea) -> {
             try {
-                app.db.updateAddressTable(addressList);
+                app.db.upsertAddress(addressList, app.userName());
                 unsavedChanges = false;
                 app.common.alertStatus(1);
                 refreshTableView();
@@ -152,6 +152,10 @@ public class AddressController {
             addressSelected = table.getSelectionModel().getSelectedItems();
             addressSelected.forEach(allAddresses::remove);
             unsavedChanges = true;
+        });
+        
+        cboCity.setOnAction(e -> {
+            handleCityChange();
         });
     }
 
@@ -173,6 +177,9 @@ public class AddressController {
         }
     }
 
+    /**
+     * Handle Address change
+     */
     private void handleAddAddress() {
         int cityId = 0;
         int countryId = 0;
@@ -199,6 +206,21 @@ public class AddressController {
         }
         else {
             app.log.write(Level.SEVERE, "Error parsing new city record");
+        }
+    }
+    
+    /**
+     * Handle City change
+     */
+    private void handleCityChange() {
+        String country = "";
+        
+        try {
+            country = app.db.getCountryNameViaCity(cboCity.getValue().toString());
+            txtCountry.setText(country);
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
         }
     }
     
@@ -266,6 +288,7 @@ public class AddressController {
         cityColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<AddressModel, String> t) -> {
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(app.db.getCountryNameViaCity(t.getNewValue()));
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
