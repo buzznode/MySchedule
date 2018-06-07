@@ -37,6 +37,7 @@ public class AddressModel {
     private final SimpleStringProperty city;
     private final SimpleStringProperty postalCode;
     private final SimpleStringProperty phone;
+    private final SimpleStringProperty country;
     private final SimpleStringProperty createDate;
     private final SimpleStringProperty createdBy;
     private final SimpleStringProperty lastUpdate;
@@ -49,20 +50,24 @@ public class AddressModel {
         this.city = new SimpleStringProperty("");
         this.postalCode = new SimpleStringProperty("");
         this.phone = new SimpleStringProperty("");
+        this.country = new SimpleStringProperty("");
         this.createDate = new SimpleStringProperty("");
         this.createdBy = new SimpleStringProperty("");
         this.lastUpdate = new SimpleStringProperty("");
         this.lastUpdateBy = new SimpleStringProperty("");
     }
     
-    public AddressModel(int _addressId, String _address, String _address2, String _city, String _postalCode, String _phone, 
-            String _createDate, String _createdBy, String _lastUpdate, String _lastUpdateBy) {
+    public AddressModel(int _addressId, String _address, String _address2, 
+            String _city, String _postalCode, String _phone, String _country, 
+            String _createDate, String _createdBy, String _lastUpdate, 
+            String _lastUpdateBy) {
         this.addressId = new SimpleIntegerProperty(_addressId);
         this.address = new SimpleStringProperty(_address);
         this.address2 = new SimpleStringProperty(_address2);
         this.city = new SimpleStringProperty(_city);
         this.postalCode = new SimpleStringProperty(_postalCode);
         this.phone = new SimpleStringProperty(_phone);
+        this.country = new SimpleStringProperty(_country);
         this.createDate = new SimpleStringProperty(_createDate);
         this.createdBy = new SimpleStringProperty(_createdBy);
         this.lastUpdate = new SimpleStringProperty(_lastUpdate);
@@ -163,6 +168,22 @@ public class AddressModel {
      */
     public void setPhone(String _phone) {
         phone.set(_phone);
+    }
+    
+    /**
+     * Get country value
+     * @return country value
+     */
+    public String getCountry() {
+        return country.get();
+    }
+    
+    /**
+     * Set country value
+     * @param _country 
+     */
+    public void setCountry(String _country) {
+        country.set(_country);
     }
     
     /**

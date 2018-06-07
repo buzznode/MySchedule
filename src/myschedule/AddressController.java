@@ -59,6 +59,7 @@ public class AddressController {
     @FXML private TableColumn<AddressModel, String> cityColumn;
     @FXML private TableColumn<AddressModel, String> postalCodeColumn;
     @FXML private TableColumn<AddressModel, String> phoneColumn;
+    @FXML private TableColumn<AddressModel, String> countryColumn;
     @FXML private TableColumn<AddressModel, String> createDateColumn;
     @FXML private TableColumn<AddressModel, String> createdByColumn;
     @FXML private TableColumn<AddressModel, String> lastUpdateColumn;
@@ -81,28 +82,6 @@ public class AddressController {
     private MainController main;
     private boolean unsavedChanges = false;
 
-//    /**
-//     * Alert status
-//     * @param status 
-//     */
-//    @SuppressWarnings("unchecked")
-//    private void alertStatus(int status) {
-//        if (status == 1) {
-//            Alert alert = new Alert(AlertType.INFORMATION);
-//            alert.setTitle("Information Dialog");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Database commit was successful. Record(s) added.");
-//            alert.showAndWait();
-//        }
-//        else {
-//            Alert alert = new Alert(AlertType.ERROR);
-//            alert.setTitle("Error Dialog");
-//            alert.setHeaderText("Error processing request.");
-//            alert.setContentText("There was an error processing your request. Please try again.");
-//            alert.showAndWait();
-//        }
-//    }
-    
     /**
      * Check for un-saved changes; display warning message
      * as needed; close city maintenance function.
@@ -152,8 +131,9 @@ public class AddressController {
             
             if (validateAddressRecord()) {
                 addressList.add(new AddressModel(
-                    Integer.parseInt(txtAddressId.getText()), txtAddress.getText(), txtAddress2.getText(),
-                    (String) cboCity.getValue(), txtPostalCode.getText(), txtPhone.getText(), now, user, now, user));
+                    Integer.parseInt(txtAddressId.getText()), txtAddress.getText(), 
+                    txtAddress2.getText(), (String) cboCity.getValue(), txtPostalCode.getText(), 
+                    txtPhone.getText(), txtCountry.getText(), now, user, now, user));
                 
                 unsavedChanges = true;
                 initializeForm();

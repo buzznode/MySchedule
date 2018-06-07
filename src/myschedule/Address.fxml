@@ -36,10 +36,7 @@
                         <TableColumn fx:id="cityColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="City" />
                         <TableColumn fx:id="postalCodeColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Postal Code" />
                         <TableColumn fx:id="phoneColumn" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" text="Phone" />
-                        <TableColumn fx:id="createDateColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Create Date" />
-                        <TableColumn fx:id="createdByColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Created By" />
-                        <TableColumn fx:id="lastUpdateColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Last Update" />
-                        <TableColumn fx:id="lastUpdateByColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Update By" />
+                        <TableColumn fx:id="countryColumn" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" resizable="false" text="Country" />
                     </columns>
                 </TableView>
             </children>
