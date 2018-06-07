@@ -164,10 +164,12 @@ public class DB {
         connect();
         
         sql = String.join(" ",
-            "SELECT a.addressId, a.address, a.address2, b.city, a.postalCode, a.phone,",
-            "   a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
+            "SELECT a.addressId, a.address, a.address2, b.city, b.cityId, a.postalCode,",
+            "   a.phone, c.country, c.countryId, a.createDate, a.createdBy, a.lastUpdate,",
+            "   a.lastUpdateBy",
             "FROM address a",
-            "JOIN city b ON a.cityId = b.cityId",
+            "JOIN city b ON b.cityId = a.cityId",
+            "JOIN country c ON c.countryId = b.countryId",
             "ORDER BY",
             sortColumn,
             direction
@@ -182,9 +184,12 @@ public class DB {
                     rs.getInt("addressId"), 
                     rs.getString("address"), 
                     rs.getString("address2"), 
-                    rs.getString("city"), 
+                    rs.getString("city"),
+                    rs.getInt("cityId"),
                     rs.getString("postalCode"), 
-                    rs.getString("phone"), 
+                    rs.getString("phone"),
+                    rs.getString("country"),
+                    rs.getInt("countryId"),
                     rs.getString("createDate"), 
                     rs.getString("createdBy"), 
                     rs.getString("lastUpdate"), 
@@ -771,6 +776,79 @@ public class DB {
         }
         return city;
     }
+
+    /**
+     * Get a Country Id using a Country
+     * @param country
+     * @return countryId (Integer)
+     * @throws SQLException
+     */    
+    @SuppressWarnings("unchecked")
+    public int getACountryId(String country) throws SQLException {
+        int countryId = 0;
+        String sql;
+        connect();
+
+        sql = String.join(" ",
+            "SELECT countryId",
+            "FROM country",
+            "WHERE country=?"
+        );
+            
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, country);
+            rs = pstmt.executeQuery(sql);
+            rs.first();
+            countryId = rs.getInt("countryId");
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return countryId;
+    }
+
+    /**
+     * Get a Country using a Country Id
+     * @param countryId
+     * @return Country (String)
+     * @throws SQLException
+     */
+    @SuppressWarnings("unchecked")
+    public String getACountryName(int countryId) throws SQLException {
+        String country = "";
+        String sql;
+        connect();
+
+        sql = String.join(" ",
+            "SELECT country",
+            "FROM country",
+            "WHERE countryId=?",
+            "ORDER BY country"
+        );
+        
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, countryId);
+            rs = pstmt.executeQuery(sql);
+            rs.first();
+            country = rs.getString("country");
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return country;
+    }
     
     /**
      * Get a list of Cities
@@ -958,48 +1036,68 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public boolean updateAddressTable(ObservableList<AddressModel> list) throws SQLException{
-        int cityId;
+    public int upsertAddress(ObservableList<AddressModel> list, String userName) throws SQLException{
+        int cnt;
+        int id;
+        int rows = 0;
         String sql;
-        String lookup;
+        connect();
         
         try {
-            sql = "TRUNCATE address";
-            run(sql);
-            
-            sql = String.join(" ", 
-                "INSERT",
-                "INTO address (addressId, address, address2, cityId, postalCode, ",
-                "   phone, createDate, createdBy, lastUpdate, lastUpdateBy)",
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            );
-
-            pstmt = conn.prepareStatement(sql);
-            
             for (AddressModel a : list) {
-                lookup = String.join(" ",
-                    "SELECT cityId",
-                    "FROM city",
-                    "WHERE city = \"" + a.getCity()+ "\""
+                sql = String.join(" ",
+                    "SELECT COUNT(*) AS cnt",
+                    "FROM address",
+                    "WHERE addressId = " + a.getAddressId()
                 );
-                rs = stmt.executeQuery(lookup);
-                rs.beforeFirst();
-                rs.next();
-                cityId = rs.getInt("cityId");
+                rs = stmt.executeQuery(sql);
+                rs.first();
+                cnt = rs.getInt("cnt");
                 
-                pstmt.setInt(1,     a.getAddressId());
-                pstmt.setString(2,  a.getAddress());
-                pstmt.setString(3,  a.getAddress2());
-                pstmt.setInt(4,     cityId);
-                pstmt.setString(5,  a.getPostalCode());
-                pstmt.setString(6,  a.getPhone());
-                pstmt.setString(7,  a.getCreateDate());
-                pstmt.setString(8,  a.getCreatedBy());
-                pstmt.setString(9,  a.getLastUpdate());
-                pstmt.setString(10, a.getLastUpdateBy());
-                pstmt.executeUpdate();
+                if (cnt > 0) {  // update record
+                    sql = String.join(" ",
+                        "UPDATE address",
+                        "SET address=?,",
+                        "   address2=?,",
+                        "   cityId=?,",
+                        "   postalCode=?,",
+                        "   phone=?,",
+                        "   lastUpdate=NOW(),",
+                        "   lastUpdateBy=?",
+                        "WHERE addressId=?"
+                    );
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.setString(1, a.getAddress());
+                    pstmt.setString(2, a.getAddress2());
+                    pstmt.setInt(3, a.getCityId());
+                    pstmt.setString(4, a.getPostalCode());
+                    pstmt.setString(5, a.getPhone());
+                    pstmt.setString(6, userName);
+                    pstmt.setInt(7, a.getAddressId());
+                    rows += pstmt.executeUpdate();
+                }
+                else {  // insert new record
+                    sql = String.join(" ",
+                        "INSERT",
+                        "INTO address (addressId, address, address2, cityId,",
+                        "   postalCode, phone, createDate, createdBy, lastUpdate,",
+                        "   lastUpdateBy)",
+                        "VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, NOW(), ?)"
+                    );
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.setInt(1, a.getAddressId());
+                    pstmt.setString(2, a.getAddress());
+                    pstmt.setString(3, a.getAddress2());
+                    pstmt.setInt(4, a.getCityId());
+                    pstmt.setString(5, a.getPostalCode());
+                    pstmt.setString(6, a.getPhone());
+                    pstmt.setString(7, userName);
+                    pstmt.setString(8, userName);
+                    rows += pstmt.executeUpdate(sql);
+                    
+                }
             }
-            return true;
+            return rows;
         }
         catch (SQLException ex) {
             log.write(Level.SEVERE, ex.toString(), ex);

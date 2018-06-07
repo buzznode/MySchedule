@@ -35,9 +35,11 @@ public class AddressModel {
     private final SimpleStringProperty address;
     private final SimpleStringProperty address2;
     private final SimpleStringProperty city;
+    private final SimpleIntegerProperty cityId;
     private final SimpleStringProperty postalCode;
     private final SimpleStringProperty phone;
     private final SimpleStringProperty country;
+    private final SimpleIntegerProperty countryId;
     private final SimpleStringProperty createDate;
     private final SimpleStringProperty createdBy;
     private final SimpleStringProperty lastUpdate;
@@ -48,9 +50,11 @@ public class AddressModel {
         this.address = new SimpleStringProperty("");
         this.address2 = new SimpleStringProperty("");
         this.city = new SimpleStringProperty("");
+        this.cityId = new SimpleIntegerProperty(0);
         this.postalCode = new SimpleStringProperty("");
         this.phone = new SimpleStringProperty("");
         this.country = new SimpleStringProperty("");
+        this.countryId = new SimpleIntegerProperty(0);
         this.createDate = new SimpleStringProperty("");
         this.createdBy = new SimpleStringProperty("");
         this.lastUpdate = new SimpleStringProperty("");
@@ -58,16 +62,18 @@ public class AddressModel {
     }
     
     public AddressModel(int _addressId, String _address, String _address2, 
-            String _city, String _postalCode, String _phone, String _country, 
-            String _createDate, String _createdBy, String _lastUpdate, 
+            String _city, int _cityId, String _postalCode, String _phone, String _country, 
+            int _countryId, String _createDate, String _createdBy, String _lastUpdate, 
             String _lastUpdateBy) {
         this.addressId = new SimpleIntegerProperty(_addressId);
         this.address = new SimpleStringProperty(_address);
         this.address2 = new SimpleStringProperty(_address2);
         this.city = new SimpleStringProperty(_city);
+        this.cityId = new SimpleIntegerProperty(_cityId);
         this.postalCode = new SimpleStringProperty(_postalCode);
         this.phone = new SimpleStringProperty(_phone);
         this.country = new SimpleStringProperty(_country);
+        this.countryId = new SimpleIntegerProperty(_countryId);
         this.createDate = new SimpleStringProperty(_createDate);
         this.createdBy = new SimpleStringProperty(_createdBy);
         this.lastUpdate = new SimpleStringProperty(_lastUpdate);
@@ -139,6 +145,22 @@ public class AddressModel {
     }
     
     /**
+     * Get cityId value
+     * @return cityId value
+     */
+    public int getCityId() {
+        return cityId.get();
+    }
+    
+    /**
+     * Set cityId value
+     * @param _cityId 
+     */
+    public void setCityId(int _cityId) {
+        cityId.set(_cityId);
+    }
+    
+    /**
      * Get postal code value
      * @return postal code value
      */
@@ -184,6 +206,22 @@ public class AddressModel {
      */
     public void setCountry(String _country) {
         country.set(_country);
+    }
+    
+    /**
+     * Get countryId value
+     * @return countryId value
+     */
+    public int getCountryId() {
+        return countryId.get();
+    }
+    
+    /**
+     * Set countryId value
+     * @param _countryId 
+     */
+    public void setCountryId(int _countryId) {
+        countryId.set(_countryId);
     }
     
     /**

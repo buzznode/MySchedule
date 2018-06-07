@@ -75,6 +75,11 @@
                         <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
+                <TextField fx:id="txtCountry" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" promptText="Country">
+                    <HBox.margin>
+                        <Insets right="5.0" />
+                    </HBox.margin>
+                </TextField>
             </children>
         </HBox>
         <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="1075.0" styleClass="buttonsContainer">
