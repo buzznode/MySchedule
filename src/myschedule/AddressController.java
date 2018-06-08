@@ -300,7 +300,7 @@ public class AddressController {
                     ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountryId(countryId);
                 }
                 catch (SQLException ex) {
-                    
+                    System.out.println("Something is hosed: " + ex.getMessage());
                 }
                 table.refresh();
                 unsavedChanges = true;
@@ -396,11 +396,13 @@ public class AddressController {
      */
     @SuppressWarnings("unchecked")
     private boolean validateAddressRecord() {
-        return app.common.isNumber(txtAddressId.getText())
+        boolean result = false;
+        result = app.common.isNumber(txtAddressId.getText())
               && app.common.isString(txtAddress.getText())
-              && app.common.isString(txtAddress2.getText())
-              && app.common.isString((String) cboCity.getValue())
-              && app.common.isString(txtPostalCode.getText())
-              && app.common.isString(txtPhone.getText());
+              && app.common.isString(txtAddress2.getText());
+//              && app.common.isString(cboCity.getValue().toString())
+//              && app.common.isString(txtPostalCode.getText())
+//              && app.common.isString(txtPhone.getText());
+        return result;
     }
 }

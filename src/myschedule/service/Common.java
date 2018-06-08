@@ -23,6 +23,7 @@
  */
 package myschedule.service;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -226,7 +227,12 @@ public class Common  {
 
     @SuppressWarnings("unchecked")
     public boolean isString(String str) {
-        return str.length() > 0;
+        if (str.getClass().getTypeName().equals(Type.STRING)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     
     @SuppressWarnings("unchecked")
