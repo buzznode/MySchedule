@@ -59,7 +59,7 @@ public class DB {
     public DB() {
         conn = null;
         driver = "com.mysql.jdbc.Driver";
-        db  = "U03MuY";
+        db = "U03MuY";
         dbUser = "U03MuY";
         dbPwd = "53688020218";
         url = "jdbc:mysql://52.206.157.109/" + db;
@@ -73,7 +73,7 @@ public class DB {
         log = _log;
         conn = null;
         driver = "com.mysql.jdbc.Driver";
-        db  = "U03MuY";
+        db = "U03MuY";
         dbUser = "U03MuY";
         dbPwd = "53688020218";
         url = "jdbc:mysql://52.206.157.109/" + db;
@@ -106,6 +106,15 @@ public class DB {
         }
     }
 
+    /**
+     * Replace tick-marks with escaped flavor
+     * @param str (String)
+     * @return String containing escaped tick-marks
+     */
+    private String escapeTicks(String str) {
+        return str.replaceAll("'", "\'");
+    }
+    
     /**
      * Execute SQL and return result
      * @param sql
@@ -317,7 +326,8 @@ public class DB {
         connect();
         
         sql = String.join(" ",
-            "SELECT a.customerName, a.active, b.address, b.address2, c.city, b.postalCode, b.phone, d.country",
+            "SELECT a.customerName, a.active, b.address, b.address2, c.city,",
+            "   b.postalCode, b.phone, d.country",
             "FROM customer a",
             "JOIN address b ON b.addressId = a.addressId",
             "JOIN city c ON c.cityId = b.cityId",
@@ -355,7 +365,8 @@ public class DB {
         connect();
 
         sql = String.join(" ",
-            "SELECT customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy",
+            "SELECT customerId, customerName, addressId, active, createDate, createdBy,",
+            "   lastUpdate, lastUpdateBy",
             "FROM customer",
             "ORDER BY",
             sortColumn,
@@ -717,15 +728,12 @@ public class DB {
         sql = String.join(" ",
             "SELECT cityId",
             "FROM city",
-            "WHERE city = '?'"
+            "WHERE city=\"" + escapeTicks(city) + "\""
         );
             
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, city);
-            rs = pstmt.executeQuery(sql);
-            rs.beforeFirst();
-            rs.next();
+            rs = stmt.executeQuery(sql);
+            rs.first();
             cityId = rs.getInt("cityId");
         }
         catch (SQLException ex) {
@@ -754,16 +762,13 @@ public class DB {
         sql = String.join(" ",
             "SELECT city",
             "FROM city",
-            "WHERE cityId = ?",
+            "WHERE cityId=" + cityId,
             "ORDER BY city"
         );
         
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, cityId);
-            rs = pstmt.executeQuery(sql);
-            rs.beforeFirst();
-            rs.next();
+            rs = stmt.executeQuery(sql);
+            rs.first();
             city = rs.getString("city");
         }
         catch (SQLException ex) {
@@ -792,13 +797,11 @@ public class DB {
         sql = String.join(" ",
             "SELECT countryId",
             "FROM country",
-            "WHERE country=?"
+            "WHERE country=\"" + escapeTicks(country) + "\"" 
         );
             
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, country);
-            rs = pstmt.executeQuery(sql);
+            rs = stmt.executeQuery(sql);
             rs.first();
             countryId = rs.getInt("countryId");
         }
@@ -828,14 +831,11 @@ public class DB {
         sql = String.join(" ",
             "SELECT country",
             "FROM country",
-            "WHERE countryId=?",
-            "ORDER BY country"
+            "WHERE countryId=" + countryId
         );
         
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, countryId);
-            rs = pstmt.executeQuery(sql);
+            rs = stmt.executeQuery(sql);
             rs.first();
             country = rs.getString("country");
         }
@@ -902,7 +902,7 @@ public class DB {
             sql = String.join(" ",
                 "SELECT countryId",
                 "FROM city",
-                "WHERE city='" + city + "'"
+                "WHERE city=\"" + escapeTicks(city) + "\""
             );
             rs = stmt.executeQuery(sql);
             rs.first();
@@ -937,11 +937,9 @@ public class DB {
                 "SELECT b.country",
                 "FROM city a",
                 "JOIN country b ON b.countryId = a.countryId",
-                "WHERE a.city=?"
+                "WHERE a.city=\"" + escapeTicks(city) + "\""
             );
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, city);
-            rs = pstmt.executeQuery();
+            rs = stmt.executeQuery(sql);
             rs.first();
             country = rs.getString("country");
         }
@@ -1052,16 +1050,11 @@ public class DB {
             rs.beforeFirst();
             
             while (rs.next()) {
-                list.add(rs.getString("address") 
-                       + " " 
-                       + rs.getString("address2") 
-                       + " " 
-                       + rs.getString("city") 
-                       + " " 
-                       + rs.getString("country") 
-                       + " " 
-                       + rs.getString("postalCode") 
-                       + " " 
+                list.add(rs.getString("address") + " " 
+                       + rs.getString("address2") + " " 
+                       + rs.getString("city") + " " 
+                       + rs.getString("country") + " " 
+                       + rs.getString("postalCode") + " " 
                        + rs.getString("phone"));
             }
         }
@@ -1129,13 +1122,13 @@ public class DB {
                 if (cnt > 0) {  // update record
                     sql = String.join(" ",
                         "UPDATE address",
-                        "SET address='" + a.getAddress() + "',",
-                        "   address2='" + a.getAddress2() + "',",
+                        "SET address=\"" + a.getAddress() + "\",",
+                        "   address2=\"" + a.getAddress2() + "\",",
                         "   cityId=" + a.getCityId() + ",",
-                        "   postalCode='" + a.getPostalCode() + "',",
+                        "   postalCode=\"" + a.getPostalCode() + "\",",
                         "   phone='" + a.getPhone() + "',",
-                        "   lastUpdate='" + rightNow + "', ",
-                        "   lastUpdateBy='" + userName + "'",
+                        "   lastUpdate=\"" + rightNow + "\", ",
+                        "   lastUpdateBy=\"" + userName + "\"",
                         "WHERE addressId=" + a.getAddressId()
                     );
                     rows += stmt.executeUpdate(sql);
@@ -1145,16 +1138,16 @@ public class DB {
                         "INSERT",
                         "INTO  address (addressId, address, address2, cityId, postalCode, phone",
                         "   createDate, createdBy, lastUpdate, lastUpdateBy)",
-                        "VALUES(" + a.getAddressId() + ", '",
-                            a.getAddress() + "', '",
-                            a.getAddress2() + "', '",
-                            a.getCityId() + ", '",
-                            a.getPostalCode() + "','",
-                            a.getPhone() + "', '",
-                            rightNow + "', '",
-                            userName + "', '",
-                            rightNow + "', '",
-                            userName + "')"
+                        "VALUES(" + a.getAddressId() + ", \"",
+                            a.getAddress() + "\", \"",
+                            a.getAddress2() + "\", \"",
+                            a.getCityId() + ", \"",
+                            a.getPostalCode() + "\",\"",
+                            a.getPhone() + "\", \"",
+                            rightNow + "\", \"",
+                            userName + "\", \"",
+                            rightNow + "\", \"",
+                            userName + "\")"
                     );
                     rows += stmt.executeUpdate(sql);
                 }
@@ -1206,9 +1199,9 @@ public class DB {
                 rs.next();
                 countryId = rs.getInt("countryId");
                 
-                pstmt.setInt(1,    c.getCityId());
-                pstmt.setString(2, c.getCity());
-                pstmt.setInt(3,    countryId);
+                pstmt.setInt(1, c.getCityId());
+                pstmt.setString(2, escapeTicks(c.getCity()));
+                pstmt.setInt(3, countryId);
                 pstmt.setString(4, c.getCreateDate());
                 pstmt.setString(5, c.getCreatedBy());
                 pstmt.setString(6, c.getLastUpdate());
@@ -1251,8 +1244,8 @@ public class DB {
             pstmt = conn.prepareStatement(sql);
             
             for (CountryModel c : list) {
-                pstmt.setInt(1,    c.getCountryId());
-                pstmt.setString(2, c.getCountry());
+                pstmt.setInt(1, c.getCountryId());
+                pstmt.setString(2, escapeTicks(c.getCountry()));
                 pstmt.setString(3, c.getCreateDate());
                 pstmt.setString(4, c.getCreatedBy());
                 pstmt.setString(5, c.getLastUpdate());
@@ -1301,21 +1294,14 @@ public class DB {
                 // update existing record
                 sql = String.join(" ",
                     "UPDATE customer",
-                    "SET customerName=?,",
-                    "   addressId=?,",
-                    "   active=?,",
+                    "SET customerName=\"" + escapeTicks(record.getCustomerName()) + "\", ",
+                    "   addressId=" + record.getAddressId() + ", ",
+                    "   active=" + record.getActive() + ", ",
                     "   lastUpdate=NOW(),",
-                    "   lastUpdateBy=?",
-                    "WHERE customerId=?"
+                    "   lastUpdateBy=\"" + userName + "\"",
+                    "WHERE customerId=" + record.getCustomerId()
                 );
-                
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, record.getCustomerName());
-                pstmt.setInt(2, record.getAddressId());
-                pstmt.setBoolean(3, record.getActive());
-                pstmt.setString(4, userName);
-                pstmt.setInt(5, record.getCustomerId());
-                rows = pstmt.executeUpdate();
+                rows = stmt.executeUpdate(sql);
             }
             else {
                 // insert new record
@@ -1335,10 +1321,9 @@ public class DB {
                     "   lastUpdate, lastUpdateBy",
                     "VALUES (?, ?, ?, ?, NOW(), ?, NOW(), ?)"
                 );
-                
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, id);
-                pstmt.setString(2, record.getCustomerName());
+                pstmt.setString(2, escapeTicks(record.getCustomerName()));
                 pstmt.setInt(3, record.getAddressId());
                 pstmt.setBoolean(4, record.getActive());
                 pstmt.setString(5, userName);

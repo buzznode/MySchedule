@@ -2,59 +2,14 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-06-07T20:43:05</date>
-  <millis>1528422185397</millis>
+  <date>2018-06-08T07:22:13</date>
+  <millis>1528460533973</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
   <class>myschedule.service.Logging</class>
   <method>write</method>
-  <thread>14</thread>
+  <thread>17</thread>
   <message>Starting application...</message>
-</record>
-<record>
-  <date>2018-06-07T20:43:21</date>
-  <millis>1528422201166</millis>
-  <sequence>1</sequence>
-  <logger>myschedule</logger>
-  <level>SEVERE</level>
-  <class>myschedule.service.Logging</class>
-  <method>write</method>
-  <thread>14</thread>
-  <message>java.sql.SQLException: Parameter index out of range (1 &gt; number of parameters, which is 0).</message>
-  <param>java.sql.SQLException: Parameter index out of range (1 &gt; number of parameters, which is 0).</param>
-</record>
-<record>
-  <date>2018-06-07T20:43:21</date>
-  <millis>1528422201167</millis>
-  <sequence>2</sequence>
-  <logger>myschedule</logger>
-  <level>SEVERE</level>
-  <class>myschedule.service.Logging</class>
-  <method>write</method>
-  <thread>14</thread>
-  <message>SQLException: Parameter index out of range (1 &gt; number of parameters, which is 0).</message>
-</record>
-<record>
-  <date>2018-06-07T20:43:21</date>
-  <millis>1528422201168</millis>
-  <sequence>3</sequence>
-  <logger>myschedule</logger>
-  <level>SEVERE</level>
-  <class>myschedule.service.Logging</class>
-  <method>write</method>
-  <thread>14</thread>
-  <message>SQLState: S1009</message>
-</record>
-<record>
-  <date>2018-06-07T20:43:21</date>
-  <millis>1528422201168</millis>
-  <sequence>4</sequence>
-  <logger>myschedule</logger>
-  <level>SEVERE</level>
-  <class>myschedule.service.Logging</class>
-  <method>write</method>
-  <thread>14</thread>
-  <message>VendorError: 0</message>
 </record>
 </log>
