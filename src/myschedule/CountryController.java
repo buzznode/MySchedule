@@ -129,12 +129,12 @@ public class CountryController {
     @SuppressWarnings("unchecked")
     private void createActionListeners() {
         btnAdd.setOnAction((ae) -> {
-            String now = app.common.now();
+            String rightNow = app.common.rightNow();
             String user = app.userName();
             
             if (validateCountryRecord()) {
                 countryList.add(new CountryModel(
-                    Integer.parseInt(txtCountryId.getText()), txtCountry.getText(), now, user, now, user)
+                    Integer.parseInt(txtCountryId.getText()), txtCountry.getText(), rightNow, user, rightNow, user)
                 );
                 
                 unsavedChanges = true;
@@ -214,7 +214,7 @@ public class CountryController {
         countryColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CountryModel, String> t) -> {
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
-                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.rightNow());
                 ((CountryModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
                 unsavedChanges = true;

@@ -142,13 +142,13 @@ public class CityController {
     private void createActionListeners() {
         
         btnAdd.setOnAction((ae) -> {
-            String now = app.common.now();
+            String rightNow = app.common.rightNow();
             String user = app.userName();
 
             if (validateCityRecord()) {
                 cityList.add(new CityModel(
                     Integer.parseInt(txtCityId.getText()), txtCity.getText(), (String) cboCountry.getValue(),
-                    now, user, now, user)
+                    rightNow, user, rightNow, user)
                 );
                 
                 unsavedChanges = true;
@@ -208,7 +208,7 @@ public class CityController {
     @SuppressWarnings("unchecked")
     private void initializeForm() {
         int nextCityId = getNextCityId(cityList);
-        String now = app.common.now();
+        String rightNow = app.common.rightNow();
         String user = app.userName();
 
         txtCityId.setText(Integer.toString(nextCityId));
@@ -234,7 +234,7 @@ public class CityController {
         cityColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CityModel, String> t) -> {
                 ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.rightNow());
                 ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
                 unsavedChanges = true;
@@ -247,7 +247,7 @@ public class CityController {
         countryColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<CityModel, String> t) -> {
                 ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
-                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.rightNow());
                 ((CityModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
                 unsavedChanges = true;

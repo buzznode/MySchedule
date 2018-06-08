@@ -98,7 +98,7 @@ public class AddressController {
         
         btnCommit.setOnAction((ea) -> {
             try {
-                app.db.upsertAddress(addressList, app.userName());
+                app.db.upsertAddress(addressList, app.userName(), app.common.rightNow());
                 unsavedChanges = false;
                 app.common.alertStatus(1);
                 refreshTableView();
@@ -184,7 +184,7 @@ public class AddressController {
     private void handleAddAddress() {
         int cityId = 0;
         int countryId = 0;
-        String now = app.common.now();
+        String rightNow = app.common.rightNow();
         String user = app.userName();
 
         try {
@@ -200,7 +200,7 @@ public class AddressController {
                 Integer.parseInt(txtAddressId.getText()), txtAddress.getText(), 
                 txtAddress2.getText(), cboCity.getValue().toString(), cityId, 
                 txtPostalCode.getText(), txtPhone.getText(), txtCountry.getText(), 
-                countryId, now, user, now, user));
+                countryId, rightNow, user, rightNow, user));
 
             unsavedChanges = true;
             initializeForm();
@@ -263,7 +263,7 @@ public class AddressController {
         addressColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<AddressModel, String> t) -> {
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setAddress(t.getNewValue());
-                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.rightNow());
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
                 unsavedChanges = true;
@@ -276,7 +276,7 @@ public class AddressController {
         address2Column.setOnEditCommit(
             (TableColumn.CellEditEvent<AddressModel, String> t) -> {
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setAddress2(t.getNewValue());
-                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.rightNow());
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
                 unsavedChanges = true;
@@ -289,11 +289,15 @@ public class AddressController {
         cityColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<AddressModel, String> t) -> {
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
-                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.rightNow());
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 try {
-                  final String country = app.db.getCountryNameViaCity(t.getNewValue());
-                  ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(country);
+                    final int cityId = app.db.getACityId(t.getNewValue());
+                    final String country = app.db.getCountryNameViaCity(t.getNewValue());
+                    final int countryId = app.db.getCountryIdViaCity(t.getNewValue());
+                    ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCityId(cityId);
+                    ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(country);
+                    ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountryId(countryId);
                 }
                 catch (SQLException ex) {
                     
@@ -309,7 +313,7 @@ public class AddressController {
         postalCodeColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<AddressModel, String> t) -> {
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setPostalCode(t.getNewValue());
-                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.rightNow());
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
                 unsavedChanges = true;
@@ -322,7 +326,7 @@ public class AddressController {
         phoneColumn.setOnEditCommit(
             (TableColumn.CellEditEvent<AddressModel, String> t) -> {
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setPhone(t.getNewValue());
-                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.now());
+                ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.rightNow());
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
                 table.refresh();
                 unsavedChanges = true;
