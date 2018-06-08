@@ -887,6 +887,40 @@ public class DB {
     }
 
     /**
+     * Get a Country id using a City Name
+     * @param city
+     * @return CountryId (Integer)
+     * @throws java.sql.SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public int getCountryIdViaCity(String city) throws SQLException {
+        int countryId = 0;
+        String sql;
+        
+        try {
+            connect();
+            sql = String.join(" ",
+                "SELECT countryId",
+                "FROM city",
+                "WHERE city='" + city + "'"
+            );
+            rs = stmt.executeQuery(sql);
+            rs.first();
+            countryId = rs.getInt("countryId");
+        }
+        catch (SQLException ex) {
+            log.write(Level.SEVERE, ex.toString(), ex);
+            log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
+            log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
+            log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
+            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            throw new SQLException(msg);
+        }
+        return countryId;
+    }
+    
+    
+    /**
      * Get a Country Name using a City Name
      * @param city
      * @return Country (String)
@@ -1068,11 +1102,13 @@ public class DB {
     /**
      * Update address table
      * @param list
+     * @param userName
+     * @param rightNow
      * @return boolean result
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public int upsertAddress(ObservableList<AddressModel> list, String userName) throws SQLException{
+    public int upsertAddress(ObservableList<AddressModel> list, String userName, String rightNow) throws SQLException{
         int cnt;
         int id;
         int rows = 0;
@@ -1093,44 +1129,34 @@ public class DB {
                 if (cnt > 0) {  // update record
                     sql = String.join(" ",
                         "UPDATE address",
-                        "SET address=?,",
-                        "   address2=?,",
-                        "   cityId=?,",
-                        "   postalCode=?,",
-                        "   phone=?,",
-                        "   lastUpdate=NOW(),",
-                        "   lastUpdateBy=?",
-                        "WHERE addressId=?"
+                        "SET address='" + a.getAddress() + "',",
+                        "   address2='" + a.getAddress2() + "',",
+                        "   cityId=" + a.getCityId() + ",",
+                        "   postalCode='" + a.getPostalCode() + "',",
+                        "   phone='" + a.getPhone() + "',",
+                        "   lastUpdate='" + rightNow + "', ",
+                        "   lastUpdateBy='" + userName + "'",
+                        "WHERE addressId=" + a.getAddressId()
                     );
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, a.getAddress());
-                    pstmt.setString(2, a.getAddress2());
-                    pstmt.setInt(3, a.getCityId());
-                    pstmt.setString(4, a.getPostalCode());
-                    pstmt.setString(5, a.getPhone());
-                    pstmt.setString(6, userName);
-                    pstmt.setInt(7, a.getAddressId());
-                    rows += pstmt.executeUpdate();
+                    rows += stmt.executeUpdate(sql);
                 }
                 else {  // insert new record
                     sql = String.join(" ",
                         "INSERT",
-                        "INTO address (addressId, address, address2, cityId,",
-                        "   postalCode, phone, createDate, createdBy, lastUpdate,",
-                        "   lastUpdateBy)",
-                        "VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, NOW(), ?)"
+                        "INTO  address (addressId, address, address2, cityId, postalCode, phone",
+                        "   createDate, createdBy, lastUpdate, lastUpdateBy)",
+                        "VALUES(" + a.getAddressId() + ", '",
+                            a.getAddress() + "', '",
+                            a.getAddress2() + "', '",
+                            a.getCityId() + ", '",
+                            a.getPostalCode() + "','",
+                            a.getPhone() + "', '",
+                            rightNow + "', '",
+                            userName + "', '",
+                            rightNow + "', '",
+                            userName + "')"
                     );
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.setInt(1, a.getAddressId());
-                    pstmt.setString(2, a.getAddress());
-                    pstmt.setString(3, a.getAddress2());
-                    pstmt.setInt(4, a.getCityId());
-                    pstmt.setString(5, a.getPostalCode());
-                    pstmt.setString(6, a.getPhone());
-                    pstmt.setString(7, userName);
-                    pstmt.setString(8, userName);
-                    rows += pstmt.executeUpdate(sql);
-                    
+                    rows += stmt.executeUpdate(sql);
                 }
             }
             return rows;

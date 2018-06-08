@@ -169,7 +169,7 @@ public class Common  {
     }
 
     @SuppressWarnings("unchecked")
-    public String now() {
+    public String rightNow() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
     }
     
