@@ -50,52 +50,59 @@ public class LoginController extends AnchorPane {
     private MainController main;
 
     /**
-     * Cancel login 
+     *  Add listeners
      */
-    private void cancelLogin() {
-
-        app.log.write(Level.INFO, "User cancelled login attempt");
-        main.endProcess();
-    }
-    
-    /**
-     *  Create action event listeners
-     */
-    private void createActionListeners() {
-        btnCancel.setOnMouseClicked((ea) -> {
-            cancelLogin();
+    private void addListeners() {
+        btnCancel.setOnMouseClicked(e -> {
+            handleCancel();
         });
         
-        btnLogin.setOnMouseClicked((ea) -> {
-            userLogin();
+        btnLogin.setOnMouseClicked(e -> {
+            handleLogin();
         });
         
-        txtPassword.setOnMouseClicked((me) -> {
+        txtPassword.setOnMouseClicked(e -> {
             txtPassword.setText("");
             lblFeedback.setText("");
         });
         
-        txtUsername.setOnMouseClicked((me) -> {
+        txtUsername.setOnMouseClicked(e -> {
             txtUsername.setText("");
             lblFeedback.setText("");
         });
     }
 
     /**
-     * Begin login process
+     * Handle cancel action
      */
-    public void start() {
-        app.log.write(Level.INFO, "Attempting login...");
-        createActionListeners();
-        btnCancel.setText(app.localize("cancel"));
-        btnLogin.setText(app.localize("login"));
-        lblPassword.setText(app.localize("password"));
-        lblTitle.setText(app.localize("login"));
-        lblUsername.setText(app.localize("username"));
-        txtUsername.setPromptText(app.localize("username"));
-        txtPassword.setPromptText(app.localize("password"));
-        lblFeedback.setText("");
-        app.common.loadUsers();
+    private void handleCancel() {
+        app.log.write(Level.INFO, "User cancelled login attempt");
+        main.endProcess();
+    }
+
+    /**
+     * Process login
+     */
+    private void handleLogin() {
+        if (!app.loggedIn()) {
+            String user = txtUsername.getText();
+            String password = txtPassword.getText();
+
+            if (app.common.validateUser(user, password)) {
+                app.userName(user);
+                app.loggedIn(true);
+                main.enableMenu();
+                main.disableLogin();
+                main.endProcess();
+                app.log.write(Level.INFO, user + " has logged in");
+            }
+            else {
+                lblFeedback.setText(app.localize("invalid_username_password"));
+            }
+        }
+        else {
+            app.log.write(Level.INFO, "already logged in");
+        }
     }
 
     /**
@@ -114,28 +121,21 @@ public class LoginController extends AnchorPane {
         main = _main;
     }
     
+    
     /**
-     * Process login
+     * Begin login process
      */
-    private void userLogin() {
-        if (!app.loggedIn()) {
-            String user = txtUsername.getText();
-            String password = txtPassword.getText();
-            
-            if (app.common.validateUser(user, password)) {
-                app.userName(user);
-                app.loggedIn(true);
-                main.enableMenu();
-                main.disableLogin();
-                main.endProcess();
-                app.log.write(Level.INFO, user + " has logged in");
-            }
-            else {
-                lblFeedback.setText(app.localize("invalid_username_password"));
-            }
-        }
-        else {
-            app.log.write(Level.INFO, "already logged in");
-        }
+    public void start() {
+        app.log.write(Level.INFO, "Attempting login...");
+        addListeners();
+        btnCancel.setText(app.localize("cancel"));
+        btnLogin.setText(app.localize("login"));
+        lblPassword.setText(app.localize("password"));
+        lblTitle.setText(app.localize("login"));
+        lblUsername.setText(app.localize("username"));
+        txtUsername.setPromptText(app.localize("username"));
+        txtPassword.setPromptText(app.localize("password"));
+        lblFeedback.setText("");
+        app.common.loadUsers();
     }
 }

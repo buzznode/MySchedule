@@ -10,10 +10,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="country" fx:id="country" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="country" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.CountryController">
+<VBox id="country" fx:id="country" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="445.0" styleClass="country" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.CountryController">
     <children>
-        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="996.0" styleClass="header-bar" />
-        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="1000.0">
+        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="441.0" styleClass="header-bar" />
+        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="445.0">
             <children>
                 <Label id="title" fx:id="lblTitle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="950.0" styleClass="title" text="Countries">
                     <HBox.margin>
@@ -22,24 +22,20 @@
                 </Label>
             </children>
         </HBox>
-        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="1000.0">
+        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="445.0">
             <VBox.margin>
                 <Insets bottom="10.0" />
             </VBox.margin>
             <children>
-                <TableView fx:id="table" editable="true" prefHeight="415.0" prefWidth="955.0">
+                <TableView fx:id="table" editable="true" prefHeight="415.0" prefWidth="400.0">
                     <columns>
                         <TableColumn fx:id="countryIdColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Country Id" />
-                        <TableColumn fx:id="countryColumn" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" resizable="false" text="Country" />
-                        <TableColumn fx:id="createDateColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Create Date" />
-                        <TableColumn fx:id="createdByColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Created By" />
-                        <TableColumn fx:id="lastUpdateColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Last Update" />
-                        <TableColumn fx:id="lastUpdateByColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Last Update By" />
+                        <TableColumn fx:id="countryColumn" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" resizable="false" text="Country" />
                     </columns>
                 </TableView>
             </children>
         </HBox>
-        <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="950.0" styleClass="controlsContainer">
+        <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="400.0" styleClass="controlsContainer">
             <VBox.margin>
                 <Insets bottom="10.0" left="25.0" />
             </VBox.margin>
@@ -48,14 +44,14 @@
                <HBox.margin>
                   <Insets right="5.0" />
                </HBox.margin></TextField>
-                <TextField fx:id="txtCountry" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" promptText="Country">
+                <TextField fx:id="txtCountry" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="295.0" promptText="Country">
                     <HBox.margin>
                         <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
             </children>
         </HBox>
-        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="975.0" styleClass="buttonsContainer">
+        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="425.0" styleClass="buttonsContainer">
             <VBox.margin>
                 <Insets right="20.0" top="5.0" />
             </VBox.margin>

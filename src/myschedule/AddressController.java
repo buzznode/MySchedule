@@ -89,38 +89,25 @@ public class AddressController {
     @SuppressWarnings("unchecked")
     private void addListeners() {
         btnAdd.setOnAction(e -> {
-            handleAddAddress();
+            handleAdd();
         });
         
         btnClose.setOnMouseClicked((ea) -> {
             closeAddressMaint();
         });
         
-        btnCommit.setOnAction((ea) -> {
-            try {
-                app.db.upsertAddress(addressList, app.userName(), app.common.rightNow());
-                unsavedChanges = false;
-                app.common.alertStatus(1);
-                refreshTableView();
-            }
-            catch (SQLException ex) {
-                app.common.alertStatus(0);
-            }
+        btnCommit.setOnAction(e -> {
+                handleCommit();
         });
 
-        btnRemove.setOnAction((ae) -> {
-            ObservableList<AddressModel> addressSelected, allAddresses;
-            allAddresses = table.getItems();
-            addressSelected = table.getSelectionModel().getSelectedItems();
-            addressSelected.forEach(allAddresses::remove);
-            unsavedChanges = true;
+        btnRemove.setOnAction(e -> {
+            handleRemove();
         });
         
         cboCity.setOnAction(e -> {
             handleCityChange();
         });
     }
-
 
     /**
      * Check for un-saved changes; display warning message
@@ -152,7 +139,6 @@ public class AddressController {
             "click \"No\" to close this alert, and then click on the \"Commit\" button to save the changes.\n\n" +
             "Clicking \"Yes\" will result in the pending changes being lost and the address maintenance process ending."
         );
-        
         ButtonType btnYes = new ButtonType("Yes");
         ButtonType btnNo = new ButtonType("No");
         alert.getButtonTypes().setAll(btnYes, btnNo);
@@ -181,7 +167,7 @@ public class AddressController {
     /**
      * Handle Address change
      */
-    private void handleAddAddress() {
+    private void handleAdd() {
         int cityId = 0;
         int countryId = 0;
         String rightNow = app.common.rightNow();
@@ -200,8 +186,8 @@ public class AddressController {
                 Integer.parseInt(txtAddressId.getText()), txtAddress.getText(), 
                 txtAddress2.getText(), cboCity.getValue().toString(), cityId, 
                 txtPostalCode.getText(), txtPhone.getText(), txtCountry.getText(), 
-                countryId, rightNow, user, rightNow, user));
-
+                countryId, rightNow, user, rightNow, user)
+            );
             unsavedChanges = true;
             initializeForm();
         }
@@ -214,7 +200,7 @@ public class AddressController {
      * Handle City change
      */
     private void handleCityChange() {
-        String country = "";
+        String country;
         
         try {
             country = app.db.getCountryNameViaCity(cboCity.getValue().toString());
@@ -223,6 +209,32 @@ public class AddressController {
         catch (SQLException ex) {
             app.common.alertStatus(0);
         }
+    }
+
+    /**
+     * Handles the commit action
+     */
+    private void handleCommit() {
+        try {
+            app.db.upsertAddress(addressList, app.userName(), app.common.rightNow());
+            unsavedChanges = false;
+            app.common.alertStatus(1);
+            refreshTableView();
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
+    }
+
+    /**
+     * Handle remove action
+     */
+    private void handleRemove() {
+        ObservableList<AddressModel> addressSelected, allAddresses;
+        allAddresses = table.getItems();
+        addressSelected = table.getSelectionModel().getSelectedItems();
+        addressSelected.forEach(allAddresses::remove);
+        unsavedChanges = true;
     }
     
     /**
@@ -253,7 +265,7 @@ public class AddressController {
      * Initialize Cell Factories and Cell Value Factories
      */
     @SuppressWarnings("unchecked")
-    private void initializeTableViewColumns() {
+    private void initializeTableColumns() {
         // Address Id column
         addressIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getAddressId()));
         
@@ -385,7 +397,7 @@ public class AddressController {
             app.log.write(Level.SEVERE, ex.getMessage());
         }
         initializeForm();
-        initializeTableViewColumns();
+        initializeTableColumns();
         table.setEditable(true);
         table.setItems(addressList);
     }

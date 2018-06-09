@@ -56,10 +56,6 @@ public class CityController {
     @FXML private TableColumn<CityModel, Integer> cityIdColumn;
     @FXML private TableColumn<CityModel, String> cityColumn;
     @FXML private TableColumn<CityModel, String> countryColumn;
-    @FXML private TableColumn<CityModel, String> createDateColumn;
-    @FXML private TableColumn<CityModel, String> createdByColumn;
-    @FXML private TableColumn<CityModel, String> lastUpdateColumn;
-    @FXML private TableColumn<CityModel, String> lastUpdateByColumn;
     @FXML private TextField txtCityId;
     @FXML private TextField txtCity;
     @FXML private ComboBox cboCountry;
@@ -75,28 +71,29 @@ public class CityController {
     private MainController main;
     private boolean unsavedChanges = false;
 
-//    /**
-//     * Alert status
-//     * @param status 
-//     */
-//    @SuppressWarnings("unchecked")
-//    private void alertStatus(int status) {
-//        if (status == 1) {
-//            Alert alert = new Alert(AlertType.INFORMATION);
-//            alert.setTitle("Information Dialog");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Database commit was successful. Record(s) added.");
-//            alert.showAndWait();
-//        }
-//        else {
-//            Alert alert = new Alert(AlertType.ERROR);
-//            alert.setTitle("Error Dialog");
-//            alert.setHeaderText("Error processing request.");
-//            alert.setContentText("There was an error processing your request. Please try again.");
-//            alert.showAndWait();
-//        }
-//    }
-    
+    /**
+     *  Add action event listeners
+     */
+    @SuppressWarnings("unchecked")
+    private void addListeners() {
+        
+        btnAdd.setOnAction(e -> {
+            handleAdd();
+        });
+        
+        btnClose.setOnMouseClicked((ae) -> {
+            closeCityMaint();
+        });
+        
+        btnCommit.setOnAction(e -> {
+            handleCommit();
+        });
+
+        btnRemove.setOnAction(e -> {
+            handleRemove();
+        });
+    }
+
     /**
      * Check for un-saved changes; display warning message
      * as needed; close city maintenance function.
@@ -127,7 +124,6 @@ public class CityController {
             "click \"No\" to close this alert, and then click on the \"Commit\" button to save the changes.\n\n" +
             "Clicking \"Yes\" will result in the pending changes being lost and the city maintenance process ending."
         );
-        
         ButtonType btnYes = new ButtonType("Yes");
         ButtonType btnNo = new ButtonType("No");
         alert.getButtonTypes().setAll(btnYes, btnNo);
@@ -135,55 +131,6 @@ public class CityController {
         return result.get() == btnYes;
     }
     
-    /**
-     *  Create action event listeners
-     */
-    @SuppressWarnings("unchecked")
-    private void createActionListeners() {
-        
-        btnAdd.setOnAction((ae) -> {
-            String rightNow = app.common.rightNow();
-            String user = app.userName();
-
-            if (validateCityRecord()) {
-                cityList.add(new CityModel(
-                    Integer.parseInt(txtCityId.getText()), txtCity.getText(), (String) cboCountry.getValue(),
-                    rightNow, user, rightNow, user)
-                );
-                
-                unsavedChanges = true;
-                initializeForm();
-            }
-            else {
-                app.log.write(Level.SEVERE, "Error parsing new city record");
-            }
-        });
-        
-        btnClose.setOnMouseClicked((ae) -> {
-            closeCityMaint();
-        });
-        
-        btnCommit.setOnAction((ae) -> {
-            try {
-                app.db.updateCityTable(cityList);
-                unsavedChanges = false;
-                app.common.alertStatus(1);
-                refreshTableView();
-            }
-            catch (SQLException ex) {
-                app.common.alertStatus(0);
-            }
-        });
-
-        btnRemove.setOnAction((ae) -> {
-            ObservableList<CityModel> citySelected, allCities;
-            allCities = table.getItems();
-            citySelected = table.getSelectionModel().getSelectedItems();
-            citySelected.forEach(allCities::remove);
-            unsavedChanges = true;
-        });
-    }
-
     /**
      * Get next available Country Id to be use for add
      * @param list
@@ -194,7 +141,8 @@ public class CityController {
         if (list.size() > 0) {
             Optional<CityModel> c = list
                 .stream()
-                .max(Comparator.comparing(CityModel::getCityId));
+                .max(Comparator.comparing(CityModel::getCityId)
+            );
             return c.get().getCityId() + 1;
         }
         else {
@@ -202,6 +150,52 @@ public class CityController {
         }
     }
 
+    /**
+     * Handle add action
+     */
+    private void handleAdd() {
+        String rightNow = app.common.rightNow();
+        String user = app.userName();
+
+        if (validateCityRecord()) {
+            cityList.add(new CityModel(
+                Integer.parseInt(txtCityId.getText()), txtCity.getText(), (String) cboCountry.getValue(),
+                rightNow, user, rightNow, user)
+            );
+            unsavedChanges = true;
+            initializeForm();
+        }
+        else {
+            app.log.write(Level.SEVERE, "Error parsing new city record");
+        }
+    }
+
+    /**
+     * Handle commit action
+     */
+    private void handleCommit() {
+        try {
+            app.db.updateCityTable(cityList);
+            unsavedChanges = false;
+            app.common.alertStatus(1);
+            refreshTableView();
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
+    }
+
+    /**
+     * Handle remove action
+     */
+    private void handleRemove() {
+        ObservableList<CityModel> citySelected, allCities;
+        allCities = table.getItems();
+        citySelected = table.getSelectionModel().getSelectedItems();
+        citySelected.forEach(allCities::remove);
+        unsavedChanges = true;
+    }
+    
     /**
      * Initialize "add record" form elements
      */
@@ -224,7 +218,7 @@ public class CityController {
      * Initialize Cell Factories and Cell Value Factories
      */
     @SuppressWarnings("unchecked")
-    private void initializeTableViewColumns() {
+    private void initializeTableColumns() {
         // City Id column
         cityIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCityId()));
         
@@ -253,18 +247,6 @@ public class CityController {
                 unsavedChanges = true;
             }
         );
-            
-        // Create Date column
-        createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
-
-        // Created By column
-        createdByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreatedBy()));
-
-        // Last Update column
-        lastUpdateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdate()));
-
-        // Last Update By column
-        lastUpdateByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdateBy()));
     }
     
     /**
@@ -304,7 +286,7 @@ public class CityController {
      */
     @SuppressWarnings("unchecked")
     public void start() {
-        createActionListeners();
+        addListeners();
         lblTitle.setText(app.localize("cities"));
         
         try {
@@ -316,7 +298,7 @@ public class CityController {
         }
         
         initializeForm();
-        initializeTableViewColumns();
+        initializeTableColumns();
         table.setEditable(true);
         table.setItems(cityList);
     }
