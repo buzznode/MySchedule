@@ -1136,17 +1136,17 @@ public class DB {
                 else {  // insert new record
                     sql = String.join(" ",
                         "INSERT",
-                        "INTO  address (addressId, address, address2, cityId, postalCode, phone",
+                        "INTO  address (addressId, address, address2, cityId, postalCode, phone,",
                         "   createDate, createdBy, lastUpdate, lastUpdateBy)",
-                        "VALUES(" + a.getAddressId() + ", \"",
-                            a.getAddress() + "\", \"",
-                            a.getAddress2() + "\", \"",
-                            a.getCityId() + ", \"",
+                        "VALUES(" + a.getAddressId() + ",\"",
+                            a.getAddress() + "\",\"",
+                            a.getAddress2() + "\",\"",
+                            a.getCityId() + "\",\"",
                             a.getPostalCode() + "\",\"",
-                            a.getPhone() + "\", \"",
-                            rightNow + "\", \"",
-                            userName + "\", \"",
-                            rightNow + "\", \"",
+                            a.getPhone() + "\",\"",
+                            rightNow + "\",\"",
+                            userName + "\",\"",
+                            rightNow + "\",\"",
                             userName + "\")"
                     );
                     rows += stmt.executeUpdate(sql);
