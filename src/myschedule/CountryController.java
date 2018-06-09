@@ -30,7 +30,6 @@ import java.util.logging.Level;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -53,10 +52,6 @@ public class CountryController {
     @FXML private TableView table;
     @FXML private TableColumn<CountryModel, Integer> countryIdColumn;
     @FXML private TableColumn<CountryModel, String> countryColumn;
-    @FXML private TableColumn<CountryModel, String> createDateColumn;
-    @FXML private TableColumn<CountryModel, String> createdByColumn;
-    @FXML private TableColumn<CountryModel, String> lastUpdateColumn;
-    @FXML private TableColumn<CountryModel, String> lastUpdateByColumn;
     @FXML private TextField txtCountryId;
     @FXML private TextField txtCountry;
     @FXML private Button btnAdd;
@@ -68,24 +63,29 @@ public class CountryController {
     private ObservableList<CountryModel> countryList = FXCollections.observableArrayList();
     private MainController main;
     private boolean unsavedChanges = false;
-    
-//    private void alertStatus(int status) {
-//        if (status == 1) {
-//            Alert alert = new Alert(AlertType.INFORMATION);
-//            alert.setTitle("Information Dialog");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Database commit was successful. Record(s) added.");
-//            alert.showAndWait();
-//        }
-//        else {
-//            Alert alert = new Alert(AlertType.ERROR);
-//            alert.setTitle("Error Dialog");
-//            alert.setHeaderText("Error processing request.");
-//            alert.setContentText("There was an error processing your request. Please try again.");
-//            alert.showAndWait();
-//        }
-//    }
-    
+
+    /**
+     *  Add listeners
+     */
+    @SuppressWarnings("unchecked")
+    private void addListeners() {
+        btnAdd.setOnAction(e -> {
+            handleAdd();
+        });
+        
+        btnClose.setOnMouseClicked((ea) -> {
+            closeCountryMaint();
+        });
+        
+        btnCommit.setOnAction(e -> {
+            handleCommit();
+        });
+
+        btnRemove.setOnAction(e -> {
+            handleRemove();
+        });
+    }
+
     /**
      * Close country maintenance 
      */
@@ -115,7 +115,6 @@ public class CountryController {
             "click \"No\" to close this alert, and then click on the \"Commit\" button to save the changes.\n\n" +
             "Clicking \"Yes\" will result in the pending changes being lost and the country maintenance process ending."
         );
-        
         ButtonType btnYes = new ButtonType("Yes");
         ButtonType btnNo = new ButtonType("No");
         alert.getButtonTypes().setAll(btnYes, btnNo);
@@ -123,53 +122,6 @@ public class CountryController {
         return result.get() == btnYes;
     }
     
-    /**
-     *  Create action event listeners
-     */
-    @SuppressWarnings("unchecked")
-    private void createActionListeners() {
-        btnAdd.setOnAction((ae) -> {
-            String rightNow = app.common.rightNow();
-            String user = app.userName();
-            
-            if (validateCountryRecord()) {
-                countryList.add(new CountryModel(
-                    Integer.parseInt(txtCountryId.getText()), txtCountry.getText(), rightNow, user, rightNow, user)
-                );
-                
-                unsavedChanges = true;
-                initializeForm();
-            }
-            else {
-                app.log.write(Level.SEVERE, "Error parsing new country record");
-            }
-        });
-        
-        btnClose.setOnMouseClicked((ea) -> {
-            closeCountryMaint();
-        });
-        
-        btnCommit.setOnAction((ea) -> {
-            try {
-                app.db.updateCountryTable(countryList);
-                unsavedChanges = false;
-                app.common.alertStatus(1);
-                refreshTableView();
-            }
-            catch (SQLException ex) {
-                app.common.alertStatus(0);
-            }
-        });
-
-        btnRemove.setOnAction((ae) -> {
-            ObservableList<CountryModel> countrySelected, allCountries;
-            allCountries = table.getItems();
-            countrySelected = table.getSelectionModel().getSelectedItems();
-            countrySelected.forEach(allCountries::remove);
-            unsavedChanges = true;
-        });
-    }
-
     /**
      * Get next available Country Id to be use for add
      * @param clist
@@ -189,6 +141,48 @@ public class CountryController {
     }
 
     /**
+     * Handle add action
+     */
+    private void handleAdd() {
+        String rightNow = app.common.rightNow();
+        String user = app.userName();
+
+        if (validateCountryRecord()) {
+            countryList.add(new CountryModel(
+                Integer.parseInt(txtCountryId.getText()), txtCountry.getText(), rightNow, user, rightNow, user)
+            );
+            unsavedChanges = true;
+            initializeForm();
+        }
+        else {
+            app.log.write(Level.SEVERE, "Error parsing new country record");
+        }
+    }
+
+    private void handleCommit() {
+        try {
+            app.db.updateCountryTable(countryList);
+            unsavedChanges = false;
+            app.common.alertStatus(1);
+            refreshTableView();
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
+    }
+
+    /**
+     * Handle remove action
+     */
+    private void handleRemove() {
+        ObservableList<CountryModel> countrySelected, allCountries;
+        allCountries = table.getItems();
+        countrySelected = table.getSelectionModel().getSelectedItems();
+        countrySelected.forEach(allCountries::remove);
+        unsavedChanges = true;
+    }
+    
+    /**
      * Set default values for new record
      */
     @SuppressWarnings("unchecked")
@@ -204,7 +198,7 @@ public class CountryController {
      * Initialize Cell Factories and Cell Value Factories
      */
     @SuppressWarnings("unchecked")
-    private void initializeTableViewColumns() {
+    private void initializeTableColumns() {
         // Country Id column
         countryIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCountryId()));
         
@@ -220,18 +214,6 @@ public class CountryController {
                 unsavedChanges = true;
             }
         );
-        
-        // Create Date column
-        createDateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreateDate()));
-
-        // Created By column
-        createdByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCreatedBy()));
-
-        // Last Update column
-        lastUpdateColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdate()));
-
-        // Last Update By column
-        lastUpdateByColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLastUpdateBy()));
     }
     
     /**
@@ -271,19 +253,18 @@ public class CountryController {
      */
     @SuppressWarnings("unchecked")
     public void start() {
-        createActionListeners();
+        addListeners();
         lblTitle.setText(app.localize("countries"));
         
         try {
             countryList = app.db.getCountryModelList("country", "asc");
-//            countryList = sortCountryByName(countryList);
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
         }
         
         initializeForm();
-        initializeTableViewColumns();
+        initializeTableColumns();
         table.setEditable(true);
         table.setItems(countryList);
     }

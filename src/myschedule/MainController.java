@@ -23,6 +23,7 @@
  */
 package myschedule;
 
+import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -59,52 +60,15 @@ public class MainController {
     protected MenuItem miHelpAbout;
 
     /**
-     * Create action listeners
+     * Add listeners
      */
-    private void createActionListeners() {
-        miFileExit.setOnAction((ea) -> {
-            System.exit(0);
-        });
-        
-        miMaintAddress.setOnAction((ae) -> {
-            try {
-                startAddressMaint();
-            }
-            catch (Exception ex) {
-            }
-        });
-
-        miMaintCity.setOnAction((ae) -> {
-            try {
-                startCityMaint();
-            }
-            catch (Exception ex) {
-            }
-        });
-        
-        miMaintCountry.setOnAction((ae) -> {
-            try {
-                startCountryMaint();
-            }
-            catch(Exception ex) {
-            }
-        });
-        
-        miMaintCustomer.setOnAction((ae) -> {
-            try {
-                startCustomerMaint();
-            }
-            catch (Exception ex) {
-            }
-        });
-        
-        miUserLogin.setOnAction((ae) -> {
-            try {
-                startLogin();
-            }
-            catch(Exception ex) {
-            }
-        });
+    private void addListeners() {
+        miFileExit.setOnAction(e -> { System.exit(0); } );
+        miMaintAddress.setOnAction(e -> { handleAddressMaintenance(); } );
+        miMaintCity.setOnAction(e -> { handleCityMaintenance(); } );
+        miMaintCountry.setOnAction(e -> { handleCountryMaintenance(); } );
+        miMaintCustomer.setOnAction(e -> { handleCustomerMaintenance(); } );
+        miUserLogin.setOnAction(e -> { handleLogin(); } ); 
     }
 
     /**
@@ -175,11 +139,20 @@ public class MainController {
      * End currently running process
      */
     protected void endProcess() {
-        Node node = mainContainer.getCenter();
-        mainContainer.getChildren().removeAll(node);
+        try {
+            Node node = mainContainer.getCenter();
+            mainContainer.getChildren().removeAll(node);
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error ending current process");
+        }
     }
-    
-    
+
+    /**
+     * End currently running process and start the next action
+     * @param nextAction 
+     */
     protected void endProcess(String nextAction) {
         Node node = mainContainer.getCenter();
         mainContainer.getChildren().removeAll(node);
@@ -187,22 +160,116 @@ public class MainController {
         try {
             switch (nextAction) {
                 case "addressMaint":
-                    startAddressMaint();
+                    handleAddressMaintenance();
                     break;
                 case "cityMaint":
-                    startCityMaint();
+                    handleCityMaintenance();
                     break;
                 case "countryMaint":
-                    startCountryMaint();
+                    handleCountryMaintenance();
                     break;
                 default:
                     break;
             }
         }
         catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error ending current process and starting " + nextAction);
         }
     }
 
+    /**
+     * Handle AddressMaintenance request
+     */
+    private void handleAddressMaintenance() {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Address.fxml"));
+            Node node = loader.load();
+            AddressController controller = loader.getController();
+            controller.injectMainController(this);
+            controller.injectApp(app);
+            mainContainer.setCenter(node);
+            controller.start();
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Address Maintenance");
+        }
+    }
+    
+    /**
+     * Handle CityMaintenance request
+     */
+    private void handleCityMaintenance() {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("City.fxml"));
+            Node node = loader.load();
+            CityController controller = loader.getController();
+            controller.injectMainController(this);
+            controller.injectApp(app);
+            mainContainer.setCenter(node);
+            controller.start();
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting City Maintenance");
+        }
+    }
+
+    /**
+     * Handle CountryMaintenance request
+     */
+    private void handleCountryMaintenance() {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Country.fxml"));
+            Node node = loader.load();
+            CountryController controller = loader.getController();
+            controller.injectMainController(this);
+            controller.injectApp(app);
+            mainContainer.setCenter(node);
+            controller.start();
+        }
+        catch(Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Country Maintenance");
+        }
+    }
+
+    /**
+     * Handle CustomerMaintenance request
+     */
+    private void handleCustomerMaintenance() {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Customer.fxml"));
+            Node node = loader.load();
+            CustomerController controller = loader.getController();
+            controller.injectMainController(this);
+            controller.injectApp(app);
+            mainContainer.setCenter(node);
+            controller.start();
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Customer Maintenance");
+        }
+    }
+    
+    private void handleLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Login.fxml"));
+            Node node = loader.load();
+            LoginController login = loader.getController();
+            login.injectMainController(this);
+            login.injectApp(app);
+            mainContainer.setCenter(node);
+            login.start();
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Login");
+        }
+    }
+    
     /**
      * Inject App object
      * @param _app 
@@ -218,56 +285,38 @@ public class MainController {
 
         // File menu [0]
         Menu menuFile = new Menu(app.localize("file"));
-        // [0.0]
-        miFileNew = new MenuItem(app.localize("new"));
-        // [0.1]
-        miFileOpen = new MenuItem(app.localize("open"));
-        // [0.2]
-        miFileSave = new MenuItem(app.localize("save"));
-        // [0.3]
-        miFileSaveAs = new MenuItem(app.localize("save_as"));
-        // [0.4]
-        miFileExit = new MenuItem(app.localize("exit"));
-
+        miFileNew = new MenuItem(app.localize("new")); // [0.0]
+        miFileOpen = new MenuItem(app.localize("open")); // [0.1]
+        miFileSave = new MenuItem(app.localize("save")); // [0.2]
+        miFileSaveAs = new MenuItem(app.localize("save_as")); // [0.3]
+        miFileExit = new MenuItem(app.localize("exit")); // [0.4]
         menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
 
         // Edit menu [1]
         Menu menuEdit = new Menu(app.localize("edit"));
-        // [1.0]
-        miEditDelete = new MenuItem(app.localize("delete"));
-
+        miEditDelete = new MenuItem(app.localize("delete")); // [1.0]
         menuEdit.getItems().addAll(miEditDelete); 
 
         // Maintenance menu [2]
         Menu menuMaint = new Menu(app.localize("maintain"));
-        // [2.0]
-        miMaintAddress = new MenuItem(app.localize("address"));
-        // [2.1]
-        miMaintCity = new MenuItem(app.localize("city"));
-        // [2.2]
-        miMaintCountry = new MenuItem(app.localize("country"));
-        // [2.3]
-        miMaintCustomer = new MenuItem(app.localize("customer"));
-        
+        miMaintAddress = new MenuItem(app.localize("address")); // [2.0]
+        miMaintCity = new MenuItem(app.localize("city")); // [2.1]
+        miMaintCountry = new MenuItem(app.localize("country")); // [2.2]
+        miMaintCustomer = new MenuItem(app.localize("customer")); // [2.3]
         menuMaint.getItems().addAll(miMaintAddress, miMaintCity, miMaintCountry, miMaintCustomer);
         
         // User menu [3]
         Menu menuUser = new Menu(app.localize("user"));
-        // [3.0]
-        miUserLogin = new MenuItem(app.localize("login"));
-        // [3.1]
-        miUserLogout = new MenuItem(app.localize("logout"));
-
+        miUserLogin = new MenuItem(app.localize("login")); // [3.0]
+        miUserLogout = new MenuItem(app.localize("logout")); // [3.1]
         menuUser.getItems().addAll(miUserLogin, miUserLogout);
 
         // Help menu [4]
         Menu menuHelp = new Menu(app.localize("help"));
-        // [4.0]
-        miHelpAbout = new MenuItem(app.localize("about"));
-
+        miHelpAbout = new MenuItem(app.localize("about")); // [4.0]
         menuHelp.getItems().addAll(miHelpAbout);
 
-        createActionListeners();
+        addListeners();
         menuBar.getMenus().addAll(menuFile, menuEdit, menuMaint, menuUser, menuHelp);
         mainContainer.setTop(menuBar);
         
@@ -276,70 +325,11 @@ public class MainController {
             enableAbout();
             enableExit();
             enableLogin();
-            
-            try {
-                startLogin();
-            }
-            catch(Exception ex) {
-                
-            }
+            handleLogin();
         }
         else {
             enableMenu();
             disableLogin();
         }
-    }
-
-    /**
-     * Start the login process
-     */
-    private void startLogin() throws Exception {
-        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Login.fxml"));
-        Node node = loader.load();
-        LoginController login = loader.getController();
-        login.injectMainController(this);
-        login.injectApp(app);
-        mainContainer.setCenter(node);
-        login.start();
-    }
-
-    private void startAddressMaint() throws Exception {
-        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Address.fxml"));
-        Node node = loader.load();
-        AddressController controller = loader.getController();
-        controller.injectMainController(this);
-        controller.injectApp(app);
-        mainContainer.setCenter(node);
-        controller.start();
-    }
-    
-    private void startCityMaint() throws Exception {
-        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("City.fxml"));
-        Node node = loader.load();
-        CityController controller = loader.getController();
-        controller.injectMainController(this);
-        controller.injectApp(app);
-        mainContainer.setCenter(node);
-        controller.start();
-    }
-    
-    private void startCountryMaint() throws Exception {
-        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Country.fxml"));
-        Node node = loader.load();
-        CountryController controller = loader.getController();
-        controller.injectMainController(this);
-        controller.injectApp(app);
-        mainContainer.setCenter(node);
-        controller.start();
-    }
-    
-    private void startCustomerMaint() throws Exception {
-        FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Customer.fxml"));
-        Node node = loader.load();
-        CustomerController controller = loader.getController();
-        controller.injectMainController(this);
-        controller.injectApp(app);
-        mainContainer.setCenter(node);
-        controller.start();
     }
 }

@@ -73,25 +73,23 @@
                         <Insets right="15.0" />
                      </GridPane.margin>
                   </Label>
-                  <ComboBox fx:id="cboCity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" promptText="-- Select City --" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                   <Label fx:id="lblPostalCode" text="Postal Code" GridPane.rowIndex="4">
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField fx:id="txtPostalCode" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" promptText="Postal Code" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="txtPostalCode" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Label fx:id="lblPhone" text="Phone" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField fx:id="txtPhone" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" promptText="Phone" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="txtPhone" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <Label fx:id="lblCountry" text="Country" GridPane.rowIndex="6">
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin>
                   </Label>
-                  <ComboBox fx:id="cboCountry" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" promptText="-- Select Country --" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                   <Button fx:id="btnAddAddress" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Add" GridPane.columnIndex="5" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets left="10.0" />
@@ -107,6 +105,8 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Button>
+                  <TextField fx:id="txtCity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="txtCountry" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                </children>
             </GridPane>
             </children>

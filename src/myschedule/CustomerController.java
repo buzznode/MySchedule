@@ -53,8 +53,6 @@ public class CustomerController {
     @FXML private Button btnSave;
     @FXML private ComboBox cboCustomer;
     @FXML private ComboBox cboAddress;
-    @FXML private ComboBox cboCity;
-    @FXML private ComboBox cboCountry;
     @FXML private CheckBox chkActive;
     @FXML private Label lblAddress;
     @FXML private Label lblCity;
@@ -64,6 +62,8 @@ public class CustomerController {
     @FXML private Label lblPostalCode;
     @FXML private Label lblTitle;
     @FXML private TextField txtAddress;
+    @FXML private TextField txtCity;
+    @FXML private TextField txtCountry;
     @FXML private TextField txtCustomer;
     @FXML private TextField txtPhone;
     @FXML private TextField txtPostalCode;
@@ -73,22 +73,44 @@ public class CustomerController {
     // Maps
     private Map<String, Integer> addressToAddressIdMap = new HashMap<>();
     private Map<Integer, String> addressIdToAddressMap = new HashMap<>();
-    private Map<String, Integer> cityToCityIdMap = new HashMap<>();
-    private Map<Integer, String> cityIdToCityMap = new HashMap<>();
-    private Map<String, Integer> countryToCountryIdMap = new HashMap<>();
-    private Map<Integer, String> countryIdToCountryMap = new HashMap<>();
     private Map<String, Integer> customerToCustomerIdMap = new HashMap<>();
     private Map<Integer, String> customerIdToCustomerMap = new HashMap<>();
 
     // Lists
     private List addressList;
-    private List cityList;
-    private List countryList;
     private List customerList;
         
     private MainController main;
     private final boolean unsavedChanges = false;
 
+    /**
+     *  Add listeners
+     */
+    @SuppressWarnings("unchecked")
+    private void addListeners() {
+        btnAddAddress.setOnAction(e -> { handleAddOther("addressMaint"); } );
+        btnAddCity.setOnAction(e -> { handleAddOther("cityMaint"); } );
+        btnAddCountry.setOnAction(e -> { handleAddOther("countryMaint"); } );
+        btnCancel.setOnMouseClicked(e -> { closeCustomerMaint(); } );
+        btnSave.setOnAction(e -> { handleSave(); } );
+        cboAddress.setOnAction(e -> { handleAddressChange(); } );
+        cboCustomer.setOnAction(e -> { handleCustomerChange(); } );
+
+//            try {
+//                app.db.upsertCustomer(addressList);
+//                unsavedChanges = false;
+//                app.common.alertStatus(1);
+//            }
+//            catch (SQLException ex) {
+//                app.common.alertStatus(0);
+//            }
+
+//        cboCustomer.setOnAction((ae) -> {
+//            handleCustomerChange();
+//            ae.consume();
+//        });
+    }
+    
     /**
      * Add new Customer 
      */
@@ -127,7 +149,6 @@ public class CustomerController {
             "click \"No\" to close this alert, and then click on the \"Commit\" button to save the changes.\n\n" +
             "Clicking \"Yes\" will result in the pending changes being lost and the customer maintenance process ending."
         );
-        
         ButtonType btnYes = new ButtonType("Yes");
         ButtonType btnNo = new ButtonType("No");
         alert.getButtonTypes().setAll(btnYes, btnNo);
@@ -136,53 +157,67 @@ public class CustomerController {
     }
     
     /**
-     *  Create action event listeners
-     */
-    @SuppressWarnings("unchecked")
-    private void createActionListeners() {
-        btnAddAddress.setOnAction(e -> {
-            handleAddOther("addressMaint");
-        });
-        
-        btnAddCity.setOnAction(e -> {
-            handleAddOther("cityMaint");
-        });
-        
-        btnAddCountry.setOnAction(e -> {
-            handleAddOther("countryMaint");
-        });
-
-        btnCancel.setOnMouseClicked(e -> {
-            closeCustomerMaint();
-        });
-
-        cboCustomer.setOnAction(e -> {
-            handleCustomerChange();
-        });
-        
-        btnSave.setOnAction(e -> {
-            handleSave();
-//            try {
-//                app.db.upsertCustomer(addressList);
-//                unsavedChanges = false;
-//                app.common.alertStatus(1);
-//            }
-//            catch (SQLException ex) {
-//                app.common.alertStatus(0);
-//            }
-        });
-
-//        cboCustomer.setOnAction((ae) -> {
-//            handleCustomerChange();
-//            ae.consume();
-//        });
-    }
-    
-    /**
      * Edit existing Customer
      */
     @SuppressWarnings("unchecked")
-    private void editCustomer() {
+    private void getAddressData() {
+        String address;
+        int addressId;
+        String city;
+        String country;
+        String phone;
+        String postalCode;
+        ResultSet rs;
+        
+        address = cboAddress.getValue().toString();
+        addressId = addressToAddressIdMap.get(address);
+        
+        try {
+            rs = app.db.getAddressData(addressId);
+            address = String.join(" ",
+                rs.getString("address"),
+                rs.getString("address2")
+            );
+            city = rs.getString("city");
+            country = rs.getString("country");
+            postalCode = rs.getString("postalCode");
+            phone = rs.getString("phone");
+            
+            cboAddress.setEditable(false);
+            cboAddress.setValue(address);
+            txtCity.setText(city);
+            txtCountry.setText(country);
+            txtPhone.setText(phone);
+            txtPostalCode.setText(postalCode);
+        }
+        catch (SQLException ex) {
+            app.log.write(Level.SEVERE, ex.getMessage());
+        }
+    }
+    
+    /**
+     * Fires off other Maintenance routines
+     * @param routine 
+     */
+    @SuppressWarnings("unchecked")
+    private void handleAddOther(String routine) {
+        String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
+        String msg = "Are you sure you want to continue?";
+
+        if (app.common.displayConfirmation(hdr, msg)) {
+            main.endProcess(routine);
+        }
+    }
+
+    private void handleAddressChange() {
+        getAddressData();
+    }
+    
+    /**
+     * Handle Customer ComboBox onChange
+     */
+    @SuppressWarnings("unchecked")
+    private void handleCustomerChange() {
         String address;
         String city;
         String country;
@@ -210,38 +245,14 @@ public class CustomerController {
             txtCustomer.setText(rs.getString("customerName"));
             cboAddress.setEditable(false);
             cboAddress.setValue(address);
-            cboCity.setEditable(false);
-            cboCity.setValue(city);
-            cboCountry.setEditable(false);
-            cboCountry.setValue(country);
+            txtCity.setText(city);
+            txtCountry.setText(country);
             txtPhone.setText(phone);
             txtPostalCode.setText(postalCode);
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
         }
-    }
-    
-    /**
-     * Fires off other Maintenance routines
-     * @param routine 
-     */
-    @SuppressWarnings("unchecked")
-    private void handleAddOther(String routine) {
-        String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
-        String msg = "Are you sure you want to continue?";
-
-        if (app.common.displayConfirmation(hdr, msg)) {
-            main.endProcess(routine);
-        }
-    }
-    
-    /**
-     * Handle Customer ComboBox onChange
-     */
-    @SuppressWarnings("unchecked")
-    private void handleCustomerChange() {
-        editCustomer();
     }
 
     /**
@@ -312,17 +323,11 @@ public class CustomerController {
             // Load Maps
             addressToAddressIdMap = app.db.getAddressToAddressIdMap();
             addressIdToAddressMap = app.db.getAddressIdToAddressMap();
-            cityToCityIdMap = app.db.getCityToCityIdMap();
-            cityIdToCityMap = app.db.getCityIdToCityMap();
-            countryToCountryIdMap = app.db.getCountryToCountryIdMap();
-            countryIdToCountryMap = app.db.getCountryIdToCountryMap();
             customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
             customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
             
             // Load Lists from Maps
             addressList = app.common.convertSIMapToList(addressToAddressIdMap);
-            cityList = app.common.convertSIMapToList(cityToCityIdMap);
-            countryList = app.common.convertSIMapToList(countryToCountryIdMap);
             customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
         }
         catch (SQLException ex) {
@@ -330,18 +335,21 @@ public class CustomerController {
         }
         
         chkActive.setSelected(false);
+        txtCity.setText("");
+        txtCountry.setText("");
         txtCustomer.setText("");
         txtPostalCode.setText("");
         txtPhone.setText("");
+        
+        txtCity.setDisable(true);
+        txtCountry.setDisable(true);
+        txtPhone.setDisable(true);
+        txtPostalCode.setDisable(true);
 
         cboAddress.getItems().addAll(addressList);
-        cboCity.getItems().addAll(cityList);
-        cboCountry.getItems().addAll(countryList);
         cboCustomer.getItems().addAll(customerList);
         
         cboAddress.setValue("----  Select Address  ----");
-        cboCity.setValue("----  Select City  ----");
-        cboCountry.setValue("----  Select Country  ----");
         cboCustomer.setValue("----  Select Customer  ----");
     }
     
@@ -363,17 +371,12 @@ public class CustomerController {
         main = _main;
     }
 
-    @SuppressWarnings("unchecked")
-    public void loadCustomerData() throws SQLException {
-        
-    }
-    
     /**
      * Start address maintenance
      */
     @SuppressWarnings("unchecked")
     public void start() {
-        createActionListeners();
+        addListeners();
         lblTitle.setText(app.localize("customers"));
         initializeForm();
     }

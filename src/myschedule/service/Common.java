@@ -23,7 +23,7 @@
  */
 package myschedule.service;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
+import com.sun.org.apache.bcel.internal.generic.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -43,16 +43,15 @@ import javafx.scene.control.ButtonType;
  * @version 0.5.0
  */
 public class Common  {
-    
     public HashMap<String, String> USERS = new HashMap<>();
     public Map<String, Integer> MENUS = new HashMap<>();
     public Map<String, Integer> MENUITEMS = new HashMap<>();
-    
+
     public static String currentUser;
     public static int currentUserId;
     public static String currentLangCode;
     public static String currentLangName;
-    
+
     private final Logging log;
     
     /**
@@ -173,7 +172,6 @@ public class Common  {
     public String rightNow() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
     }
-    
     
 //    public static void setCursor(boolean busy) {
 //        Platform.runLater(new Runnable() {
