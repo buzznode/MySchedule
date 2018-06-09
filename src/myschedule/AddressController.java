@@ -396,13 +396,13 @@ public class AddressController {
      */
     @SuppressWarnings("unchecked")
     private boolean validateAddressRecord() {
-        boolean result = false;
+        boolean result;
         result = app.common.isNumber(txtAddressId.getText())
               && app.common.isString(txtAddress.getText())
-              && app.common.isString(txtAddress2.getText());
-//              && app.common.isString(cboCity.getValue().toString())
-//              && app.common.isString(txtPostalCode.getText())
-//              && app.common.isString(txtPhone.getText());
+              && app.common.isString(txtAddress2.getText())
+              && app.common.isString(cboCity.getValue().toString())
+              && app.common.isString(txtPostalCode.getText())
+              && app.common.isString(txtPhone.getText());
         return result;
     }
 }

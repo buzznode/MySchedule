@@ -193,16 +193,12 @@ public class Common  {
 //        });
 //    }
 
-    @SuppressWarnings("unchecked")
-    public boolean validateUser(String user, String password) {
-        if (!USERS.containsKey(user)) {
-            return false;
-        }
-        else {
-            return USERS.get(user).equals(password);
-        }
-    }
-    
+    /**
+     * Validate passed argument is a non-zero number
+     * @param str
+     * @return Boolean flag
+     * @throws NumberFormatException 
+     */
     @SuppressWarnings("unchecked")
     public boolean isNumber(String str) throws NumberFormatException {
         try {
@@ -214,6 +210,12 @@ public class Common  {
         }
     }
     
+    /**
+     * Validate passed argument is a zero-inclusive number
+     * @param str
+     * @param zeroOK
+     * @return Boolean flag
+     */
     @SuppressWarnings("unchecked")
     public boolean isNumber(String str, boolean zeroOK) {
         try {
@@ -225,16 +227,22 @@ public class Common  {
         }
     }
 
+    /**
+     * Validate passed argument is a non-empty string
+     * @param str
+     * @return Boolean flag
+     */
     @SuppressWarnings("unchecked")
     public boolean isString(String str) {
-        if (str.getClass().getTypeName().equals(Type.STRING)) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return str.getClass().getTypeName().equals(Type.STRING);
     }
     
+    /**
+     * Validate passed argument is empty/null-inclusive string
+     * @param str
+     * @param emptyNullOK
+     * @return Boolean flag
+     */
     @SuppressWarnings("unchecked")
     public boolean isString(String str, boolean emptyNullOK) {
         if (str.length() > 0) {
@@ -242,6 +250,22 @@ public class Common  {
         }
         else {
             return !str.isEmpty();
+        }
+    }
+
+    /**
+     * Validate the User
+     * @param user
+     * @param password
+     * @return Boolean flag
+     */
+    @SuppressWarnings("unchecked")
+    public boolean validateUser(String user, String password) {
+        if (!USERS.containsKey(user)) {
+            return false;
+        }
+        else {
+            return USERS.get(user).equals(password);
         }
     }
 }
