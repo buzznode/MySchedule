@@ -57,12 +57,12 @@ public class DB {
      * Default constructor
      */
     public DB() {
-        conn = null;
-        driver = "com.mysql.jdbc.Driver";
-        db = "U03MuY";
-        dbUser = "U03MuY";
-        dbPwd = "53688020218";
-        url = "jdbc:mysql://52.206.157.109/" + db;
+        conn    = null;
+        db      = "U03MuY";
+        dbPwd   = "53688020218";
+        dbUser  = "U03MuY";
+        driver  = "com.mysql.jdbc.Driver";
+        url     = "jdbc:mysql://52.206.157.109/" + db;
     }
     
     /**
@@ -70,13 +70,13 @@ public class DB {
      * @param _log 
      */
     public DB(Logging _log) {
-        log = _log;
-        conn = null;
-        driver = "com.mysql.jdbc.Driver";
-        db = "U03MuY";
-        dbUser = "U03MuY";
-        dbPwd = "53688020218";
-        url = "jdbc:mysql://52.206.157.109/" + db;
+        conn    = null;
+        db      = "U03MuY";
+        dbPwd   = "53688020218";
+        dbUser  = "U03MuY";
+        driver  = "com.mysql.jdbc.Driver";
+        log     = _log;
+        url     = "jdbc:mysql://52.206.157.109/" + db;
     }
     
     /**
@@ -101,7 +101,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
     }
@@ -136,7 +138,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return rset;
@@ -173,9 +177,8 @@ public class DB {
         connect();
         
         sql = String.join(" ",
-            "SELECT a.addressId, a.address, a.address2, b.city, b.cityId, a.postalCode,",
-            "   a.phone, c.country, c.countryId, a.createDate, a.createdBy, a.lastUpdate,",
-            "   a.lastUpdateBy",
+            "SELECT a.addressId, a.address, a.address2, b.city, b.cityId, a.postalCode, a.phone, c.country,",
+            "   c.countryId, a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
             "FROM address a",
             "JOIN city b ON b.cityId = a.cityId",
             "JOIN country c ON c.countryId = b.countryId",
@@ -211,7 +214,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return list;
@@ -231,8 +236,7 @@ public class DB {
         connect();
 
         sql = String.join(" ",
-            "SELECT a.cityId, a.city, b.country, a.createDate, a.createdBy, a.lastUpdate, ",
-            "   a.lastUpdateBy",
+            "SELECT a.cityId, a.city, b.country, a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
             "FROM city a",
             "JOIN country b ON a.countryId = b.countryId",
             "ORDER BY",
@@ -261,7 +265,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return list;
@@ -308,7 +314,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return list;
@@ -326,8 +334,7 @@ public class DB {
         connect();
         
         sql = String.join(" ",
-            "SELECT a.customerName, a.active, b.address, b.address2, c.city,",
-            "   b.postalCode, b.phone, d.country",
+            "SELECT a.customerName, a.active, b.address, b.address2, c.city, b.postalCode, b.phone, d.country",
             "FROM customer a",
             "JOIN address b ON b.addressId = a.addressId",
             "JOIN city c ON c.cityId = b.cityId",
@@ -345,7 +352,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return rs;
@@ -365,8 +374,7 @@ public class DB {
         connect();
 
         sql = String.join(" ",
-            "SELECT customerId, customerName, addressId, active, createDate, createdBy,",
-            "   lastUpdate, lastUpdateBy",
+            "SELECT customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy",
             "FROM customer",
             "ORDER BY",
             sortColumn,
@@ -395,7 +403,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return list;
@@ -439,7 +449,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return map;
@@ -483,7 +495,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return map;
@@ -520,7 +534,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return map;
@@ -557,7 +573,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return map;
@@ -594,7 +612,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return map;
@@ -631,7 +651,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return map;
@@ -669,7 +691,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return map;
@@ -707,7 +731,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return map;
@@ -741,7 +767,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return cityId;
@@ -776,7 +804,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return city;
@@ -810,7 +840,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return countryId;
@@ -844,7 +876,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return country;
@@ -880,7 +914,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return list;
@@ -913,7 +949,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return countryId;
@@ -948,7 +986,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return country;
@@ -984,7 +1024,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return list;
@@ -1020,7 +1062,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return list;
@@ -1050,10 +1094,10 @@ public class DB {
             rs.beforeFirst();
             
             while (rs.next()) {
-                list.add(rs.getString("address") + " " 
-                       + rs.getString("address2") + " " 
-                       + rs.getString("city") + " " 
-                       + rs.getString("country") + " " 
+                list.add(rs.getString("address")    + " " 
+                       + rs.getString("address2")   + " " 
+                       + rs.getString("city")       + " " 
+                       + rs.getString("country")    + " " 
                        + rs.getString("postalCode") + " " 
                        + rs.getString("phone"));
             }
@@ -1063,7 +1107,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : "  
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         return list;
@@ -1086,7 +1132,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
         stmt.execute(sql);
@@ -1122,14 +1170,14 @@ public class DB {
                 if (cnt > 0) {  // update record
                     sql = String.join(" ",
                         "UPDATE address",
-                        "SET address=\"" + a.getAddress() + "\",",
-                        "   address2=\"" + a.getAddress2() + "\",",
-                        "   cityId=" + a.getCityId() + ",",
-                        "   postalCode=\"" + a.getPostalCode() + "\",",
-                        "   phone='" + a.getPhone() + "',",
-                        "   lastUpdate=\"" + rightNow + "\", ",
-                        "   lastUpdateBy=\"" + userName + "\"",
-                        "WHERE addressId=" + a.getAddressId()
+                        "SET address=\""     + a.getAddress()    + "\",",
+                        "   address2=\""     + a.getAddress2()   + "\",",
+                        "   cityId="         + a.getCityId()     + ",",
+                        "   postalCode=\""   + a.getPostalCode() + "\",",
+                        "   phone='"         + a.getPhone()      + "',",
+                        "   lastUpdate=\""   + rightNow          + "\",",
+                        "   lastUpdateBy=\"" + userName          + "\"",
+                        "WHERE addressId="   + a.getAddressId()
                     );
                     rows += stmt.executeUpdate(sql);
                 }
@@ -1138,16 +1186,17 @@ public class DB {
                         "INSERT",
                         "INTO  address (addressId, address, address2, cityId, postalCode, phone,",
                         "   createDate, createdBy, lastUpdate, lastUpdateBy)",
-                        "VALUES(" + a.getAddressId() + ",\"",
-                            a.getAddress() + "\",\"",
-                            a.getAddress2() + "\",\"",
-                            a.getCityId() + "\",\"",
+                        "VALUES(" + 
+                            a.getAddressId()  + ",\"",
+                            a.getAddress()    + "\",\"",
+                            a.getAddress2()   + "\",\"",
+                            a.getCityId()     + "\",\"",
                             a.getPostalCode() + "\",\"",
-                            a.getPhone() + "\",\"",
-                            rightNow + "\",\"",
-                            userName + "\",\"",
-                            rightNow + "\",\"",
-                            userName + "\")"
+                            a.getPhone()      + "\",\"",
+                            rightNow          + "\",\"",
+                            userName          + "\",\"",
+                            rightNow          + "\",\"",
+                            userName          + "\")"
                     );
                     rows += stmt.executeUpdate(sql);
                 }
@@ -1159,7 +1208,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
     }
@@ -1199,9 +1250,9 @@ public class DB {
                 rs.next();
                 countryId = rs.getInt("countryId");
                 
-                pstmt.setInt(1, c.getCityId());
+                pstmt.setInt(1,    c.getCityId());
                 pstmt.setString(2, escapeTicks(c.getCity()));
-                pstmt.setInt(3, countryId);
+                pstmt.setInt(3,    countryId);
                 pstmt.setString(4, c.getCreateDate());
                 pstmt.setString(5, c.getCreatedBy());
                 pstmt.setString(6, c.getLastUpdate());
@@ -1215,7 +1266,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
     }
@@ -1244,7 +1297,7 @@ public class DB {
             pstmt = conn.prepareStatement(sql);
             
             for (CountryModel c : list) {
-                pstmt.setInt(1, c.getCountryId());
+                pstmt.setInt(1,    c.getCountryId());
                 pstmt.setString(2, escapeTicks(c.getCountry()));
                 pstmt.setString(3, c.getCreateDate());
                 pstmt.setString(4, c.getCreatedBy());
@@ -1259,7 +1312,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
     }
@@ -1294,12 +1349,12 @@ public class DB {
                 // update existing record
                 sql = String.join(" ",
                     "UPDATE customer",
-                    "SET customerName=\"" + escapeTicks(record.getCustomerName()) + "\", ",
-                    "   addressId=" + record.getAddressId() + ", ",
-                    "   active=" + record.getActive() + ", ",
-                    "   lastUpdate=NOW(),",
-                    "   lastUpdateBy=\"" + userName + "\"",
-                    "WHERE customerId=" + record.getCustomerId()
+                    "SET customerName = \"" + escapeTicks(record.getCustomerName()) + "\", ",
+                    "   addressId = " + record.getAddressId() + ", ",
+                    "   active = " + record.getActive() + ", ",
+                    "   lastUpdate = NOW(),",
+                    "   lastUpdateBy = \"" + userName + "\"",
+                    "WHERE customerId = " + record.getCustomerId()
                 );
                 rows = stmt.executeUpdate(sql);
             }
@@ -1317,8 +1372,7 @@ public class DB {
                 
                 sql = String.join(" ", 
                     "INSERT",
-                    "INTO customer (customerId, customerName, addressId, active, createDate, createdBy",
-                    "   lastUpdate, lastUpdateBy",
+                    "INTO customer (customerId, customerName, addressId, active, createDate, createdBy lastUpdate, lastUpdateBy",
                     "VALUES (?, ?, ?, ?, NOW(), ?, NOW(), ?)"
                 );
                 pstmt = conn.prepareStatement(sql);
@@ -1337,7 +1391,9 @@ public class DB {
             log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
             log.write(Level.SEVERE, "SQLState: {0}", ex.getSQLState());
             log.write(Level.SEVERE, "VendorError: {0}", ex.getErrorCode());
-            String msg = ex.getMessage() + " : " + ex.getSQLState() + " : " + ex.getErrorCode();
+            String msg = ex.getMessage()  + " : " 
+                       + ex.getSQLState() + " : " 
+                       + ex.getErrorCode();
             throw new SQLException(msg);
         }
     }
