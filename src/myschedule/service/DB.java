@@ -222,18 +222,18 @@ public class DB {
             while (rs.next()) {
                 list.add(new AddressModel (
                     rs.getInt("addressId"), 
-                    rs.getString("address"), 
-                    rs.getString("address2"), 
-                    rs.getString("city"),
+                    rs.getString("address").trim(), 
+                    rs.getString("address2").trim(), 
+                    rs.getString("city").trim(),
                     rs.getInt("cityId"),
-                    rs.getString("postalCode"), 
-                    rs.getString("phone"),
-                    rs.getString("country"),
+                    rs.getString("postalCode").trim(), 
+                    rs.getString("phone").trim(),
+                    rs.getString("country").trim(),
                     rs.getInt("countryId"),
-                    rs.getString("createDate"), 
-                    rs.getString("createdBy"), 
-                    rs.getString("lastUpdate"), 
-                    rs.getString("lastUpdateBy")
+                    rs.getString("createDate").trim(), 
+                    rs.getString("createdBy").trim(), 
+                    rs.getString("lastUpdate").trim(), 
+                    rs.getString("lastUpdateBy").trim()
                 ));
             }
         }
@@ -272,12 +272,12 @@ public class DB {
             while (rs.next()) {
                 list.add(new CityModel (
                     rs.getInt("cityId"), 
-                    rs.getString("city"),  
-                    rs.getString("country"), 
-                    rs.getString("createDate"), 
-                    rs.getString("createdBy"), 
-                    rs.getString("lastUpdate"), 
-                    rs.getString("lastUpdateBy")
+                    rs.getString("city").trim(),  
+                    rs.getString("country").trim(), 
+                    rs.getString("createDate").trim(), 
+                    rs.getString("createdBy").trim(), 
+                    rs.getString("lastUpdate").trim(), 
+                    rs.getString("lastUpdateBy").trim()
                 ));
             }
         }
@@ -315,11 +315,11 @@ public class DB {
             while (rs.next()) {
                 list.add(new CountryModel (
                     rs.getInt("countryId"), 
-                    rs.getString("country"), 
-                    rs.getString("createDate"), 
-                    rs.getString("createdBy"), 
-                    rs.getString("lastUpdate"), 
-                    rs.getString("lastUpdateBy")
+                    rs.getString("country").trim(), 
+                    rs.getString("createDate").trim(), 
+                    rs.getString("createdBy").trim(), 
+                    rs.getString("lastUpdate").trim(), 
+                    rs.getString("lastUpdateBy").trim()
                 ));
             }
         }
@@ -387,13 +387,13 @@ public class DB {
             while (rs.next()) {
                 list.add(new CustomerModel (
                     rs.getInt("customerId"), 
-                    rs.getString("customerName"), 
+                    rs.getString("customerName").trim(), 
                     rs.getInt("addressId"),
                     rs.getBoolean("active"), 
-                    rs.getString("createDate"), 
-                    rs.getString("createdBy"), 
-                    rs.getString("lastUpdate"), 
-                    rs.getString("lastUpdateBy")
+                    rs.getString("createDate").trim(), 
+                    rs.getString("createdBy").trim(), 
+                    rs.getString("lastUpdate").trim(), 
+                    rs.getString("lastUpdateBy").trim()
                 ));
             }
         }
@@ -539,7 +539,7 @@ public class DB {
             map.clear();
             
             while (rs.next()) {
-                map.put(rs.getString("city"), rs.getInt("cityId"));
+                map.put(rs.getString("city").trim(), rs.getInt("cityId"));
             }
         }
         catch (SQLException ex) {
@@ -571,7 +571,7 @@ public class DB {
             map.clear();
             
             while (rs.next()) {
-                map.put(rs.getInt("cityId"), rs.getString("city"));
+                map.put(rs.getInt("cityId"), rs.getString("city").trim());
             }
         }
         catch (SQLException ex) {
@@ -603,7 +603,7 @@ public class DB {
             map.clear();
             
             while (rs.next()) {
-                map.put(rs.getString("country"), rs.getInt("countryId"));
+                map.put(rs.getString("country").trim(), rs.getInt("countryId"));
             }
         }
         catch (SQLException ex) {
@@ -635,7 +635,7 @@ public class DB {
             map.clear();
             
             while (rs.next()) {
-                map.put(rs.getInt("countryId"), rs.getString("country"));
+                map.put(rs.getInt("countryId"), rs.getString("country").trim());
             }
         }
         catch (SQLException ex) {
@@ -668,7 +668,7 @@ public class DB {
             map.put("----  Add New Customer  ----", 0);
             
             while (rs.next()) {
-                map.put(rs.getString("customerName"), rs.getInt("customerId"));
+                map.put(rs.getString("customerName").trim(), rs.getInt("customerId"));
             }
         }
         catch (SQLException ex) {
@@ -701,7 +701,7 @@ public class DB {
             map.put(0, "----  Add New Customer  ----");
             
             while (rs.next()) {
-                map.put(rs.getInt("customerId"), rs.getString("customerName"));
+                map.put(rs.getInt("customerId"), rs.getString("customerName").trim());
             }
         }
         catch (SQLException ex) {
@@ -761,7 +761,7 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.first();
-            city = rs.getString("city");
+            city = rs.getString("city").trim();
         }
         catch (SQLException ex) {
             throw new SQLException(exception(ex));
@@ -819,7 +819,7 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.first();
-            country = rs.getString("country");
+            country = rs.getString("country").trim();
         }
         catch (SQLException ex) {
             throw new SQLException(exception(ex));
@@ -849,7 +849,7 @@ public class DB {
             rs.beforeFirst();
             
             while (rs.next()) {
-                list.add(rs.getString("city"));
+                list.add(rs.getString("city").trim());
             }
         }
         catch (SQLException ex) {
@@ -908,7 +908,7 @@ public class DB {
             );
             rs = stmt.executeQuery(sql);
             rs.first();
-            country = rs.getString("country");
+            country = rs.getString("country").trim();
         }
         catch (SQLException ex) {
             throw new SQLException(exception(ex));
@@ -938,7 +938,7 @@ public class DB {
             rs.beforeFirst();
             
             while (rs.next()) {
-                list.add(rs.getString("country"));
+                list.add(rs.getString("country").trim());
             }
         }
         catch (SQLException ex) {
@@ -969,7 +969,7 @@ public class DB {
             rs.beforeFirst();
             
             while (rs.next()) {
-                list.add(rs.getString("customerName"));
+                list.add(rs.getString("customerName").trim());
             }
         }
         catch (SQLException ex) {
@@ -983,38 +983,38 @@ public class DB {
      * @return List Concatenated Address (String)
      * @throws SQLException 
      */
-    @SuppressWarnings("unchecked")
-    public List getFullAddressList() throws SQLException {
-        ObservableList<String> list = FXCollections.observableArrayList();
-        String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT a.address, a.address2, b.city, c.country, a.postalCode, a.phone",
-            "FROM address a",
-            "JOIN city b ON a.cityId = b.cityId",
-            "JOIN country c ON b.countryId = c.countryId",
-            "ORDER BY a.address, a.address2, b.city"
-        );
-        
-        try {
-            rs = stmt.executeQuery(sql);
-            rs.beforeFirst();
-            
-            while (rs.next()) {
-                list.add(rs.getString("address") + " " 
-                       + rs.getString("address2") + " " 
-                       + rs.getString("city") + " " 
-                       + rs.getString("country") + " " 
-                       + rs.getString("postalCode") + " " 
-                       + rs.getString("phone"));
-            }
-        }
-        catch (SQLException ex) {
-            throw new SQLException(exception(ex));
-        }
-        return list;
-    }
+//    @SuppressWarnings("unchecked")
+//    public List getFullAddressList() throws SQLException {
+//        ObservableList<String> list = FXCollections.observableArrayList();
+//        String sql;
+//        connect();
+//        
+//        sql = String.join(" ",
+//            "SELECT a.address, a.address2, b.city, c.country, a.postalCode, a.phone",
+//            "FROM address a",
+//            "JOIN city b ON a.cityId = b.cityId",
+//            "JOIN country c ON b.countryId = c.countryId",
+//            "ORDER BY a.address, a.address2, b.city"
+//        );
+//        
+//        try {
+//            rs = stmt.executeQuery(sql);
+//            rs.beforeFirst();
+//            
+//            while (rs.next()) {
+//                list.add(rs.getString("address").trim() + " " 
+//                       + rs.getString("address2").trim() + " " 
+//                       + rs.getString("city").trim() + " " 
+//                       + rs.getString("country").trim() + " " 
+//                       + rs.getString("postalCode").trim() + " " 
+//                       + rs.getString("phone").trim());
+//            }
+//        }
+//        catch (SQLException ex) {
+//            throw new SQLException(exception(ex));
+//        }
+//        return list;
+//    }
     
     /**
      * Execute query without result set
@@ -1199,7 +1199,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public int upsertCustomer(CustomerModel record, String userName) throws SQLException{
+    public int upsertCustomer(CustomerModel customer, String userName) throws SQLException{
         int id;
         int rows;
         String sql;
@@ -1209,7 +1209,7 @@ public class DB {
             sql = String.join(" ",
                 "SELECT COUNT(*) AS cnt",
                 "FROM customer",
-                "WHERE customerId = " + record.getCustomerId()
+                "WHERE customerId = " + customer.getCustomerId()
             );
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery(sql);
@@ -1220,12 +1220,12 @@ public class DB {
                 // update existing record
                 sql = String.join(" ",
                     "UPDATE customer",
-                    "SET customerName = \"" + escapeTicks(record.getCustomerName().trim()) + "\", ",
-                    "   addressId = " + record.getAddressId() + ", ",
-                    "   active = " + record.getActive() + ", ",
+                    "SET customerName = \"" + escapeTicks(customer.getCustomerName().trim()) + "\", ",
+                    "   addressId = " + customer.getAddressId() + ", ",
+                    "   active = " + customer.getActive() + ", ",
                     "   lastUpdate = NOW(),",
                     "   lastUpdateBy = \"" + userName.trim() + "\"",
-                    "WHERE customerId = " + record.getCustomerId()
+                    "WHERE customerId = " + customer.getCustomerId()
                 );
                 rows = stmt.executeUpdate(sql);
             }
@@ -1242,14 +1242,14 @@ public class DB {
                 
                 sql = String.join(" ", 
                     "INSERT",
-                    "INTO customer (customerId, customerName, addressId, active, createDate, createdBy lastUpdate, lastUpdateBy",
+                    "INTO customer (customerId, customerName, addressId, active, createDate, createdBy lastUpdate, lastUpdateBy)",
                     "VALUES (?, ?, ?, ?, NOW(), ?, NOW(), ?)"
                 );
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, id);
-                pstmt.setString(2, escapeTicks(record.getCustomerName().trim()));
-                pstmt.setInt(3, record.getAddressId());
-                pstmt.setBoolean(4, record.getActive());
+                pstmt.setString(2, escapeTicks(customer.getCustomerName().trim()));
+                pstmt.setInt(3, customer.getAddressId());
+                pstmt.setBoolean(4, customer.getActive());
                 pstmt.setString(5, userName.trim());
                 pstmt.setString(6, userName.trim());
                 rows = pstmt.executeUpdate();

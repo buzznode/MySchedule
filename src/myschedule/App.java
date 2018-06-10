@@ -62,7 +62,7 @@ public class App extends Application {
      * @return 
      */
     public String localize(String str) {
-        return rb.getString(str);
+        return rb.getString(str).trim();
     }
     
     /**
