@@ -82,6 +82,8 @@ public class CustomerController {
         
     private MainController main;
     private final boolean unsavedChanges = false;
+    private boolean phoneChanged = false;
+    private boolean postalCodeChanged = false;
 
     /**
      *  Add listeners
@@ -95,20 +97,6 @@ public class CustomerController {
         btnSave.setOnAction(e -> { handleSave(); } );
         cboAddress.setOnAction(e -> { handleAddressChange(); } );
         cboCustomer.setOnAction(e -> { handleCustomerChange(); } );
-
-//            try {
-//                app.db.upsertCustomer(addressList);
-//                unsavedChanges = false;
-//                app.common.alertStatus(1);
-//            }
-//            catch (SQLException ex) {
-//                app.common.alertStatus(0);
-//            }
-
-//        cboCustomer.setOnAction((ae) -> {
-//            handleCustomerChange();
-//            ae.consume();
-//        });
     }
     
     /**
@@ -185,19 +173,20 @@ public class CustomerController {
         try {
             rs = app.db.getAddressData(addressId);
             address = String.join(" ",
-                rs.getString("address"),
-                rs.getString("address2")
+                rs.getString("address").trim(),
+                rs.getString("address2").trim()
             );
-            city = rs.getString("city");
-            country = rs.getString("country");
-            postalCode = rs.getString("postalCode");
-            phone = rs.getString("phone");
+            city = rs.getString("city").trim();
+            country = rs.getString("country").trim();
+            postalCode = rs.getString("postalCode").trim();
+            phone = rs.getString("phone").trim();
             
-//            cboAddress.setValue(address);
             txtCity.setText(city);
             txtCountry.setText(country);
             txtPhone.setText(phone);
             txtPostalCode.setText(postalCode);
+            phoneChanged = false;
+            postalCodeChanged = false;
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
@@ -224,45 +213,29 @@ public class CustomerController {
         try {
             rs = app.db.getCustomerData(customerId);
             address = String.join(" ",
-                rs.getString("address"),
-                rs.getString("address2")
+                rs.getString("address").trim(),
+                rs.getString("address2").trim()
             );
-            city = rs.getString("city");
-            country = rs.getString("country");
-            postalCode = rs.getString("postalCode");
-            phone = rs.getString("phone");
+            city = rs.getString("city").trim();
+            country = rs.getString("country").trim();
+            postalCode = rs.getString("postalCode").trim();
+            phone = rs.getString("phone").trim();
             
             chkActive.setSelected(rs.getBoolean("active"));
-            txtCustomer.setText(rs.getString("customerName"));
-            cboAddress.setEditable(false);
-            cboAddress.setValue(address);
+            txtCustomer.setText(rs.getString("customerName").trim());
+//            cboAddress.setEditable(false);
+//            cboAddress.setValue(address);
             txtCity.setText(city);
             txtCountry.setText(country);
             txtPhone.setText(phone);
             txtPostalCode.setText(postalCode);
+            phoneChanged = false;
+            postalCodeChanged = false;
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
         }
     }
-
-    /**
-     * Get next available Address Id to be use for add
-     * @param list
-     * @return 
-     */
-//    @SuppressWarnings("unchecked")
-//    private int getNextAddressId(ObservableList<AddressModel> alist) {
-//        if (alist.size() > 0) {
-//            Optional<AddressModel> a = alist
-//                .stream()
-//                .max(Comparator.comparing(AddressModel::getAddressId));
-//            return a.get().getAddressId() + 1;
-//        }
-//        else {
-//            return 1;
-//        }
-//    }
 
     /**
      * Handle Customer Save
@@ -288,19 +261,23 @@ public class CustomerController {
         record.setCustomerId(customerId);
         record.setCustomerName(customerName);
         record.setAddressId(addressId);
+
+        System.out.println("phoneChanged: " + phoneChanged);
+        System.out.println("postalCodeChanged: " + postalCodeChanged);
         
-        try {
-            rows = app.db.upsertCustomer(record, app.userName());
-            if (rows > 0) {
-                app.common.alertStatus(1);
-            }
-            else {
-                app.common.alertStatus(0);
-            }
-        }
-        catch (SQLException ex) {
-            app.common.alertStatus(0);
-        }
+//        try {
+//            rows = app.db.upsertCustomer(record, app.userName());
+//            
+//            if (rows > 0) {
+//                app.common.alertStatus(1);
+//            }
+//            else {
+//                app.common.alertStatus(0);
+//            }
+//        }
+//        catch (SQLException ex) {
+//            app.common.alertStatus(0);
+//        }
     }
     
     /**
@@ -334,14 +311,22 @@ public class CustomerController {
         
         txtCity.setEditable(false);
         txtCountry.setEditable(false);
-        txtPhone.setEditable(false);
-        txtPostalCode.setEditable(false);
+        txtPhone.setEditable(true);
+        txtPostalCode.setEditable(true);
+        
+        txtPhone.textProperty().addListener((observable, oldValue, newValue) -> {
+            phoneChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+        });
+        
+        txtPostalCode.textProperty().addListener((observable, oldValue, newValue) -> {
+            postalCodeChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+        });
 
         cboAddress.getItems().addAll(addressList);
         cboCustomer.getItems().addAll(customerList);
         
-        cboAddress.setValue("----  Select Address  ----");
-        cboCustomer.setValue("----  Select Customer  ----");
+//        cboAddress.setValue("----  Select Address  ----");
+//        cboCustomer.setValue("----  Select Customer  ----");
     }
     
     /**

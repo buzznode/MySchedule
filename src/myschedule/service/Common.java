@@ -154,8 +154,8 @@ public class Common  {
             int recordCount = 0;
            
             while (results.next()) {
-                String user = results.getString("userName");
-                String pwd = results.getString("password");
+                String user = results.getString("userName").trim();
+                String pwd = results.getString("password").trim();
                 USERS.put(user, pwd);
                 recordCount++;
             }

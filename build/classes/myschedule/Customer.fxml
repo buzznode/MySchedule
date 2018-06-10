@@ -59,10 +59,10 @@
                         <Insets right="15.0" />
                      </GridPane.margin>
                   </Label>
-                  <ComboBox fx:id="cboCustomer" prefWidth="250.0" promptText="-- Select Customer --" GridPane.columnIndex="1" />
+                  <ComboBox fx:id="cboCustomer" prefWidth="250.0" GridPane.columnIndex="1" />
                   <CheckBox fx:id="chkActive" mnemonicParsing="false" text="Active" GridPane.columnIndex="3" />
                   <TextField id="customerName" fx:id="txtCustomer" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" promptText="Customer Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="cboAddress" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="500.0" promptText="-- Select Address --" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="cboAddress" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="500.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2" />
                   <Label fx:id="lblAddress" text="Address" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets right="15.0" />
