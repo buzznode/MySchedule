@@ -157,10 +157,20 @@ public class CustomerController {
     }
     
     /**
-     * Edit existing Customer
+     * Fires off other Maintenance routines
+     * @param routine 
      */
     @SuppressWarnings("unchecked")
-    private void getAddressData() {
+    private void handleAddOther(String routine) {
+        String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
+        String msg = "Are you sure you want to continue?";
+
+        if (app.common.displayConfirmation(hdr, msg)) {
+            main.endProcess(routine);
+        }
+    }
+
+    private void handleAddressChange() {
         String address;
         int addressId;
         String city;
@@ -183,8 +193,7 @@ public class CustomerController {
             postalCode = rs.getString("postalCode");
             phone = rs.getString("phone");
             
-            cboAddress.setEditable(false);
-            cboAddress.setValue(address);
+//            cboAddress.setValue(address);
             txtCity.setText(city);
             txtCountry.setText(country);
             txtPhone.setText(phone);
@@ -193,24 +202,6 @@ public class CustomerController {
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
         }
-    }
-    
-    /**
-     * Fires off other Maintenance routines
-     * @param routine 
-     */
-    @SuppressWarnings("unchecked")
-    private void handleAddOther(String routine) {
-        String hdr = "You are about to leave Customer Maintenance. Any unsaved changes will be lost.";
-        String msg = "Are you sure you want to continue?";
-
-        if (app.common.displayConfirmation(hdr, msg)) {
-            main.endProcess(routine);
-        }
-    }
-
-    private void handleAddressChange() {
-        getAddressData();
     }
     
     /**
@@ -341,10 +332,10 @@ public class CustomerController {
         txtPostalCode.setText("");
         txtPhone.setText("");
         
-        txtCity.setDisable(true);
-        txtCountry.setDisable(true);
-        txtPhone.setDisable(true);
-        txtPostalCode.setDisable(true);
+        txtCity.setEditable(false);
+        txtCountry.setEditable(false);
+        txtPhone.setEditable(false);
+        txtPostalCode.setEditable(false);
 
         cboAddress.getItems().addAll(addressList);
         cboCustomer.getItems().addAll(customerList);

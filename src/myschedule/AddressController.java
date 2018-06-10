@@ -97,7 +97,7 @@ public class AddressController {
         });
         
         btnCommit.setOnAction(e -> {
-                handleCommit();
+            handleCommit();
         });
 
         btnRemove.setOnAction(e -> {
