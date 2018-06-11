@@ -174,7 +174,7 @@ public class DB {
         connect();
         
         sql = String.join(" ",
-            "SELECT a.address, a.address2, b.city, a.postalCode, a.phone, c.country",
+            "SELECT a.address, a.address2, b.cityId, b.city, a.postalCode, a.phone, c.countryId, c.country",
             "FROM address a",
             "JOIN city b ON b.cityId = a.cityId",
             "JOIN country c ON c.countryId = b.countryId",
@@ -341,12 +341,9 @@ public class DB {
         connect();
         
         sql = String.join(" ",
-            "SELECT a.customerName, a.active, b.address, b.address2, c.city, b.postalCode, b.phone, d.country",
-            "FROM customer a",
-            "JOIN address b on b.addressId = a.addressId",
-            "JOIN city c ON c.cityId = b.cityId",
-            "JOIN country d ON d.countryId = c.countryId",
-            "WHERE a.customerId = " + customerId
+            "SELECT customerName, active, addressId",
+            "FROM customer",
+            "WHERE customerId = " + customerId
         );
         
         try {
