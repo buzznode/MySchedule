@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-06-11T06:57:33</date>
-  <millis>1528718253326</millis>
+  <date>2018-06-11T11:39:08</date>
+  <millis>1528735148659</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
@@ -11,5 +11,50 @@
   <method>write</method>
   <thread>14</thread>
   <message>Starting application...</message>
+</record>
+<record>
+  <date>2018-06-11T11:40:41</date>
+  <millis>1528735241489</millis>
+  <sequence>1</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'id' in 'field list'</message>
+  <param>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'id' in 'field list'</param>
+</record>
+<record>
+  <date>2018-06-11T11:40:41</date>
+  <millis>1528735241491</millis>
+  <sequence>2</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>SQLException: Unknown column 'id' in 'field list'</message>
+</record>
+<record>
+  <date>2018-06-11T11:40:41</date>
+  <millis>1528735241493</millis>
+  <sequence>3</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>SQLState: 42S22</message>
+</record>
+<record>
+  <date>2018-06-11T11:40:41</date>
+  <millis>1528735241494</millis>
+  <sequence>4</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>VendorError: 1,054</message>
 </record>
 </log>

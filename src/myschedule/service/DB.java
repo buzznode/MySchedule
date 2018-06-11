@@ -1190,7 +1190,7 @@ public class DB {
 
     /**
      * Insert / Update Customer table
-     * @param record (CustomerModel)
+     * @param customer (CustomerModel)
      * @param userName (String)
      * @return boolean result
      * @throws SQLException 
