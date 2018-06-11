@@ -84,6 +84,7 @@ public class CustomerController {
     private final boolean unsavedChanges = false;
     private boolean phoneChanged = false;
     private boolean postalCodeChanged = false;
+    private final static String ADD_CUSTOMER = "----  Add Customer  ----";
 
     /**
      *  Add listeners
@@ -98,8 +99,18 @@ public class CustomerController {
         cboAddress.setOnAction(e -> { handleAddressChange(); } );
         cboCustomer.setOnAction(e -> { 
             int addressId = handleCustomerChange();
-            handleAddressChange(addressId);
+            
+            if (addressId != 0) {
+                handleAddressChange(addressId);
+            }
         } );
+        txtPhone.textProperty().addListener((observable, oldValue, newValue) -> {
+            phoneChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+        });
+        
+        txtPostalCode.textProperty().addListener((observable, oldValue, newValue) -> {
+            postalCodeChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+        });
     }
     
     /**
@@ -148,14 +159,6 @@ public class CustomerController {
     }
     
     /**
-     * Get address data using addressId
-     * @param addressId (Integer)
-     */
-    private void getAddressData(int addressId) {
-        
-    }
-    
-    /**
      * Fires off other Maintenance routines
      * @param routine 
      */
@@ -172,6 +175,7 @@ public class CustomerController {
     /**
      * Handle address change request
      */
+    @SuppressWarnings("unchecked")
     private void handleAddressChange() {
         String address;
         int addressId;
@@ -185,6 +189,7 @@ public class CustomerController {
      * Handle address change request using addressId
      * @param addressId 
      */
+    @SuppressWarnings("unchecked")
     private void handleAddressChange(int addressId) {
         String address;
         String address2;
@@ -230,17 +235,25 @@ public class CustomerController {
         ResultSet rs;
         
         customerName = cboCustomer.getValue().toString();
-        customerId = customerToCustomerIdMap.get(customerName);
         
-        try {
-            rs = app.db.getCustomerData(customerId);
-            chkActive.setSelected(rs.getBoolean("active"));
-            txtCustomer.setText(rs.getString("customerName").trim());
-            addressId = rs.getInt("addressId");
+        if (customerName.equals(ADD_CUSTOMER)) {
+            initializeForm();
+            txtCustomer.requestFocus();
         }
-        catch (SQLException ex) {
+        else if (!customerName.isEmpty()) {
+            customerId = customerToCustomerIdMap.get(customerName);
+
+            try {
+                rs = app.db.getCustomerData(customerId);
+                chkActive.setSelected(rs.getBoolean("active"));
+                txtCustomer.setText(rs.getString("customerName").trim());
+                addressId = rs.getInt("addressId");
+            }
+            catch (SQLException ex) {
+            }
+            return addressId;
         }
-        return addressId;
+        return 0;
     }
 
     /**
@@ -268,22 +281,22 @@ public class CustomerController {
         record.setCustomerName(customerName);
         record.setAddressId(addressId);
 
-        System.out.println("phoneChanged: " + phoneChanged);
-        System.out.println("postalCodeChanged: " + postalCodeChanged);
+//        System.out.println("phoneChanged: " + phoneChanged);
+//        System.out.println("postalCodeChanged: " + postalCodeChanged);
         
-//        try {
-//            rows = app.db.upsertCustomer(record, app.userName());
-//            
-//            if (rows > 0) {
-//                app.common.alertStatus(1);
-//            }
-//            else {
-//                app.common.alertStatus(0);
-//            }
-//        }
-//        catch (SQLException ex) {
-//            app.common.alertStatus(0);
-//        }
+        try {
+            rows = app.db.upsertCustomer(record, app.userName());
+            
+            if (rows > 0) {
+                app.common.alertStatus(1);
+            }
+            else {
+                app.common.alertStatus(0);
+            }
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
     }
     
     /**
@@ -291,23 +304,6 @@ public class CustomerController {
      */
     @SuppressWarnings("unchecked")
     private void initializeForm() {
-//        int nextAddressId = getNextAddressId(addressList);
-
-        try {
-            // Load Maps
-            addressToAddressIdMap = app.db.getAddressToAddressIdMap();
-            addressIdToAddressMap = app.db.getAddressIdToAddressMap();
-            customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
-            customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
-            
-            // Load Lists from Maps
-            addressList = app.common.convertSIMapToList(addressToAddressIdMap);
-            customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
-        }
-        catch (SQLException ex) {
-            app.common.alertStatus(0);
-        }
-        
         chkActive.setSelected(false);
         txtCity.setText("");
         txtCountry.setText("");
@@ -320,14 +316,6 @@ public class CustomerController {
         txtPhone.setEditable(true);
         txtPostalCode.setEditable(true);
         
-        txtPhone.textProperty().addListener((observable, oldValue, newValue) -> {
-            phoneChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
-        });
-        
-        txtPostalCode.textProperty().addListener((observable, oldValue, newValue) -> {
-            postalCodeChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
-        });
-
         cboAddress.getItems().addAll(addressList);
         cboCustomer.getItems().addAll(customerList);
         
@@ -354,12 +342,34 @@ public class CustomerController {
     }
 
     /**
+     * Load Maps and Lists
+     */
+    @SuppressWarnings("unchecked")
+    private void loadMapsAndLists() {
+        try {
+            // Load Maps
+            addressToAddressIdMap = app.db.getAddressToAddressIdMap();
+            addressIdToAddressMap = app.db.getAddressIdToAddressMap();
+            customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
+            customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
+            
+            // Load Lists from Maps
+            addressList = app.common.convertSIMapToList(addressToAddressIdMap);
+            customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
+    }
+        
+    /**
      * Start address maintenance
      */
     @SuppressWarnings("unchecked")
     public void start() {
         addListeners();
         lblTitle.setText(app.localize("customers"));
+        loadMapsAndLists();
         initializeForm();
     }
     

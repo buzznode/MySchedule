@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-06-10T19:32:12</date>
-  <millis>1528677132315</millis>
+  <date>2018-06-11T06:57:33</date>
+  <millis>1528718253326</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
