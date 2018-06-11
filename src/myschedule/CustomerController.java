@@ -84,7 +84,7 @@ public class CustomerController {
     private final boolean unsavedChanges = false;
     private boolean phoneChanged = false;
     private boolean postalCodeChanged = false;
-    private final static String ADD_CUSTOMER = "----  Add Customer  ----";
+    private final static String ADD_CUSTOMER = "----  Add New Customer  ----";
 
     /**
      *  Add listeners
@@ -271,7 +271,7 @@ public class CustomerController {
         active = chkActive.isSelected();
         addressId = addressToAddressIdMap.get(cboAddress.getValue().toString());
         customer = cboCustomer.getValue().toString();
-        customerId = customer.equals("----  Add New Customer  ----") ? 
+        customerId = customer.equals(ADD_CUSTOMER) ? 
             0 : customerToCustomerIdMap.get(customer);
         customerName = txtCustomer.getText();
         
