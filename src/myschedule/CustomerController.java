@@ -96,7 +96,10 @@ public class CustomerController {
         btnCancel.setOnMouseClicked(e -> { closeCustomerMaint(); } );
         btnSave.setOnAction(e -> { handleSave(); } );
         cboAddress.setOnAction(e -> { handleAddressChange(); } );
-        cboCustomer.setOnAction(e -> { handleCustomerChange(); } );
+        cboCustomer.setOnAction(e -> { 
+            int addressId = handleCustomerChange();
+            handleAddressChange(addressId);
+        } );
     }
     
     /**
@@ -145,6 +148,14 @@ public class CustomerController {
     }
     
     /**
+     * Get address data using addressId
+     * @param addressId (Integer)
+     */
+    private void getAddressData(int addressId) {
+        
+    }
+    
+    /**
      * Fires off other Maintenance routines
      * @param routine 
      */
@@ -158,35 +169,50 @@ public class CustomerController {
         }
     }
 
+    /**
+     * Handle address change request
+     */
     private void handleAddressChange() {
         String address;
         int addressId;
+        
+        address = cboAddress.getValue().toString().trim();
+        addressId = addressToAddressIdMap.get(address);
+        handleAddressChange(addressId);
+    }
+    
+    /**
+     * Handle address change request using addressId
+     * @param addressId 
+     */
+    private void handleAddressChange(int addressId) {
+        String address;
+        String address2;
+        String addressLine;
         String city;
+        int cityId;
         String country;
+        int countryId;
         String phone;
         String postalCode;
         ResultSet rs;
         
-        address = cboAddress.getValue().toString();
-        addressId = addressToAddressIdMap.get(address);
-        
         try {
             rs = app.db.getAddressData(addressId);
-            address = String.join(" ",
-                rs.getString("address").trim(),
-                rs.getString("address2").trim()
-            );
+            address = rs.getString("address").trim();
+            address2 = rs.getString("address2").trim();
+            addressLine = (!address.isEmpty()) && (!address2.isEmpty()) ? address + " " + address2 :
+                          (!address.isEmpty()) && (address2.isEmpty())  ? address  :
+                          (address.isEmpty())  && (!address2.isEmpty()) ? address2 : "";
+            cboAddress.setValue(addressLine);
             city = rs.getString("city").trim();
-            country = rs.getString("country").trim();
-            postalCode = rs.getString("postalCode").trim();
-            phone = rs.getString("phone").trim();
-            
             txtCity.setText(city);
+            country = rs.getString("country").trim();
             txtCountry.setText(country);
+            phone = rs.getString("phone").trim();
             txtPhone.setText(phone);
+            postalCode = rs.getString("postalCode");
             txtPostalCode.setText(postalCode);
-            phoneChanged = false;
-            postalCodeChanged = false;
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
@@ -197,14 +223,10 @@ public class CustomerController {
      * Handle Customer ComboBox onChange
      */
     @SuppressWarnings("unchecked")
-    private void handleCustomerChange() {
-        String address;
-        String city;
-        String country;
+    private int handleCustomerChange() {
+        int addressId = 0;
         int customerId;
         String customerName;
-        String phone;
-        String postalCode;
         ResultSet rs;
         
         customerName = cboCustomer.getValue().toString();
@@ -212,29 +234,13 @@ public class CustomerController {
         
         try {
             rs = app.db.getCustomerData(customerId);
-            address = String.join(" ",
-                rs.getString("address").trim(),
-                rs.getString("address2").trim()
-            );
-            city = rs.getString("city").trim();
-            country = rs.getString("country").trim();
-            postalCode = rs.getString("postalCode").trim();
-            phone = rs.getString("phone").trim();
-            
             chkActive.setSelected(rs.getBoolean("active"));
             txtCustomer.setText(rs.getString("customerName").trim());
-//            cboAddress.setEditable(false);
-//            cboAddress.setValue(address);
-            txtCity.setText(city);
-            txtCountry.setText(country);
-            txtPhone.setText(phone);
-            txtPostalCode.setText(postalCode);
-            phoneChanged = false;
-            postalCodeChanged = false;
+            addressId = rs.getInt("addressId");
         }
         catch (SQLException ex) {
-            app.log.write(Level.SEVERE, ex.getMessage());
         }
+        return addressId;
     }
 
     /**
