@@ -1196,7 +1196,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public int upsertCustomer(CustomerModel customer, String userName) throws SQLException{
+    public int upsertCustomer(CustomerModel customer, String userName, String rightNow) throws SQLException{
         int id;
         int rows;
         String sql;
@@ -1229,7 +1229,7 @@ public class DB {
             else {
                 // insert new record
                 sql = String.join(" ",
-                    "SELECT MAX(id) AS id",
+                    "SELECT MAX(customerId) AS id",
                     "FROM customer"
                 );
                 rs = stmt.executeQuery(sql);
@@ -1239,16 +1239,18 @@ public class DB {
                 
                 sql = String.join(" ", 
                     "INSERT",
-                    "INTO customer (customerId, customerName, addressId, active, createDate, createdBy lastUpdate, lastUpdateBy)",
-                    "VALUES (?, ?, ?, ?, NOW(), ?, NOW(), ?)"
+                    "INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy)",
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
                 );
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, id);
                 pstmt.setString(2, escapeTicks(customer.getCustomerName().trim()));
                 pstmt.setInt(3, customer.getAddressId());
                 pstmt.setBoolean(4, customer.getActive());
-                pstmt.setString(5, userName.trim());
+                pstmt.setString(5, rightNow.trim());
                 pstmt.setString(6, userName.trim());
+                pstmt.setString(7, rightNow.trim());
+                pstmt.setString(8, userName.trim());
                 rows = pstmt.executeUpdate();
             }
             return rows;
