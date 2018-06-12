@@ -97,21 +97,17 @@ public class CustomerController {
         btnCancel.setOnMouseClicked(e -> { closeCustomerMaint(); } );
         btnSave.setOnAction(e -> { handleSave(); } );
         cboAddress.setOnAction(e -> { handleAddressChange(); } );
-        cboCustomer.setOnAction(e -> { 
-            int addressId = handleCustomerChange();
-             
-            if (addressId != 0) {
-                handleAddressChange(addressId);
-            }
-        } );
+        cboCustomer.setOnAction(e -> { handleCustomerChange(); } );
         txtPhone.textProperty().addListener((observable, oldValue, newValue) -> {
-            phoneChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
-            phoneChanged = (oldValue == null || oldValue.isEmpty()) ? false : phoneChanged;
+            phoneChanged = (oldValue.isEmpty()) ? false : !newValue.equals(oldValue);
+//            phoneChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+//            phoneChanged = (oldValue == null || oldValue.isEmpty()) ? false : phoneChanged;
         });
         
         txtPostalCode.textProperty().addListener((observable, oldValue, newValue) -> {
-            postalCodeChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
-            postalCodeChanged = (oldValue == null || oldValue.isEmpty()) ? false : postalCodeChanged;
+            postalCodeChanged = (oldValue.isEmpty()) ? false : !newValue.equals(oldValue);
+//            postalCodeChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+//            postalCodeChanged = (oldValue == null || oldValue.isEmpty()) ? false : postalCodeChanged;
         });
     }
     
@@ -181,19 +177,6 @@ public class CustomerController {
     private void handleAddressChange() {
         String address;
         int addressId;
-        
-        address = cboAddress.getValue().toString().trim();
-        addressId = addressToAddressIdMap.get(address);
-        handleAddressChange(addressId);
-    }
-    
-    /**
-     * Handle address change request using addressId
-     * @param addressId 
-     */
-    @SuppressWarnings("unchecked")
-    private void handleAddressChange(int addressId) {
-        String address;
         String address2;
         String addressLine;
         String city;
@@ -204,6 +187,9 @@ public class CustomerController {
         String postalCode;
         ResultSet rs;
         
+        address = cboAddress.getValue().toString().trim();
+        addressId = addressToAddressIdMap.get(address);
+    
         try {
             rs = app.db.getAddressData(addressId);
             address = rs.getString("address").trim();
@@ -211,6 +197,13 @@ public class CustomerController {
             addressLine = (!address.isEmpty()) && (!address2.isEmpty()) ? address + " " + address2 :
                           (!address.isEmpty()) && (address2.isEmpty())  ? address  :
                           (address.isEmpty())  && (!address2.isEmpty()) ? address2 : "";
+            addressLine += " | ";
+            addressLine += String.join(" | ", 
+                rs.getString("city"),
+                rs.getString("country"),
+                rs.getString("postalCode"),
+                rs.getString("phone")
+            );
             cboAddress.setValue(addressLine);
             city = rs.getString("city").trim();
             txtCity.setText(city);
@@ -230,8 +223,9 @@ public class CustomerController {
      * Handle Customer ComboBox onChange
      */
     @SuppressWarnings("unchecked")
-    private int handleCustomerChange() {
-        int addressId = 0;
+    private void handleCustomerChange() {
+        String address;
+        int addressId;
         int customerId;
         String customerName;
         ResultSet rs;
@@ -250,12 +244,12 @@ public class CustomerController {
                 chkActive.setSelected(rs.getBoolean("active"));
                 txtCustomer.setText(rs.getString("customerName").trim());
                 addressId = rs.getInt("addressId");
+                address = addressIdToAddressMap.get(addressId);
+                cboAddress.setValue(address);
             }
             catch (SQLException ex) {
             }
-            return addressId;
         }
-        return 0;
     }
 
     /**
@@ -288,19 +282,19 @@ public class CustomerController {
         System.out.println("phoneChanged: " + phoneChanged);
         System.out.println("postalCodeChanged: " + postalCodeChanged);
         
-        try {
-            rows = app.db.upsertCustomer(customerRecord, app.userName(), rightNow);
-            
-            if (rows > 0) {
-                app.common.alertStatus(1);
-            }
-            else {
-                app.common.alertStatus(0);
-            }
-        }
-        catch (SQLException ex) {
-            app.common.alertStatus(0);
-        }
+//        try {
+//            rows = app.db.upsertCustomer(customerRecord, app.userName(), rightNow);
+//            
+//            if (rows > 0) {
+//                app.common.alertStatus(1);
+//            }
+//            else {
+//                app.common.alertStatus(0);
+//            }
+//        }
+//        catch (SQLException ex) {
+//            app.common.alertStatus(0);
+//        }
     }
     
     /**

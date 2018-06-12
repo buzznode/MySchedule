@@ -411,23 +411,23 @@ public class DB {
         String address;
         String address1;
         String address2;
-//        String city;
-//        String country;
+        String city;
+        String country;
         String key;
-//        String phone;
-//        String postalCode;
+        String phone;
+        String postalCode;
         String sql;
         connect();
         
         sql = String.join(" ",
-            "SELECT addressId, address, address2",
-            "FROM address",
-            "ORDER BY address, address2"
-//            "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
-//            "FROM address a",
-//            "JOIN city b ON b.cityId = a.cityId",
-//            "JOIN country c ON b.countryId = c.countryId",
-//            "ORDER BY a.address, a.address2, c.country, b.city"
+//            "SELECT addressId, address, address2",
+//            "FROM address",
+//            "ORDER BY address, address2"
+            "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
+            "FROM address a",
+            "JOIN city b ON b.cityId = a.cityId",
+            "JOIN country c ON b.countryId = c.countryId",
+            "ORDER BY a.address, a.address2, c.country, b.city"
         );
         
         try {
@@ -438,16 +438,16 @@ public class DB {
             while (rs.next()) {
                 address1 = rs.getString("address").trim();
                 address2 = rs.getString("address2").trim();
-//                city = rs.getString("city").trim();
-//                country = rs.getString("country").trim();
-//                phone = rs.getString("phone").trim();
-//                postalCode = rs.getString("postalCode").trim();
+                city = rs.getString("city").trim();
+                country = rs.getString("country").trim();
+                phone = rs.getString("phone").trim();
+                postalCode = rs.getString("postalCode").trim();
                 key  = (address1 != null && !address1.isEmpty()) ? address1 : "";
                 key += (address2 != null && !address2.isEmpty()) ? " " + address2 : "";
-//                key += (!key.isEmpty()) ? " | " + city : city;
-//                key += (!key.isEmpty()) ? " | " + country : country;
-//                key += (!key.isEmpty()) ? " | " + postalCode : postalCode;
-//                key += (!key.isEmpty()) ? " | " + phone : phone;
+                key += (!key.isEmpty()) ? " | " + city : city;
+                key += (!key.isEmpty()) ? " | " + country : country;
+                key += (!key.isEmpty()) ? " | " + postalCode : postalCode;
+                key += (!key.isEmpty()) ? " | " + phone : phone;
                 map.put(key, rs.getInt("addressId"));
             }
         }
@@ -467,23 +467,23 @@ public class DB {
         Map<Integer, String> map = new HashMap<>();
         String address1;
         String address2;
-//        String city;
-//        String country;
-//        String phone;
-//        String postalCode;
+        String city;
+        String country;
+        String phone;
+        String postalCode;
         String sql;
         String value;
         connect();
         
         sql = String.join(" ",
-            "SELECT addressId, address, address2",
-            "FROM address",
-            "ORDER BY addressId"
-//            "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
-//            "FROM address a",
-//            "JOIN city b ON b.cityId = a.cityId",
-//            "JOIN country c ON b.countryId = c.countryId",
-//            "ORDER BY a.addressId"
+//            "SELECT addressId, address, address2",
+//            "FROM address",
+//            "ORDER BY addressId"
+            "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
+            "FROM address a",
+            "JOIN city b ON b.cityId = a.cityId",
+            "JOIN country c ON b.countryId = c.countryId",
+            "ORDER BY a.addressId"
         );
         
         try {
@@ -494,16 +494,16 @@ public class DB {
             while (rs.next()) {
                 address1 = rs.getString("address").trim();
                 address2 = rs.getString("address2").trim();
-//                city = rs.getString("city").trim();
-//                country = rs.getString("country").trim();
-//                phone = rs.getString("phone").trim();
-//                postalCode = rs.getString("postalCode").trim();
+                city = rs.getString("city").trim();
+                country = rs.getString("country").trim();
+                phone = rs.getString("phone").trim();
+                postalCode = rs.getString("postalCode").trim();
                 value  = (address1 != null && !address1.isEmpty()) ? address1 : "";
                 value += (address2 != null && !address2.isEmpty()) ? " " + address2 : "";
-//                value += (!value.isEmpty()) ? " | " + city : city;
-//                value += (!value.isEmpty()) ? " | " + country : country;
-//                value += (!value.isEmpty()) ? " | " + postalCode : postalCode;
-//                value += (!value.isEmpty()) ? " | " + phone : phone;
+                value += (!value.isEmpty()) ? " | " + city : city;
+                value += (!value.isEmpty()) ? " | " + country : country;
+                value += (!value.isEmpty()) ? " | " + postalCode : postalCode;
+                value += (!value.isEmpty()) ? " | " + phone : phone;
                 map.put(rs.getInt("addressId"), value);
             }
         }
