@@ -99,17 +99,19 @@ public class CustomerController {
         cboAddress.setOnAction(e -> { handleAddressChange(); } );
         cboCustomer.setOnAction(e -> { 
             int addressId = handleCustomerChange();
-            
+             
             if (addressId != 0) {
                 handleAddressChange(addressId);
             }
         } );
         txtPhone.textProperty().addListener((observable, oldValue, newValue) -> {
             phoneChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+            phoneChanged = (oldValue == null || oldValue.isEmpty()) ? false : phoneChanged;
         });
         
         txtPostalCode.textProperty().addListener((observable, oldValue, newValue) -> {
             postalCodeChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+            postalCodeChanged = (oldValue == null || oldValue.isEmpty()) ? false : postalCodeChanged;
         });
     }
     
@@ -266,6 +268,7 @@ public class CustomerController {
         String customer;
         int customerId;
         String customerName;
+        String rightNow;
         int rows;
         
         active = chkActive.isSelected();
@@ -275,17 +278,18 @@ public class CustomerController {
             0 : customerToCustomerIdMap.get(customer);
         customerName = txtCustomer.getText();
         
-        CustomerModel record = new CustomerModel();
-        record.setActive(active);
-        record.setCustomerId(customerId);
-        record.setCustomerName(customerName);
-        record.setAddressId(addressId);
+        CustomerModel customerRecord = new CustomerModel();
+        customerRecord.setActive(active);
+        customerRecord.setCustomerId(customerId);
+        customerRecord.setCustomerName(customerName);
+        customerRecord.setAddressId(addressId);
 
-//        System.out.println("phoneChanged: " + phoneChanged);
-//        System.out.println("postalCodeChanged: " + postalCodeChanged);
+        rightNow = app.common.rightNow();
+        System.out.println("phoneChanged: " + phoneChanged);
+        System.out.println("postalCodeChanged: " + postalCodeChanged);
         
         try {
-            rows = app.db.upsertCustomer(record, app.userName());
+            rows = app.db.upsertCustomer(customerRecord, app.userName(), rightNow);
             
             if (rows > 0) {
                 app.common.alertStatus(1);
