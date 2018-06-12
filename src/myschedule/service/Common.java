@@ -83,6 +83,54 @@ public class Common  {
             alert.showAndWait();
         }
     }
+
+    /**
+     * Alert status using message parameter
+     * @param status (String)
+     * @param msg 
+     */
+    @SuppressWarnings("unchecked")
+    public void alertStatus(int status, String msg) {
+        if (status == 1) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText(msg);
+            alert.showAndWait();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText(msg);
+            alert.showAndWait();
+        }
+    }
+
+    /**
+     * Alert status using header and message parameters
+     * @param status
+     * @param hdr (String)
+     * @param msg  (String)
+     */
+    @SuppressWarnings("unchecked")
+    public void alertStatus(int status, String hdr, String msg) {
+        if (status == 1) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(hdr);
+            alert.setContentText(msg);
+            alert.showAndWait();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText(hdr);
+            alert.setContentText(msg);
+            alert.showAndWait();
+        }
+    }
+    
     
     /**
      * Convert Map (Integer, String) to list
