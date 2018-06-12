@@ -81,10 +81,12 @@ public class CustomerController {
     private List customerList;
         
     private MainController main;
+    private final static String ADD_CUSTOMER = "----  Add New Customer  ----";
     private final boolean unsavedChanges = false;
+    private String originalPhone;
+    private String originalPostalCode;
     private boolean phoneChanged = false;
     private boolean postalCodeChanged = false;
-    private final static String ADD_CUSTOMER = "----  Add New Customer  ----";
 
     /**
      *  Add listeners
@@ -99,13 +101,13 @@ public class CustomerController {
         cboAddress.setOnAction(e -> { handleAddressChange(); } );
         cboCustomer.setOnAction(e -> { handleCustomerChange(); } );
         txtPhone.textProperty().addListener((observable, oldValue, newValue) -> {
-            phoneChanged = (oldValue.isEmpty()) ? false : !newValue.equals(oldValue);
+            phoneChanged = (!newValue.equals(originalPhone));
 //            phoneChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
 //            phoneChanged = (oldValue == null || oldValue.isEmpty()) ? false : phoneChanged;
         });
         
         txtPostalCode.textProperty().addListener((observable, oldValue, newValue) -> {
-            postalCodeChanged = (oldValue.isEmpty()) ? false : !newValue.equals(oldValue);
+            postalCodeChanged = (!newValue.equals(originalPostalCode));
 //            postalCodeChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
 //            postalCodeChanged = (oldValue == null || oldValue.isEmpty()) ? false : postalCodeChanged;
         });
@@ -211,8 +213,10 @@ public class CustomerController {
             txtCountry.setText(country);
             phone = rs.getString("phone").trim();
             txtPhone.setText(phone);
+            originalPhone = phone;
             postalCode = rs.getString("postalCode");
             txtPostalCode.setText(postalCode);
+            originalPostalCode = postalCode;
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
