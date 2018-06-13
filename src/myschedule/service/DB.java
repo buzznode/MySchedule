@@ -1099,6 +1099,58 @@ public class DB {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public int upsertAddress(AddressModel obj) throws SQLException{
+        int cnt;
+        int id;
+        String sql;
+        connect();
+        
+        try {
+            sql = String.join(" ",
+                "SELECT addressId",
+                "FROM address",
+                "WHERE cityId = " + obj.getCityId(),
+                "AND postalCode = \"" + obj.getPostalCode() + "\"",
+                "AND phone = \"" + obj.getPhone() + "\""
+            );
+            rs = stmt.executeQuery(sql);
+
+            if (rs.first()) {
+                return rs.getInt("addressId");
+            }
+            
+            sql = "SELECT MAX(addressId) + 1 AS id FROM address";
+            rs = stmt.executeQuery(sql);
+            rs.first();
+            id = rs.getInt("id");
+
+            sql = String.join(" ",
+                "INSERT",
+                "INTO  address (addressId, address, address2, cityId, postalCode, phone,",
+                "   createDate, createdBy, lastUpdate, lastUpdateBy)",
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            pstmt.setString(2, obj.getAddress().trim());
+            pstmt.setString(3, obj.getAddress2().trim());
+            pstmt.setInt(4, obj.getCityId());
+            pstmt.setString(5, obj.getPostalCode().trim());
+            pstmt.setString(6, obj.getPhone().trim());
+            pstmt.setString(7, obj.getCreateDate().trim());
+            pstmt.setString(8, obj.getCreatedBy().trim());
+            pstmt.setString(9, obj.getLastUpdate().trim());
+            pstmt.setString(10, obj.getLastUpdateBy().trim());
+            pstmt.executeUpdate();
+            return id;
+        }
+        catch (SQLException ex) {
+            throw new SQLException(exception(ex));
+        }
+    }
+    
     /**
      * Update city table
      * @param list

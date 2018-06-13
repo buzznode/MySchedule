@@ -39,6 +39,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import myschedule.model.AddressModel;
 import myschedule.model.CustomerModel;
 
 /**
@@ -80,13 +81,14 @@ public class CustomerController {
     private List addressList;
     private List customerList;
         
-    private MainController main;
     private final static String ADD_CUSTOMER = "----  Add New Customer  ----";
-    private final boolean unsavedChanges = false;
+    private AddressModel addressModel = new AddressModel();
+    private MainController main;
     private String originalPhone;
     private String originalPostalCode;
     private boolean phoneChanged = false;
     private boolean postalCodeChanged = false;
+    private final boolean unsavedChanges = false;
 
     /**
      *  Add listeners
@@ -101,15 +103,13 @@ public class CustomerController {
         cboAddress.setOnAction(e -> { handleAddressChange(); } );
         cboCustomer.setOnAction(e -> { handleCustomerChange(); } );
         txtPhone.textProperty().addListener((observable, oldValue, newValue) -> {
-            phoneChanged = (!newValue.equals(originalPhone));
-//            phoneChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
-//            phoneChanged = (oldValue == null || oldValue.isEmpty()) ? false : phoneChanged;
+            phoneChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+            phoneChanged = (oldValue == null || oldValue.isEmpty()) ? false : phoneChanged;
         });
         
         txtPostalCode.textProperty().addListener((observable, oldValue, newValue) -> {
-            postalCodeChanged = (!newValue.equals(originalPostalCode));
-//            postalCodeChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
-//            postalCodeChanged = (oldValue == null || oldValue.isEmpty()) ? false : postalCodeChanged;
+            postalCodeChanged = (newValue == null ? oldValue != null : !newValue.equals(oldValue));
+            postalCodeChanged = (oldValue == null || oldValue.isEmpty()) ? false : postalCodeChanged;
         });
     }
     
@@ -187,9 +187,16 @@ public class CustomerController {
         int countryId;
         String phone;
         String postalCode;
+        String rightNow;
         ResultSet rs;
+        String userName;
         
         address = cboAddress.getValue().toString().trim();
+        
+        if (address.isEmpty()) {
+            return;
+        }
+        
         addressId = addressToAddressIdMap.get(address);
     
         try {
@@ -209,6 +216,7 @@ public class CustomerController {
             cboAddress.setValue(addressLine);
             city = rs.getString("city").trim();
             txtCity.setText(city);
+            cityId = rs.getInt("cityId");
             country = rs.getString("country").trim();
             txtCountry.setText(country);
             phone = rs.getString("phone").trim();
@@ -217,6 +225,19 @@ public class CustomerController {
             postalCode = rs.getString("postalCode");
             txtPostalCode.setText(postalCode);
             originalPostalCode = postalCode;
+            
+            rightNow = app.common.rightNow();
+            userName = app.userName();
+            addressModel.setAddressId(addressId);
+            addressModel.setAddress(address);
+            addressModel.setAddress2(address2);
+            addressModel.setCityId(cityId);
+            addressModel.setPostalCode(postalCode);
+            addressModel.setPhone(phone);
+            addressModel.setCreateDate(rightNow);
+            addressModel.setCreatedBy(userName);
+            addressModel.setLastUpdate(rightNow);
+            addressModel.setLastUpdateBy(userName);
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
@@ -239,6 +260,7 @@ public class CustomerController {
         if (customerName.equals(ADD_CUSTOMER)) {
             initializeForm();
             txtCustomer.requestFocus();
+            cboAddress.setValue("");
         }
         else if (!customerName.isEmpty()) {
             customerId = customerToCustomerIdMap.get(customerName);
@@ -262,18 +284,30 @@ public class CustomerController {
     @SuppressWarnings("unchecked")
     private void handleSave() {
         boolean active;
-        int addressId;
+        int addressId = 0;
         String customer;
         int customerId;
         String customerName;
         String rightNow;
-        int rows;
+        int rows = 0;
+
+        if (phoneChanged || postalCodeChanged) {
+            try {
+                addressModel.setPhone(txtPhone.getText().trim());
+                addressModel.setPostalCode(txtPostalCode.getText().trim());
+                addressId = app.db.upsertAddress(addressModel);
+            }
+            catch (SQLException ex) {
+                app.common.alertStatus(0, "Error performing upsertAddress");
+            }
+            phoneChanged = false;
+            postalCodeChanged = false;
+        }
         
         active = chkActive.isSelected();
-        addressId = addressToAddressIdMap.get(cboAddress.getValue().toString());
+        addressId = addressId > 0 ? addressId :  addressToAddressIdMap.get(cboAddress.getValue().toString());
         customer = cboCustomer.getValue().toString();
-        customerId = customer.equals(ADD_CUSTOMER) ? 
-            0 : customerToCustomerIdMap.get(customer);
+        customerId = customer.equals(ADD_CUSTOMER) ?  0 : customerToCustomerIdMap.get(customer);
         customerName = txtCustomer.getText();
         
         CustomerModel customerRecord = new CustomerModel();
@@ -281,24 +315,21 @@ public class CustomerController {
         customerRecord.setCustomerId(customerId);
         customerRecord.setCustomerName(customerName);
         customerRecord.setAddressId(addressId);
-
         rightNow = app.common.rightNow();
-        System.out.println("phoneChanged: " + phoneChanged);
-        System.out.println("postalCodeChanged: " + postalCodeChanged);
         
-//        try {
-//            rows = app.db.upsertCustomer(customerRecord, app.userName(), rightNow);
-//            
-//            if (rows > 0) {
-//                app.common.alertStatus(1);
-//            }
-//            else {
-//                app.common.alertStatus(0);
-//            }
-//        }
-//        catch (SQLException ex) {
-//            app.common.alertStatus(0);
-//        }
+        try {
+            rows = app.db.upsertCustomer(customerRecord, app.userName(), rightNow);
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
+        
+        if (rows > 0) {
+            app.common.alertStatus(1);
+        }
+        else {
+            app.common.alertStatus(0);
+        }
     }
     
     /**
