@@ -348,15 +348,8 @@ public class CustomerController {
         txtPhone.setEditable(true);
         txtPostalCode.setEditable(true);
 
-        if (cboAddress.getItems().size() > 0) {
-            cboAddress.getItems().clear();
-        }
-        cboAddress.getItems().addAll(addressList);
-        
-        if (cboCustomer.getItems().size() > 0) {
-            cboCustomer.getItems().clear();
-        }
         cboCustomer.getItems().addAll(customerList);
+        cboAddress.getItems().addAll(addressList);
         
 //        cboAddress.setValue("----  Select Address  ----");
 //        cboCustomer.setValue("----  Select Customer  ----");
@@ -387,15 +380,34 @@ public class CustomerController {
     private void loadMapsAndLists() {
         try {
             // Load Maps
+            if (!addressToAddressIdMap.isEmpty()) {
+                addressToAddressIdMap.clear();
+            }
+            if (!addressIdToAddressMap.isEmpty()) {
+                addressIdToAddressMap.clear();
+            }
             addressToAddressIdMap = app.db.getAddressToAddressIdMap();
             addressIdToAddressMap = app.db.getAddressIdToAddressMap();
+
+            if (!customerToCustomerIdMap.isEmpty()) {
+                customerToCustomerIdMap.clear();
+            }
+            if (!customerIdToCustomerMap.isEmpty()) {
+                customerIdToCustomerMap.clear();
+            }
             customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
             customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
             
             // Load Lists from Maps
+            if (addressList != null) {
+                addressList.clear();
+            }
             addressList = app.common.convertSIMapToList(addressToAddressIdMap);
+            
+            if (customerList != null) {
+                customerList.clear();
+            }
             customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
-            System.out.println("Debugging");
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);
