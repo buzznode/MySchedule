@@ -114,14 +114,6 @@ public class CustomerController {
     }
     
     /**
-     * Add new Customer 
-     */
-    @SuppressWarnings("unchecked")
-    private void addNewCustomer() {
-        System.out.println("Adding a new customer record");
-    }
-    
-    /**
      * Check for un-saved changes; display warning message
      * as needed; close city maintenance function.
      */
@@ -276,6 +268,9 @@ public class CustomerController {
             catch (SQLException ex) {
             }
         }
+        else {
+            return;
+        }
     }
 
     /**
@@ -326,6 +321,10 @@ public class CustomerController {
         
         if (rows > 0) {
             app.common.alertStatus(1);
+            cboCustomer.setValue("");
+            cboAddress.setValue("");
+            loadMapsAndLists();
+            initializeForm();
         }
         else {
             app.common.alertStatus(0);
@@ -348,8 +347,15 @@ public class CustomerController {
         txtCountry.setEditable(false);
         txtPhone.setEditable(true);
         txtPostalCode.setEditable(true);
-        
+
+        if (cboAddress.getItems().size() > 0) {
+            cboAddress.getItems().clear();
+        }
         cboAddress.getItems().addAll(addressList);
+        
+        if (cboCustomer.getItems().size() > 0) {
+            cboCustomer.getItems().clear();
+        }
         cboCustomer.getItems().addAll(customerList);
         
 //        cboAddress.setValue("----  Select Address  ----");
@@ -389,6 +395,7 @@ public class CustomerController {
             // Load Lists from Maps
             addressList = app.common.convertSIMapToList(addressToAddressIdMap);
             customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
+            System.out.println("Debugging");
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);
