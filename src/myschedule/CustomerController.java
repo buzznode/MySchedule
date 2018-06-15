@@ -205,7 +205,7 @@ public class CustomerController {
                 rs.getString("postalCode"),
                 rs.getString("phone")
             );
-            cboAddress.setValue(addressLine);
+//            cboAddress.setValue(addressLine);
             city = rs.getString("city").trim();
             txtCity.setText(city);
             cityId = rs.getInt("cityId");
@@ -323,8 +323,8 @@ public class CustomerController {
             cboAddress.getItems().removeAll(addressList);
             cboCustomer.getItems().removeAll(customerList);
             app.common.alertStatus(1);
-            cboCustomer.setValue("");
-            cboAddress.setValue("");
+//            cboCustomer.setValue("");
+//            cboAddress.setValue("");
             loadMapsAndLists();
             initializeForm();
         }
@@ -382,33 +382,33 @@ public class CustomerController {
     private void loadMapsAndLists() {
         try {
             // Load Maps
-            if (!addressToAddressIdMap.isEmpty()) {
-                addressToAddressIdMap.clear();
-            }
-            if (!addressIdToAddressMap.isEmpty()) {
-                addressIdToAddressMap.clear();
-            }
+//            if (!addressToAddressIdMap.isEmpty()) {
+//                addressToAddressIdMap.clear();
+//            }
+//            if (!addressIdToAddressMap.isEmpty()) {
+//                addressIdToAddressMap.clear();
+//            }
             addressToAddressIdMap = app.db.getAddressToAddressIdMap();
             addressIdToAddressMap = app.db.getAddressIdToAddressMap();
 
-            if (!customerToCustomerIdMap.isEmpty()) {
-                customerToCustomerIdMap.clear();
-            }
-            if (!customerIdToCustomerMap.isEmpty()) {
-                customerIdToCustomerMap.clear();
-            }
+//            if (!customerToCustomerIdMap.isEmpty()) {
+//                customerToCustomerIdMap.clear();
+//            }
+//            if (!customerIdToCustomerMap.isEmpty()) {
+//                customerIdToCustomerMap.clear();
+//            }
             customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
             customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
             
             // Load Lists from Maps
-            if (addressList != null) {
-                addressList.clear();
-            }
+//            if (addressList != null) {
+//                addressList.clear();
+//            }
             addressList = app.common.convertSIMapToList(addressToAddressIdMap);
             
-            if (customerList != null) {
-                customerList.clear();
-            }
+//            if (customerList != null) {
+//                customerList.clear();
+//            }
             customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
         }
         catch (SQLException ex) {
