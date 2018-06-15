@@ -320,6 +320,8 @@ public class CustomerController {
         }
         
         if (rows > 0) {
+            cboAddress.getItems().removeAll(addressList);
+            cboCustomer.getItems().removeAll(customerList);
             app.common.alertStatus(1);
             cboCustomer.setValue("");
             cboAddress.setValue("");
