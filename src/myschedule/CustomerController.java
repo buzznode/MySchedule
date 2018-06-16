@@ -25,6 +25,7 @@ package myschedule;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +85,6 @@ public class CustomerController {
     private final static String ADD_CUSTOMER = "----  Add New Customer  ----";
     private final AddressModel addressModel = new AddressModel();
     private MainController main;
-    private String originalPhone;
-    private String originalPostalCode;
     private boolean phoneChanged = false;
     private boolean postalCodeChanged = false;
     private final boolean unsavedChanges = false;
@@ -185,7 +184,7 @@ public class CustomerController {
         
         address = cboAddress.getValue().toString().trim();
         
-        if (address.isEmpty()) {
+        if (address.equals("")) {
             return;
         }
         
@@ -193,6 +192,7 @@ public class CustomerController {
     
         try {
             rs = app.db.getAddressData(addressId);
+            
             address = rs.getString("address").trim();
             address2 = rs.getString("address2").trim();
             addressLine = (!address.isEmpty()) && (!address2.isEmpty()) ? address + " " + address2 :
@@ -205,25 +205,27 @@ public class CustomerController {
                 rs.getString("postalCode"),
                 rs.getString("phone")
             );
-//            cboAddress.setValue(addressLine);
+            
             city = rs.getString("city").trim();
             txtCity.setText(city);
             cityId = rs.getInt("cityId");
             country = rs.getString("country").trim();
+            countryId = rs.getInt("countryId");
             txtCountry.setText(country);
             phone = rs.getString("phone").trim();
             txtPhone.setText(phone);
-            originalPhone = phone;
             postalCode = rs.getString("postalCode");
             txtPostalCode.setText(postalCode);
-            originalPostalCode = postalCode;
             
             rightNow = app.common.rightNow();
             userName = app.userName();
             addressModel.setAddressId(addressId);
             addressModel.setAddress(address);
             addressModel.setAddress2(address2);
+            addressModel.setCity(city);
             addressModel.setCityId(cityId);
+            addressModel.setCountry(country);
+            addressModel.setCountryId(countryId);
             addressModel.setPostalCode(postalCode);
             addressModel.setPhone(phone);
             addressModel.setCreateDate(rightNow);
@@ -250,7 +252,6 @@ public class CustomerController {
         customerName = cboCustomer.getValue().toString();
         
         if (customerName.equals(ADD_CUSTOMER)) {
-//            initializeForm();
             txtCustomer.requestFocus();
             cboAddress.setValue("");
         }
@@ -276,57 +277,96 @@ public class CustomerController {
     @SuppressWarnings("unchecked")
     private void handleSave() {
         boolean active;
+        String address;
+        String address2;
+        String addressLine;
         int addressId = 0;
         String customer;
         int customerId;
         String customerName;
+        int id = 0;
         String rightNow;
-        int rows = 0;
 
-        if (phoneChanged || postalCodeChanged) {
+        if (validateForm()) {
+            if (phoneChanged || postalCodeChanged) {
+                try {
+                    addressModel.setPhone(txtPhone.getText().trim());
+                    addressModel.setPostalCode(txtPostalCode.getText().trim());
+                    addressId = app.db.upsertAddress(addressModel);
+                    
+                    address = addressModel.getAddress().trim();
+                    address2 = addressModel.getAddress2().trim();
+                    addressLine = (!address.isEmpty()) && (!address2.isEmpty()) ? address + " " + address2 :
+                                               (!address.isEmpty()) && (address2.isEmpty())  ? address  :
+                                               (address.isEmpty())  && (!address2.isEmpty()) ? address2 : "";
+                    addressLine += " | ";
+                    addressLine += String.join(" | ", 
+                        addressModel.getCity().trim(),
+                        addressModel.getCountry().trim(),
+                        addressModel.getPostalCode().trim(),
+                        addressModel.getPhone().trim()
+                    );
+
+                    addressToAddressIdMap.put(addressLine, addressId);
+                    addressIdToAddressMap.put(addressId, addressLine);
+                    
+                    addressList.stream().filter((item) -> (!item.equals(""))).forEachOrdered((item) -> {
+                        cboAddress.getItems().remove(item);
+                    });
+                    
+                    addressList.add(addressLine);
+                    
+                    addressList.stream().filter((item) -> (!item.equals(""))).forEachOrdered((item) -> {
+                        cboAddress.getItems().add(item);
+                    });
+                }
+                catch (SQLException ex) {
+                    app.common.alertStatus(0, "Error performing upsertAddress");
+                }
+                phoneChanged = false;
+                postalCodeChanged = false;
+            }
+
+            active = chkActive.isSelected();
+            addressId = addressId > 0 ? addressId :  addressToAddressIdMap.get(cboAddress.getValue().toString());
+            customer = cboCustomer.getValue().toString();
+            customerId = customer.equals(ADD_CUSTOMER) ?  0 : customerToCustomerIdMap.get(customer);
+            customerName = txtCustomer.getText();
+
+            CustomerModel customerRecord = new CustomerModel();
+            customerRecord.setActive(active);
+            customerRecord.setCustomerId(customerId);
+            customerRecord.setCustomerName(customerName);
+            customerRecord.setAddressId(addressId);
+            rightNow = app.common.rightNow();
+
             try {
-                addressModel.setPhone(txtPhone.getText().trim());
-                addressModel.setPostalCode(txtPostalCode.getText().trim());
-                addressId = app.db.upsertAddress(addressModel);
+                id = app.db.upsertCustomer(customerRecord, app.userName(), rightNow);
             }
             catch (SQLException ex) {
-                app.common.alertStatus(0, "Error performing upsertAddress");
+                app.common.alertStatus(0);
             }
-            phoneChanged = false;
-            postalCodeChanged = false;
-        }
-        
-        active = chkActive.isSelected();
-        addressId = addressId > 0 ? addressId :  addressToAddressIdMap.get(cboAddress.getValue().toString());
-        customer = cboCustomer.getValue().toString();
-        customerId = customer.equals(ADD_CUSTOMER) ?  0 : customerToCustomerIdMap.get(customer);
-        customerName = txtCustomer.getText();
-        
-        CustomerModel customerRecord = new CustomerModel();
-        customerRecord.setActive(active);
-        customerRecord.setCustomerId(customerId);
-        customerRecord.setCustomerName(customerName);
-        customerRecord.setAddressId(addressId);
-        rightNow = app.common.rightNow();
-        
-        try {
-            rows = app.db.upsertCustomer(customerRecord, app.userName(), rightNow);
-        }
-        catch (SQLException ex) {
-            app.common.alertStatus(0);
-        }
-        
-        if (rows > 0) {
-//            cboAddress.getItems().removeAll(addressList);
-//            cboCustomer.getItems().removeAll(customerList);
-            app.common.alertStatus(1);
-//            cboCustomer.setValue("");
-//            cboAddress.setValue("");
-//            loadMapsAndLists();
-            initializeForm();
-        }
-        else {
-            app.common.alertStatus(0);
+
+            if (id > 0) {
+                app.common.alertStatus(1);
+                customerToCustomerIdMap.put(customerName, id);
+                customerIdToCustomerMap.put(id, customerName);
+
+                customerList.stream().filter((item) -> (!item.equals(ADD_CUSTOMER))).forEachOrdered((item) -> {
+                    cboCustomer.getItems().remove(item);
+                });
+                    
+                customerList.add(customerName);
+
+                customerList.stream().filter((item) -> (!item.equals(ADD_CUSTOMER))).forEachOrdered((item) -> {
+                    cboCustomer.getItems().add(item);
+                });
+
+                initializeForm();
+            }
+            else {
+                app.common.alertStatus(0);
+            }
         }
     }
     
@@ -335,7 +375,11 @@ public class CustomerController {
      */
     @SuppressWarnings("unchecked")
     private void initializeForm() {
-        int size;
+        cboAddress.setEditable(true);
+        cboCustomer.setEditable(true);
+        cboAddress.setValue("");
+        cboCustomer.setValue("");
+        
         chkActive.setSelected(false);
         txtCity.setText("");
         txtCountry.setText("");
@@ -347,25 +391,6 @@ public class CustomerController {
         txtCountry.setEditable(false);
         txtPhone.setEditable(true);
         txtPostalCode.setEditable(true);
-
-        size = cboAddress.getItems().size();
-        
-        if (size > 0) {
-            cboAddress.getItems().remove(0, size - 1);
-        }
-        
-        size = cboCustomer.getItems().size();
-        
-        if (size > 1) {
-            cboCustomer.getItems().remove(0, size - 1);
-        }
-        
-        loadMapsAndLists();
-        cboCustomer.getItems().addAll(customerList);
-        cboAddress.getItems().addAll(addressList);
-        
-//        cboAddress.setValue("----  Select Address  ----");
-//        cboCustomer.setValue("----  Select Customer  ----");
     }
     
     /**
@@ -392,45 +417,22 @@ public class CustomerController {
     @SuppressWarnings("unchecked")
     private void loadMapsAndLists() {
         try {
-            // Load Maps
-            if (!addressToAddressIdMap.isEmpty()) {
-                addressToAddressIdMap.clear();
-            }
-            if (!addressIdToAddressMap.isEmpty()) {
-                addressIdToAddressMap.clear();
-            }
-
             addressToAddressIdMap = app.db.getAddressToAddressIdMap();
             addressIdToAddressMap = app.db.getAddressIdToAddressMap();
-
-            if (!customerToCustomerIdMap.isEmpty()) {
-                customerToCustomerIdMap.clear();
-            }
-            if (!customerIdToCustomerMap.isEmpty()) {
-                customerIdToCustomerMap.clear();
-            }
-            
             customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
             customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
             
-            // Load Lists from Maps
-            if (addressList != null) {
-                addressList.clear();
-            }
-
-            addressList = app.common.convertSIMapToList(addressToAddressIdMap);
-            
-            if (customerList != null) {
-                customerList.clear();
-            }
-
-            customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
+            addressList = app.common.createAddressList(addressToAddressIdMap);
+            customerList = app.common.createCustomerList(customerToCustomerIdMap);
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);
         }
+
+        cboAddress.getItems().addAll(addressList);
+        cboCustomer.getItems().addAll(customerList);
     }
-        
+    
     /**
      * Start address maintenance
      */
@@ -438,6 +440,7 @@ public class CustomerController {
     public void start() {
         addListeners();
         lblTitle.setText(app.localize("customers"));
+        loadMapsAndLists();
         initializeForm();
     }
     
@@ -445,13 +448,13 @@ public class CustomerController {
      * Validate new record data
      * @return 
      */
-//    @SuppressWarnings("unchecked")
-//    private boolean validateAddressRecord() {
-//        return app.common.isNumber(txtAddressId.getText())
-//              && app.common.isString(txtAddress.getText())
-//              && app.common.isString(txtAddress2.getText())
-//              && app.common.isString((String) cboCity.getValue())
-//              && app.common.isString(txtPostalCode.getText())
-//              && app.common.isString(txtPhone.getText());
-//    }
+    @SuppressWarnings("unchecked")
+    private boolean validateForm() {
+        return app.common.isValidString(txtCustomer.getText(), false)
+              && app.common.isValidString(cboAddress.getValue().toString(), false)
+              && app.common.isValidString(txtCity.getText(), false)
+              && app.common.isValidString(txtPostalCode.getText(), false)
+              && app.common.isValidString(txtPhone.getText(), false)
+              && app.common.isValidString(txtCountry.getText(), false);
+    }
 }

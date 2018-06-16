@@ -434,6 +434,7 @@ public class DB {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
+//            map.put("----  Select Address  ----", 0);
             
             while (rs.next()) {
                 address1 = rs.getString("address").trim();
@@ -476,9 +477,6 @@ public class DB {
         connect();
         
         sql = String.join(" ",
-//            "SELECT addressId, address, address2",
-//            "FROM address",
-//            "ORDER BY addressId"
             "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
             "FROM address a",
             "JOIN city b ON b.cityId = a.cityId",
@@ -490,6 +488,7 @@ public class DB {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
+//            map.put(0, "----  Select Address  ----");
             
             while (rs.next()) {
                 address1 = rs.getString("address").trim();
@@ -1277,6 +1276,7 @@ public class DB {
                     "WHERE customerId = " + customer.getCustomerId()
                 );
                 rows = stmt.executeUpdate(sql);
+                id = customer.getCustomerId();
             }
             else {
                 // insert new record
@@ -1305,7 +1305,7 @@ public class DB {
                 pstmt.setString(8, userName.trim());
                 rows = pstmt.executeUpdate();
             }
-            return rows;
+            return id;
         }
         catch (SQLException ex) {
             throw new SQLException(exception(ex));
