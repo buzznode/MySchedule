@@ -276,6 +276,6 @@ public class CountryController {
     @SuppressWarnings("unchecked")
     private boolean validateCountryRecord() {
         return app.common.isNumber(txtCountryId.getText())
-              && app.common.isString(txtCountry.getText());
+              && app.common.isValidString(txtCountry.getText());
     }
 }

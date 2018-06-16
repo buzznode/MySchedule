@@ -131,30 +131,61 @@ public class Common  {
         }
     }
     
-    
     /**
      * Convert Map (Integer, String) to list
      * @param map
      * @return list
      */
-    @SuppressWarnings("unchecked")
-    public List convertISMapToList(Map<Integer, String> map) {
-        List list = new ArrayList(map.keySet());
-        Collections.sort(list);
-        return list;
-    }
+//    @SuppressWarnings("unchecked")
+//    public List convertISMapToList(Map<Integer, String> map) {
+//        List list = new ArrayList(map.keySet());
+//        Collections.sort(list);
+//        return list;
+//    }
     
     /**
      * Convert Map (String, Integer) to list
      * @param map
      * @return list
      */
+//    @SuppressWarnings("unchecked")
+//    public List convertSIMapToList(Map<String, Integer> map) {
+//        List list = new ArrayList(map.keySet());
+//        Collections.sort(list);
+//        return list;
+//    }
+
+    /**
+     * Create Address list
+     * @param map
+     * @return 
+     */
     @SuppressWarnings("unchecked")
-    public List convertSIMapToList(Map<String, Integer> map) {
-        List list = new ArrayList(map.keySet());
+    public List createAddressList(Map<String, Integer> map) {
+        List list = new ArrayList();
+        list.add("");
+        map.keySet().forEach((_item) -> {
+            list.add(_item);
+        });
         Collections.sort(list);
         return list;
     }
+    
+    /**
+     * Create Address list
+     * @param map
+     * @return 
+     */
+    @SuppressWarnings("unchecked")
+    public List createCustomerList(Map<String, Integer> map) {
+        List list = new ArrayList();
+        map.keySet().forEach((_item) -> {
+            list.add(_item);
+        });
+        Collections.sort(list);
+        return list;
+    }
+    
     
     /**
      * Convert Map (String, String) to list
@@ -279,8 +310,13 @@ public class Common  {
      * @return Boolean flag
      */
     @SuppressWarnings("unchecked")
-    public boolean isString(String str) {
-        return str.getClass().getTypeName().equals(Type.STRING);
+    public boolean isValidString(String str) {
+        boolean result = false;
+        
+        if (str.length() > 0) {
+            result = true;
+        }
+        return result;
     }
     
     /**
@@ -290,13 +326,22 @@ public class Common  {
      * @return Boolean flag
      */
     @SuppressWarnings("unchecked")
-    public boolean isString(String str, boolean emptyNullOK) {
+    public boolean isValidString(String str, boolean emptyNullOK) {
+        boolean result = false;
         if (str.length() > 0) {
-            return true;
+            result = true;
         }
         else {
-            return !str.isEmpty();
+            if (emptyNullOK) {
+                if (str.isEmpty()) {
+                    result = true;
+                }
+            }
+            else {
+                result = false;
+            }
         }
+        return result;
     }
 
     /**

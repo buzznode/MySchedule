@@ -77,21 +77,10 @@ public class CityController {
     @SuppressWarnings("unchecked")
     private void addListeners() {
         
-        btnAdd.setOnAction(e -> {
-            handleAdd();
-        });
-        
-        btnClose.setOnMouseClicked((ae) -> {
-            closeCityMaint();
-        });
-        
-        btnCommit.setOnAction(e -> {
-            handleCommit();
-        });
-
-        btnRemove.setOnAction(e -> {
-            handleRemove();
-        });
+        btnAdd.setOnAction(e -> { handleAdd(); } );
+        btnClose.setOnMouseClicked((ae) -> { closeCityMaint(); } );
+        btnCommit.setOnAction(e -> { handleCommit(); } );
+        btnRemove.setOnAction(e -> { handleRemove(); } );
     }
 
     /**
@@ -310,7 +299,7 @@ public class CityController {
     @SuppressWarnings("unchecked")
     private boolean validateCityRecord() {
         return app.common.isNumber(txtCityId.getText())
-              && app.common.isString(txtCity.getText())
-              && app.common.isString((String) cboCountry.getValue());
+              && app.common.isValidString(txtCity.getText())
+              && app.common.isValidString((String) cboCountry.getValue());
     }
 }

@@ -88,25 +88,11 @@ public class AddressController {
      */
     @SuppressWarnings("unchecked")
     private void addListeners() {
-        btnAdd.setOnAction(e -> {
-            handleAdd();
-        });
-        
-        btnClose.setOnMouseClicked((ea) -> {
-            closeAddressMaint();
-        });
-        
-        btnCommit.setOnAction(e -> {
-            handleCommit();
-        });
-
-        btnRemove.setOnAction(e -> {
-            handleRemove();
-        });
-        
-        cboCity.setOnAction(e -> {
-            handleCityChange();
-        });
+        btnAdd.setOnAction(e -> { handleAdd(); } );
+        btnClose.setOnMouseClicked((ea) -> { closeAddressMaint(); } );
+        btnCommit.setOnAction(e -> { handleCommit(); } );
+        btnRemove.setOnAction(e -> { handleRemove(); } );
+        cboCity.setOnAction(e -> { handleCityChange(); } );
     }
 
     /**
@@ -167,6 +153,7 @@ public class AddressController {
     /**
      * Handle Address change
      */
+    @SuppressWarnings("unchecked")
     private void handleAdd() {
         int cityId = 0;
         int countryId = 0;
@@ -199,6 +186,7 @@ public class AddressController {
     /**
      * Handle City change
      */
+    @SuppressWarnings("unchecked")
     private void handleCityChange() {
         String country;
         
@@ -214,6 +202,7 @@ public class AddressController {
     /**
      * Handles the commit action
      */
+    @SuppressWarnings("unchecked")
     private void handleCommit() {
         try {
             app.db.upsertAddress(addressList, app.userName(), app.common.rightNow());
@@ -229,6 +218,7 @@ public class AddressController {
     /**
      * Handle remove action
      */
+    @SuppressWarnings("unchecked")
     private void handleRemove() {
         ObservableList<AddressModel> addressSelected, allAddresses;
         allAddresses = table.getItems();
@@ -410,11 +400,11 @@ public class AddressController {
     private boolean validateAddressRecord() {
         boolean result;
         result = app.common.isNumber(txtAddressId.getText())
-              && app.common.isString(txtAddress.getText())
-              && app.common.isString(txtAddress2.getText())
-              && app.common.isString(cboCity.getValue().toString())
-              && app.common.isString(txtPostalCode.getText())
-              && app.common.isString(txtPhone.getText());
+              && app.common.isValidString(txtAddress.getText())
+              && app.common.isValidString(txtAddress2.getText(), true)
+              && app.common.isValidString(cboCity.getValue().toString())
+              && app.common.isValidString(txtPostalCode.getText())
+              && app.common.isValidString(txtPhone.getText());
         return result;
     }
 }
