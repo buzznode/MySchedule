@@ -843,6 +843,7 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
+            list.add("");
             
             while (rs.next()) {
                 list.add(rs.getString("city").trim());

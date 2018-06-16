@@ -170,10 +170,19 @@ public class AddressController {
         
         if (validateAddressRecord()) {
             addressList.add(new AddressModel(
-                Integer.parseInt(txtAddressId.getText()), txtAddress.getText(), 
-                txtAddress2.getText(), cboCity.getValue().toString(), cityId, 
-                txtPostalCode.getText(), txtPhone.getText(), txtCountry.getText(), 
-                countryId, rightNow, user, rightNow, user)
+                Integer.parseInt(txtAddressId.getText()), 
+                txtAddress.getText(), 
+                txtAddress2.getText(), 
+                cboCity.getValue().toString(), 
+                cityId, 
+                txtPostalCode.getText(), 
+                txtPhone.getText(), 
+                txtCountry.getText(), 
+                countryId, 
+                rightNow, 
+                user, 
+                rightNow, 
+                user)
             );
             unsavedChanges = true;
             initializeForm();
@@ -188,7 +197,14 @@ public class AddressController {
      */
     @SuppressWarnings("unchecked")
     private void handleCityChange() {
+        String city;
         String country;
+        
+        city = cboCity.getValue().toString().trim();
+        
+        if (city.equals("")) {
+            return;
+        }
         
         try {
             country = app.db.getCountryNameViaCity(cboCity.getValue().toString());
@@ -237,7 +253,6 @@ public class AddressController {
         txtAddressId.setText(Integer.toString(nextAddressId));
         txtAddress.setText("");
         txtAddress2.setText("");
-        cboCity.getItems().addAll(cityNameList);
         txtPostalCode.setText("");
         txtPhone.setText("");
         txtCountry.setText("");
@@ -249,6 +264,7 @@ public class AddressController {
         txtPostalCode.setDisable(false);
         txtPhone.setDisable(false);
         txtCountry.setDisable(true);
+        cboCity.setValue("");
     }
     
     /**
@@ -382,6 +398,7 @@ public class AddressController {
         try {
             addressList = app.db.getAddressModelList("address", "asc");
             cityNameList = app.db.getCityNameList();
+            cboCity.getItems().addAll(cityNameList);
         }
         catch (SQLException ex) {
             app.log.write(Level.SEVERE, ex.getMessage());
