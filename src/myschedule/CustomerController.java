@@ -335,6 +335,7 @@ public class CustomerController {
      */
     @SuppressWarnings("unchecked")
     private void initializeForm() {
+        int size;
         chkActive.setSelected(false);
         txtCity.setText("");
         txtCountry.setText("");
@@ -347,11 +348,16 @@ public class CustomerController {
         txtPhone.setEditable(true);
         txtPostalCode.setEditable(true);
 
-        if (cboAddress.getItems().size() > 1) {
-            cboAddress.getItems().removeAll(addressList);
+        size = cboAddress.getItems().size();
+        
+        if (size > 0) {
+            cboAddress.getItems().remove(0, size - 1);
         }
-        if (cboCustomer.getItems().size() > 1) {
-            cboCustomer.getItems().removeAll(customerList);
+        
+        size = cboCustomer.getItems().size();
+        
+        if (size > 1) {
+            cboCustomer.getItems().remove(0, size - 1);
         }
         
         loadMapsAndLists();
@@ -387,33 +393,37 @@ public class CustomerController {
     private void loadMapsAndLists() {
         try {
             // Load Maps
-//            if (!addressToAddressIdMap.isEmpty()) {
-//                addressToAddressIdMap.clear();
-//            }
-//            if (!addressIdToAddressMap.isEmpty()) {
-//                addressIdToAddressMap.clear();
-//            }
+            if (!addressToAddressIdMap.isEmpty()) {
+                addressToAddressIdMap.clear();
+            }
+            if (!addressIdToAddressMap.isEmpty()) {
+                addressIdToAddressMap.clear();
+            }
+
             addressToAddressIdMap = app.db.getAddressToAddressIdMap();
             addressIdToAddressMap = app.db.getAddressIdToAddressMap();
 
-//            if (!customerToCustomerIdMap.isEmpty()) {
-//                customerToCustomerIdMap.clear();
-//            }
-//            if (!customerIdToCustomerMap.isEmpty()) {
-//                customerIdToCustomerMap.clear();
-//            }
+            if (!customerToCustomerIdMap.isEmpty()) {
+                customerToCustomerIdMap.clear();
+            }
+            if (!customerIdToCustomerMap.isEmpty()) {
+                customerIdToCustomerMap.clear();
+            }
+            
             customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
             customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
             
             // Load Lists from Maps
-//            if (addressList != null) {
-//                addressList.clear();
-//            }
+            if (addressList != null) {
+                addressList.clear();
+            }
+
             addressList = app.common.convertSIMapToList(addressToAddressIdMap);
             
-//            if (customerList != null) {
-//                customerList.clear();
-//            }
+            if (customerList != null) {
+                customerList.clear();
+            }
+
             customerList = app.common.convertSIMapToList(customerToCustomerIdMap);
         }
         catch (SQLException ex) {
