@@ -82,7 +82,7 @@ public class CustomerController {
     private List customerList;
         
     private final static String ADD_CUSTOMER = "----  Add New Customer  ----";
-    private AddressModel addressModel = new AddressModel();
+    private final AddressModel addressModel = new AddressModel();
     private MainController main;
     private String originalPhone;
     private String originalPostalCode;
@@ -250,7 +250,7 @@ public class CustomerController {
         customerName = cboCustomer.getValue().toString();
         
         if (customerName.equals(ADD_CUSTOMER)) {
-            initializeForm();
+//            initializeForm();
             txtCustomer.requestFocus();
             cboAddress.setValue("");
         }
@@ -267,9 +267,6 @@ public class CustomerController {
             }
             catch (SQLException ex) {
             }
-        }
-        else {
-            return;
         }
     }
 
@@ -320,12 +317,12 @@ public class CustomerController {
         }
         
         if (rows > 0) {
-            cboAddress.getItems().removeAll(addressList);
-            cboCustomer.getItems().removeAll(customerList);
+//            cboAddress.getItems().removeAll(addressList);
+//            cboCustomer.getItems().removeAll(customerList);
             app.common.alertStatus(1);
 //            cboCustomer.setValue("");
 //            cboAddress.setValue("");
-            loadMapsAndLists();
+//            loadMapsAndLists();
             initializeForm();
         }
         else {
@@ -350,6 +347,14 @@ public class CustomerController {
         txtPhone.setEditable(true);
         txtPostalCode.setEditable(true);
 
+        if (cboAddress.getItems().size() > 1) {
+            cboAddress.getItems().removeAll(addressList);
+        }
+        if (cboCustomer.getItems().size() > 1) {
+            cboCustomer.getItems().removeAll(customerList);
+        }
+        
+        loadMapsAndLists();
         cboCustomer.getItems().addAll(customerList);
         cboAddress.getItems().addAll(addressList);
         
@@ -423,7 +428,6 @@ public class CustomerController {
     public void start() {
         addListeners();
         lblTitle.setText(app.localize("customers"));
-        loadMapsAndLists();
         initializeForm();
     }
     
