@@ -24,7 +24,6 @@
 package myschedule;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -58,32 +57,81 @@ public class AppointmentController {
     @FXML private Label lblEndDate;
     @FXML private DatePicker dteEndDate;
     @FXML private Label lblStartTime;
-    @FXML private ChoiceBox<?> chcStartHour;
-    @FXML private ChoiceBox<?> chcStartMinute;
-    @FXML private ChoiceBox<?> chcStartAMPM;
+    @FXML private ChoiceBox<String> chcStartHour;
+    @FXML private ChoiceBox<String> chcStartMinute;
+    @FXML private ChoiceBox<String> chcStartAMPM;
     @FXML private Label lblEndTime;
-    @FXML private ChoiceBox<?> chcEndHour;
-    @FXML private ChoiceBox<?> chcEndMinute;
-    @FXML private ChoiceBox<?> chcEndAMPM;
+    @FXML private ChoiceBox<String> chcEndHour;
+    @FXML private ChoiceBox<String> chcEndMinute;
+    @FXML private ChoiceBox<String> chcEndAMPM;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
     @FXML private Tab tabView;
 
+    private App app;
+    private MainController main;
+
+    /**
+     * Add listeners
+     */
+    @SuppressWarnings("unchecked")
+    private void addListeners() {
+        
+    }
+    
     /**
      * Initializes the form
      */
     @SuppressWarnings("unchecked")
-    public void initializeForm() {
+    private void initializeForm() {
         txtTitle.setText("");
         txtDescription.setText("");
         txtLocation.setText("");
         txtContact.setText("");
         txtURL.setText("");
-    }    
+    }  
+    
+    /**
+     * Inject App object
+     * @param _app 
+     */
+    @SuppressWarnings("unchecked")
+    public void injectApp(App _app) {
+        this.app = _app;
+    }
+
+    /**
+     * Inject MainController object
+     * @param _main 
+     */
+    @SuppressWarnings("unchecked")
+    public void injectMainController(MainController _main) {
+        main = _main;
+    }
+
     
     @SuppressWarnings("unchecked")
-    public void loadTimeChoiceBoxes() {
-        chcStartHour.getItems().addAll("1:00",)
+    private void loadTimeChoiceBoxes() {
+        String hours[] =  {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        String minutes[] = {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
+        String ampm[] = {"AM", "PM"};
+        
+        chcStartHour.getItems().addAll(hours);
+        chcEndHour.getItems().addAll(hours);
+        chcStartMinute.getItems().addAll(minutes);
+        chcEndMinute.getItems().addAll(minutes);
+        chcStartAMPM.getItems().addAll(ampm);
+        chcEndAMPM.getItems().addAll(ampm);
+    }
+    
+    /**
+     * Start address maintenance
+     */
+    @SuppressWarnings("unchecked")
+    public void start() {
+        addListeners();
+        loadTimeChoiceBoxes();
+        initializeForm();
     }
     
 }

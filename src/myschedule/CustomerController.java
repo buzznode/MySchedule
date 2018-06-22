@@ -63,6 +63,7 @@ public class CustomerController {
     @FXML private TextField txtPostalCode;
 
     private App app;
+    private MainController main;
     
     // Maps
     private Map<String, Integer> addressToAddressIdMap = new HashMap<>();
@@ -76,7 +77,6 @@ public class CustomerController {
         
     private final static String ADD_CUSTOMER = "----  Add New Customer  ----";
     private final AddressModel addressModel = new AddressModel();
-    private MainController main;
     private boolean phoneChanged = false;
     private boolean postalCodeChanged = false;
     private final boolean unsavedChanges = false;

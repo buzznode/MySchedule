@@ -50,7 +50,7 @@ public class MainController {
     protected MenuItem miFileSave;
     protected MenuItem miFileSaveAs;
     protected MenuItem miFileExit;
-    protected MenuItem miEditDelete;
+    protected MenuItem miAppointmentAdd;
     protected MenuItem miMaintAddress;
     protected MenuItem miMaintCity;
     protected MenuItem miMaintCustomer;
@@ -62,8 +62,10 @@ public class MainController {
     /**
      * Add listeners
      */
+    @SuppressWarnings("unchecked")
     private void addListeners() {
         miFileExit.setOnAction(e -> { System.exit(0); } );
+        miAppointmentAdd.setOnAction(e -> { handleAppointmentAdd(); } );
         miMaintAddress.setOnAction(e -> { handleAddressMaintenance(); } );
         miMaintCity.setOnAction(e -> { handleCityMaintenance(); } );
         miMaintCountry.setOnAction(e -> { handleCountryMaintenance(); } );
@@ -74,6 +76,7 @@ public class MainController {
     /**
      * Disable Users.Login
      */
+    @SuppressWarnings("unchecked")
     public void disableLogin() {
         menuBar.getMenus().get(3).getItems().get(0).setDisable(true);
     }
@@ -81,6 +84,7 @@ public class MainController {
     /**
      * Disable Users.Logout
      */
+    @SuppressWarnings("unchecked")
     public void disableLogout() {
         menuBar.getMenus().get(3).getItems().get(1).setDisable(false);
     }
@@ -88,6 +92,7 @@ public class MainController {
     /**
      * Disable menu
      */
+    @SuppressWarnings("unchecked")
     public void disableMenu() {
         menuBar.getMenus().forEach(( m ) -> {
             m.getItems().forEach(( mi ) -> {
@@ -99,6 +104,7 @@ public class MainController {
     /**
      * Enable Help.About
      */
+    @SuppressWarnings("unchecked")
     public void enableAbout() {
         menuBar.getMenus().get(4).getItems().get(0).setDisable(false);
     }
@@ -106,6 +112,7 @@ public class MainController {
     /**
      * Enable Menu.Exit
      */
+    @SuppressWarnings("unchecked")
     public void enableExit() {
         menuBar.getMenus().get(0).getItems().get(4).setDisable(false);
     }
@@ -113,6 +120,7 @@ public class MainController {
     /**
      * Enable Users.Login
      */
+    @SuppressWarnings("unchecked")
     public void enableLogin() {
         menuBar.getMenus().get(3).getItems().get(0).setDisable(false);
     }
@@ -120,6 +128,7 @@ public class MainController {
     /**
      * Enable Users.Logout
      */
+    @SuppressWarnings("unchecked")
     public void enableLogout() {
         menuBar.getMenus().get(3).getItems().get(1).setDisable(false);
     }
@@ -127,6 +136,7 @@ public class MainController {
     /**
      * Enable menu
      */
+    @SuppressWarnings("unchecked")
     public void enableMenu() {
         menuBar.getMenus().forEach((m) -> {
             m.getItems().forEach((mi) -> {
@@ -138,6 +148,7 @@ public class MainController {
     /**
      * End currently running process
      */
+    @SuppressWarnings("unchecked")
     protected void endProcess() {
         try {
             Node node = mainContainer.getCenter();
@@ -153,6 +164,7 @@ public class MainController {
      * End currently running process and start the next action
      * @param nextAction 
      */
+    @SuppressWarnings("unchecked")
     protected void endProcess(String nextAction) {
         Node node = mainContainer.getCenter();
         mainContainer.getChildren().removeAll(node);
@@ -181,6 +193,7 @@ public class MainController {
     /**
      * Handle AddressMaintenance request
      */
+    @SuppressWarnings("unchecked")
     private void handleAddressMaintenance() {
         try {
             FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Address.fxml"));
@@ -196,10 +209,28 @@ public class MainController {
             app.log.write(Level.SEVERE, "Error starting Address Maintenance");
         }
     }
+
+    @SuppressWarnings("unchecked")
+    private void handleAppointmentAdd() {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Appointment.fxml"));
+            Node node = loader.load();
+            AppointmentController controller = loader.getController();
+            controller.injectMainController(this);
+            controller.injectApp(app);
+            mainContainer.setCenter(node);
+            controller.start();
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Appointment Add");
+        }
+    }
     
     /**
      * Handle CityMaintenance request
      */
+    @SuppressWarnings("unchecked")
     private void handleCityMaintenance() {
         try {
             FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("City.fxml"));
@@ -219,6 +250,7 @@ public class MainController {
     /**
      * Handle CountryMaintenance request
      */
+    @SuppressWarnings("unchecked")
     private void handleCountryMaintenance() {
         try {
             FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Country.fxml"));
@@ -238,6 +270,7 @@ public class MainController {
     /**
      * Handle CustomerMaintenance request
      */
+    @SuppressWarnings("unchecked")
     private void handleCustomerMaintenance() {
         try {
             FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Customer.fxml"));
@@ -254,6 +287,7 @@ public class MainController {
         }
     }
     
+    @SuppressWarnings("unchecked")
     private void handleLogin() {
         try {
             FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Login.fxml"));
@@ -274,6 +308,7 @@ public class MainController {
      * Inject App object
      * @param _app 
      */
+    @SuppressWarnings("unchecked")
     protected void injectApp(App _app) {
         app = _app;
     }
@@ -281,6 +316,7 @@ public class MainController {
     /**
      * Start the MainController
      */
+    @SuppressWarnings("unchecked")
     protected void start() {
 
         // File menu [0]
@@ -292,10 +328,10 @@ public class MainController {
         miFileExit = new MenuItem(app.localize("exit")); // [0.4]
         menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
 
-        // Edit menu [1]
-        Menu menuEdit = new Menu(app.localize("edit"));
-        miEditDelete = new MenuItem(app.localize("delete")); // [1.0]
-        menuEdit.getItems().addAll(miEditDelete); 
+        // Appointment menu [1]
+        Menu menuAppointment = new Menu(app.localize("appointment"));
+        miAppointmentAdd = new MenuItem(app.localize("add")); // [1.0]
+        menuAppointment.getItems().addAll(miAppointmentAdd); 
 
         // Maintenance menu [2]
         Menu menuMaint = new Menu(app.localize("maintain"));
@@ -317,7 +353,7 @@ public class MainController {
         menuHelp.getItems().addAll(miHelpAbout);
 
         addListeners();
-        menuBar.getMenus().addAll(menuFile, menuEdit, menuMaint, menuUser, menuHelp);
+        menuBar.getMenus().addAll(menuFile, menuAppointment, menuMaint, menuUser, menuHelp);
         mainContainer.setTop(menuBar);
         
         if (!app.loggedIn()) {
