@@ -25,7 +25,6 @@ package myschedule;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -41,7 +40,7 @@ public class AppointmentController {
     @FXML private TabPane appointments;
     @FXML private Tab tabCreate;
     @FXML private Label lblCustomer;
-    @FXML private ComboBox<?> cboCustomer;
+    @FXML private ComboBox<String> cboCustomer;
     @FXML private Label lblTitle;
     @FXML private TextField txtTitle;
     @FXML private Label lblDescription;
@@ -57,13 +56,13 @@ public class AppointmentController {
     @FXML private Label lblEndDate;
     @FXML private DatePicker dteEndDate;
     @FXML private Label lblStartTime;
-    @FXML private ChoiceBox<String> chcStartHour;
-    @FXML private ChoiceBox<String> chcStartMinute;
-    @FXML private ChoiceBox<String> chcStartAMPM;
+    @FXML private ComboBox<String> cboStartHour;
+    @FXML private ComboBox<String> cboStartMinute;
+    @FXML private ComboBox<String> cboStartAMPM;
     @FXML private Label lblEndTime;
-    @FXML private ChoiceBox<String> chcEndHour;
-    @FXML private ChoiceBox<String> chcEndMinute;
-    @FXML private ChoiceBox<String> chcEndAMPM;
+    @FXML private ComboBox<String> cboEndHour;
+    @FXML private ComboBox<String> cboEndMinute;
+    @FXML private ComboBox<String> cboEndAMPM;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
     @FXML private Tab tabView;
@@ -116,12 +115,12 @@ public class AppointmentController {
         String minutes[] = {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
         String ampm[] = {"AM", "PM"};
         
-        chcStartHour.getItems().addAll(hours);
-        chcEndHour.getItems().addAll(hours);
-        chcStartMinute.getItems().addAll(minutes);
-        chcEndMinute.getItems().addAll(minutes);
-        chcStartAMPM.getItems().addAll(ampm);
-        chcEndAMPM.getItems().addAll(ampm);
+        cboStartHour.getItems().addAll(hours);
+        cboEndHour.getItems().addAll(hours);
+        cboStartMinute.getItems().addAll(minutes);
+        cboEndMinute.getItems().addAll(minutes);
+        cboStartAMPM.getItems().addAll(ampm);
+        cboEndAMPM.getItems().addAll(ampm);
     }
     
     /**
