@@ -25,7 +25,6 @@ package myschedule;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,14 +55,7 @@ public class CustomerController {
     @FXML private ComboBox cboCustomer;
     @FXML private ComboBox cboAddress;
     @FXML private CheckBox chkActive;
-    @FXML private Label lblAddress;
-    @FXML private Label lblCity;
-    @FXML private Label lblCountry;
-    @FXML private Label lblCustomer;
-    @FXML private Label lblPhone;
-    @FXML private Label lblPostalCode;
     @FXML private Label lblTitle;
-    @FXML private TextField txtAddress;
     @FXML private TextField txtCity;
     @FXML private TextField txtCountry;
     @FXML private TextField txtCustomer;

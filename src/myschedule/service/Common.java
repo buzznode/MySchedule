@@ -23,7 +23,6 @@
  */
 package myschedule.service;
 
-import com.sun.org.apache.bcel.internal.generic.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
