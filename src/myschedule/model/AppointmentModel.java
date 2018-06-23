@@ -24,218 +24,266 @@
 package myschedule.model;
 
 import java.time.LocalDateTime;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  * @author bradd
  * @version 0.5.0
  */
 public class AppointmentModel {
-    private int appointmentId;
-    private int customerId;
-    private String title;
-    private String description;
-    private String location;
-    private String contact;
-    private String url;
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private LocalDateTime createDate;
-    private String createdBy;
-    private LocalDateTime lastUpdate;
-    private String lastUpdateBy;
+    private final SimpleIntegerProperty appointmentId;
+    private final SimpleIntegerProperty customerId;
+    private final SimpleStringProperty title;
+    private final SimpleStringProperty description;
+    private final SimpleStringProperty location;
+    private final SimpleStringProperty contact;
+    private final SimpleStringProperty url;
+    private final SimpleStringProperty start;
+    private final SimpleStringProperty end;
+    private final SimpleStringProperty createDate;
+    private final SimpleStringProperty createdBy;
+    private final SimpleStringProperty  lastUpdate;
+    private final SimpleStringProperty lastUpdateBy;
 
-    /**
-     * @return appointmentId
-     */
-    public int appointmentId() {
-        return appointmentId;
+    public AppointmentModel() {
+        this.appointmentId = new SimpleIntegerProperty(0);
+        this.customerId = new SimpleIntegerProperty(0);
+        this.title = new SimpleStringProperty("");
+        this.description = new SimpleStringProperty("");
+        this.location = new SimpleStringProperty("");
+        this.contact = new SimpleStringProperty("");
+        this.url = new SimpleStringProperty("");
+        this.start = new SimpleStringProperty("");
+        this.end = new SimpleStringProperty("");
+        this.createDate = new SimpleStringProperty("");
+        this.createdBy = new SimpleStringProperty("");
+        this.lastUpdate = new SimpleStringProperty("");
+        this.lastUpdateBy = new SimpleStringProperty("");
+    }
+    
+    public AppointmentModel(int _appointmentId, int _customerId, String _title, String _description, String _location,
+            String _contact, String _url, String _start, String _end, String _createDate, String _createdBy, String _lastUpdate, String _lastUpdateBy) {
+        this.appointmentId = new SimpleIntegerProperty(_appointmentId);
+        this.customerId = new SimpleIntegerProperty(_customerId);
+        this.title = new SimpleStringProperty(_title);
+        this.description = new SimpleStringProperty(_description);
+        this.location = new SimpleStringProperty(_location);
+        this.contact = new SimpleStringProperty(_contact);
+        this.url = new SimpleStringProperty(_url);
+        this.start = new SimpleStringProperty(_start);
+        this.end = new SimpleStringProperty(_end);
+        this.createDate = new SimpleStringProperty(_createDate);
+        this.createdBy = new SimpleStringProperty(_createdBy);
+        this.lastUpdate = new SimpleStringProperty(_lastUpdate);
+        this.lastUpdateBy = new SimpleStringProperty(_lastUpdateBy);
     }
     
     /**
+     * Get appointmentId value
+     * @return appointmentId value
+     */
+    public int getAppointmentId() {
+        return appointmentId.get();
+    }
+    
+    /**
+     * Set appointmentId value
      * @param _appointmentId
-     * @return appointmentId
      */
-    public int appointmentId(int _appointmentId) {
-        return appointmentId = _appointmentId;
+    public void setAppointmentId(int _appointmentId) {
+        appointmentId.set(_appointmentId);
     }
     
     /**
-     * @return customerId
+     * Get customerId value
+     * @return customerId value
      */
-    public int customerId() {
-        return customerId;
+    public int getCustomerId() {
+        return customerId.get();
     }
     
     /**
+     * Set customerId value
      * @param _customerId
-     * @return customerId
      */
-    public int customerId(int _customerId) {
-        return customerId = _customerId;
+    public void setCustomerId(int _customerId) {
+        customerId.set(_customerId);
     }
     
     /**
-     * @return title
+     * Get title value
+     * @return title value
      */
-    public String title() {
-        return title;
+    public String getTitle() {
+        return title.get();
     }
     
     /**
+     * Set title value
      * @param _title
-     * @return title
      */
-    public String title(String _title) {
-        return title = _title;
+    public void setTitle(String _title) {
+        title.set(_title);
     }
     
     /**
-     * @return description
+     * Get description value
+     * @return description value
      */
-    public String description() {
-        return description;
+    public String getDescription() {
+        return description.get();
     }
     
     /**
+     * Set description value
      * @param _description
-     * @return description
      */
-    public String description(String _description) {
-        return description = _description;
+    public void setDescription(String _description) {
+        description.set(_description);
     }
     
     /**
-     * @return location
+     * Get location value
+     * @return location value
      */
-    public String location() {
-        return location;
+    public String getLocation() {
+        return location.get();
     }
     
     /**
+     * Set location value
      * @param _location
-     * @return location
      */
-    public String location(String _location) {
-        return location = _location;
+    public void setLocation(String _location) {
+        location.set(_location);
     }
     
     /**
-     * @return contact
+     * Get contact value
+     * @return contact value
      */
-    public String contact() {
-        return contact;
+    public String getContact() {
+        return contact.get();
     }
     
     /**
+     * Set contact value
      * @param _contact
-     * @return contact
      */
-    public String contact(String _contact) {
-        return contact = _contact;
+    public void setContact(String _contact) {
+        contact.set(_contact);
     }
     
     /**
-     * @return url
+     * Get url value
+     * @return url value
      */
-    public String url() {
-        return url;
+    public String getUrl() {
+        return url.get();
     }
     
     /**
+     * Set url value
      * @param _url
-     * @return url
      */
-    public String url(String _url) {
-        return url = _url;
+    public void setUrl(String _url) {
+        url.set(_url);
     }
     
     /**
-     * @return start
+     * Get start value
+     * @return start value
      */
-    public LocalDateTime start() {
-        return start;
+    public String getStart() {
+        return start.get();
     }
     
     /**
+     * Set start value
      * @param _start
-     * @return start
      */
-    public LocalDateTime start(LocalDateTime _start) {
-        return start = _start;
+    public void setStart(String _start) {
+        start.set(_start);
     }
     
     /**
-     * @return end
+     * Get end value
+     * @return end value
      */
-    public LocalDateTime end() {
-        return end;
+    public String getEnd() {
+        return end.get();
     }
     
     /**
+     * Set end value
      * @param _end
-     * @return end
      */
-    public LocalDateTime end(LocalDateTime _end) {
-        return end = _end;
+    public void setEnd(String _end) {
+        end.set(_end);
     }
     
     /**
-     * @return createDate
+     * Get createDate value
+     * @return createDate value
      */
-    public LocalDateTime createDate() {
-        return createDate;
+    public String getCreateDate() {
+        return createDate.get();
     }
     
     /**
+     * Set createDate value
      * @param _createDate
-     * @return createDate
      */
-    public LocalDateTime createDate(LocalDateTime _createDate) {
-        return createDate = _createDate;
+    public void setCreateDate(String _createDate) {
+        createDate.set(_createDate);
     }
     
     /**
-     * @return createdBy
+     * Get createdBy value
+     * @return createdBy value
      */
-    public String createdBy() {
-        return createdBy;
+    public String getCreatedBy() {
+        return createdBy.get();
     }
     
     /**
+     * Set createdBy value
      * @param _createdBy
-     * @return createdBy
      */
-    public String createdBy(String _createdBy) {
-        return createdBy = _createdBy;
+    public void setCreatedBy(String _createdBy) {
+        createdBy.set(_createdBy);
     }
     
     /**
-     * @return lastUpdate
+     * Get lastUpdate value
+     * @return lastUpdate value
      */
-    public LocalDateTime lastUpdate() {
-        return lastUpdate;
+    public String getLastUpdate() {
+        return lastUpdate.get();
     }
     
     /**
+     * Set lastUpdate value
      * @param _lastUpdate
-     * @return lastUpdate
      */
-    public LocalDateTime lastUpdate(LocalDateTime _lastUpdate) {
-        return lastUpdate = _lastUpdate;
+    public void setLastUpdate(String _lastUpdate) {
+        lastUpdate.set(_lastUpdate);
     }
     
     /**
-     * @return lastUpdateBy
+     * Get lastUpdateBy value
+     * @return lastUpdateBy value
      */
-    public String lastUpdateBy() {
-        return lastUpdateBy;
+    public String getLastUpdateBy() {
+        return lastUpdateBy.get();
     }
     
     /**
+     * Set lastUpdateBy value
      * @param _lastUpdateBy
-     * @return lastUpdateBy
      */
-    public String lastUpdateBy(String _lastUpdateBy) {
-        return lastUpdateBy = _lastUpdateBy;
+    public void setLastUpdateBy(String _lastUpdateBy) {
+        lastUpdateBy.set(_lastUpdateBy);
     }
 }
