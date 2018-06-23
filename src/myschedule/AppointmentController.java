@@ -23,14 +23,25 @@
  */
 package myschedule;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import myschedule.model.AppointmentModel;
 
 /**
  * @author bradd
@@ -70,12 +81,97 @@ public class AppointmentController {
     private App app;
     private MainController main;
 
+    // Maps
+    private Map<String, Integer> customerToCustomerIdMap = new HashMap<>();
+
+    // Lists
+    private List customerList;
+
+    private final boolean unsavedChanges = false;
+    
     /**
      * Add listeners
      */
     @SuppressWarnings("unchecked")
     private void addListeners() {
+        btnCancel.setOnMouseClicked(e -> { closeAppointmentAdd(); } );
+        btnSave.setOnAction(e -> { handleSave(); } );
+    }
+    
+    /**
+     * Close appointment add
+     */
+    @SuppressWarnings("unchecked")
+    private void closeAppointmentAdd() {
+        if (unsavedChanges) {
+            if (confirmUnsaved()) {
+                main.endProcess();
+            }
+        }
+        else {
+            main.endProcess();
+        }
+    }
+    
+    /**
+     * Confirm closing when unsaved data exists
+     * @return boolean
+     */
+    @SuppressWarnings("unchecked")
+    private boolean confirmUnsaved() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Unsaved Changes");
+        alert.setHeaderText("Pending appointment changes exist.");
+        alert.setContentText(
+            "There have been appointment changes made that have not been saved.\n\nTo save these changes, " +
+            "click \"No\" to close this alert, and then click on the \"Save\" button to save the changes.\n\n" +
+            "Clicking \"Yes\" will result in the pending changes being lost and the appointment maintenance process ending."
+        );
+        ButtonType btnYes = new ButtonType("Yes");
+        ButtonType btnNo = new ButtonType("No");
+        alert.getButtonTypes().setAll(btnYes, btnNo);
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.get() == btnYes;
+    }
+    
+    /**
+     * Save appointment
+     */
+    @SuppressWarnings("unchecked")
+    private void handleSave() {
+        LocalDateTime endDateTime;
+        LocalDate endDate;
+        LocalTime endTime;
+        LocalDateTime startDateTime;
+        LocalDate startDate;
+        LocalTime startTime;
+        String str;
         
+        if (validateForm()) {
+            AppointmentModel appt = new AppointmentModel();
+            appt.setAppointmentId(0);
+            appt.setCustomerId(customerToCustomerIdMap.get(cboCustomer.getSelectionModel().getSelectedItem()));
+            appt.setTitle(txtTitle.getText());
+            appt.setDescription(txtDescription.getText());
+            appt.setLocation(txtLocation.getText());
+            appt.setContact(txtContact.getText());
+            appt.setUrl(txtURL.getText());
+            
+            startDate = dteStartDate.getValue();
+            endDate = dteEndDate.getValue();
+            
+            str = cboStartHour.getValue() + ":" +cboStartMinute.getValue() + cboStartAMPM.getValue(); 
+            startTime = LocalTime.parse(str);
+            str = cboEndHour.getValue() + ":" +cboEndMinute.getValue() + cboEndAMPM.getValue(); 
+            endTime = LocalTime.parse(str);
+            
+            startDateTime = LocalDateTime.parse(startDate + " " + startTime);
+            endDateTime = LocalDateTime.parse(endDate + " " + endTime);
+            System.out.println("startDateTime:" + startDateTime + "; endDateTime: " + endDateTime);
+        }
+        else {
+            app.common.alertStatus(0);
+        }
     }
     
     /**
@@ -110,7 +206,7 @@ public class AppointmentController {
 
     
     @SuppressWarnings("unchecked")
-    private void loadTimeChoiceBoxes() {
+    private void loadComboBoxes() {
         String hours[] =  {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
         String minutes[] = {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
         String ampm[] = {"AM", "PM"};
@@ -121,6 +217,15 @@ public class AppointmentController {
         cboEndMinute.getItems().addAll(minutes);
         cboStartAMPM.getItems().addAll(ampm);
         cboEndAMPM.getItems().addAll(ampm);
+        
+        try {
+            customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap(false);
+            customerList = app.common.createCustomerList(customerToCustomerIdMap);
+            cboCustomer.getItems().addAll(customerList);
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
     }
     
     /**
@@ -129,8 +234,29 @@ public class AppointmentController {
     @SuppressWarnings("unchecked")
     public void start() {
         addListeners();
-        loadTimeChoiceBoxes();
+        loadComboBoxes();
         initializeForm();
     }
-    
+
+    /**
+     * Validate new record data
+     * @return 
+     */
+    @SuppressWarnings("unchecked")
+    private boolean validateForm() {
+        return app.common.isValidString(cboCustomer.getValue(), false)
+              && app.common.isValidString(txtTitle.getText(), false)
+              && app.common.isValidString(txtDescription.getText(), false)
+              && app.common.isValidString(txtLocation.getText(), false)
+              && app.common.isValidString(txtContact.getText(), false)
+              && app.common.isValidString(txtURL.getText(), false)
+              && app.common.isValidString(dteStartDate.getValue().toString(), false)
+              && app.common.isValidString(dteEndDate.getValue().toString(), false)
+              && app.common.isValidString(cboStartHour.getValue(), false)
+              && app.common.isValidString(cboStartMinute.getValue(), false)
+              && app.common.isValidString(cboStartAMPM.getValue(), false)
+              && app.common.isValidString(cboEndHour.getValue(), false)
+              && app.common.isValidString(cboEndMinute.getValue(), false)
+              && app.common.isValidString(cboEndAMPM.getValue(), false);
+    }
 }

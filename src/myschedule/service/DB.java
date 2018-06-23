@@ -674,6 +674,43 @@ public class DB {
     }
 
     /**
+     *  Create map of Customers to Customer Id's
+     * @param addCustomer flag
+     * @return Map Customer Name (String) to Customer Id (Integer)
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, Integer> getCustomerToCustomerIdMap(boolean addCustomer) throws SQLException {
+        Map<String, Integer> map = new HashMap<>();
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT customerId, customerName",
+            "FROM customer",
+            "ORDER BY customerName"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.beforeFirst();
+            map.clear();
+            
+            if (addCustomer) {
+                map.put("----  Add New Customer  ----", 0);
+            }
+            
+            while (rs.next()) {
+                map.put(rs.getString("customerName").trim(), rs.getInt("customerId"));
+            }
+        }
+        catch (SQLException ex) {
+            throw new SQLException(exception(ex));
+        }
+        return map;
+    }
+    
+    /**
      * Create map of Customer Id's to Customers
      * @return ListMap Customer Id (Integer) to Customer Name (String)
      * @throws SQLException 
@@ -1150,6 +1187,74 @@ public class DB {
             throw new SQLException(exception(ex));
         }
     }
+    
+    /**
+     * Insert Appointment record
+     * @param list
+     * @param userName
+     * @param rightNow
+     * @return boolean result
+     * @throws SQLException 
+     */
+//    @SuppressWarnings("unchecked")
+//    public int upsertAddress(ObservableList<AddressModel> list, String userName, String rightNow) throws SQLException{
+//        int cnt;
+//        int id;
+//        int rows = 0;
+//        String sql;
+//        connect();
+//        
+//        try {
+//            for (AddressModel a : list) {
+//                sql = String.join(" ",
+//                    "SELECT COUNT(*) AS cnt",
+//                    "FROM address",
+//                    "WHERE addressId = " + a.getAddressId()
+//                );
+//                rs = stmt.executeQuery(sql);
+//                rs.first();
+//                cnt = rs.getInt("cnt");
+//                
+//                if (cnt > 0) {  // update record
+//                    sql = String.join(" ",
+//                        "UPDATE address",
+//                        "SET address = \"" + a.getAddress().trim() + "\",",
+//                        "   address2 = \"" + a.getAddress2().trim() + "\",",
+//                        "   cityId = " + a.getCityId() + ",",
+//                        "   postalCode = \"" + a.getPostalCode().trim() + "\",",
+//                        "   phone = '" + a.getPhone().trim() + "',",
+//                        "   lastUpdate = \"" + rightNow.trim() + "\",",
+//                        "   lastUpdateBy  = \"" + userName.trim() + "\"",
+//                        "WHERE addressId = " + a.getAddressId()
+//                    );
+//                    rows += stmt.executeUpdate(sql);
+//                }
+//                else {  // insert new record
+//                    sql = String.join(" ",
+//                        "INSERT",
+//                        "INTO  address (addressId, address, address2, cityId, postalCode, phone,",
+//                        "   createDate, createdBy, lastUpdate, lastUpdateBy)",
+//                        "VALUES(" + 
+//                            a.getAddressId() + ",\"",
+//                            a.getAddress().trim() + "\",\"",
+//                            a.getAddress2().trim() + "\",\"",
+//                            a.getCityId() + "\",\"",
+//                            a.getPostalCode().trim() + "\",\"",
+//                            a.getPhone().trim() + "\",\"",
+//                            rightNow.trim() + "\",\"",
+//                            userName.trim() + "\",\"",
+//                            rightNow.trim() + "\",\"",
+//                            userName.trim() + "\")"
+//                    );
+//                    rows += stmt.executeUpdate(sql);
+//                }
+//            }
+//            return rows;
+//        }
+//        catch (SQLException ex) {
+//            throw new SQLException(exception(ex));
+//        }
+//    }
     
     /**
      * Update city table
