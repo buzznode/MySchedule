@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,19 +135,41 @@ public class AppointmentController {
         return result.get() == btnYes;
     }
     
+    @SuppressWarnings("unchecked")
+    private LocalDateTime formatDateTime(LocalDate yyyymmdd, String hh, String mm, String ampm) {
+        String tme;
+        
+        if (ampm.equals("AM")) {
+            if (hh.equals("12")) {
+                hh = "00";
+            }
+            else if (hh.length() < 2) {
+                hh = "0" + hh;
+            }
+        }
+        else {
+            if (!hh.equals("12")) {
+                hh = Integer.toString(Integer.parseInt(hh) + 12);
+            }
+        }
+        
+        tme = hh + ":" + mm ;
+        return LocalDateTime.parse(yyyymmdd + " " + tme, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+    
     /**
      * Save appointment
      */
     @SuppressWarnings("unchecked")
     private void handleSave() {
+        String ampm;
         LocalDateTime endDateTime;
-        LocalDate endDate;
-        LocalTime endTime;
+        String hh;
+        String mm;
+        int rows = 0;
         LocalDateTime startDateTime;
-        LocalDate startDate;
-        LocalTime startTime;
-        String str;
-        
+        LocalDate yyyymmdd;
+
         if (validateForm()) {
             AppointmentModel appt = new AppointmentModel();
             appt.setAppointmentId(0);
@@ -157,17 +180,27 @@ public class AppointmentController {
             appt.setContact(txtContact.getText());
             appt.setUrl(txtURL.getText());
             
-            startDate = dteStartDate.getValue();
-            endDate = dteEndDate.getValue();
+            yyyymmdd = dteStartDate.getValue();
+            hh = cboStartHour.getValue();
+            mm = cboStartMinute.getValue();
+            ampm = cboStartAMPM.getValue();
+            startDateTime = formatDateTime(yyyymmdd, hh, mm, ampm);
+            appt.setStart(startDateTime.toString());
             
-            str = cboStartHour.getValue() + ":" +cboStartMinute.getValue() + cboStartAMPM.getValue(); 
-            startTime = LocalTime.parse(str);
-            str = cboEndHour.getValue() + ":" +cboEndMinute.getValue() + cboEndAMPM.getValue(); 
-            endTime = LocalTime.parse(str);
+            yyyymmdd = dteEndDate.getValue();
+            hh = cboEndHour.getValue();
+            mm = cboEndMinute.getValue();
+            ampm = cboEndAMPM.getValue();
+            endDateTime = formatDateTime(yyyymmdd, hh, mm, ampm);
+            appt.setEnd(endDateTime.toString());
             
-            startDateTime = LocalDateTime.parse(startDate + " " + startTime);
-            endDateTime = LocalDateTime.parse(endDate + " " + endTime);
-            System.out.println("startDateTime:" + startDateTime + "; endDateTime: " + endDateTime);
+            try {
+                app.db.upsertAppointment(appt, app.userName());
+                app.common.alertStatus(1);
+            }
+            catch (SQLException ex) {
+                app.common.alertStatus(0);
+            }
         }
         else {
             app.common.alertStatus(0);

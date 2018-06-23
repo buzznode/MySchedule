@@ -6,8 +6,9 @@
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/AppointmentController.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/Appointment.fxml</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/service/DB.java</file>
-            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/Customer.fxml</file>
+            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/model/AppointmentModel.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/service/Common.java</file>
+            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/CustomerController.java</file>
         </group>
     </open-files>
 </project-private>

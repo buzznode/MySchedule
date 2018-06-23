@@ -277,7 +277,6 @@ public class CustomerController {
         int customerId;
         String customerName;
         int id = 0;
-        String rightNow;
 
         if (validateForm()) {
             if (phoneChanged || postalCodeChanged) {
@@ -330,35 +329,29 @@ public class CustomerController {
             customerRecord.setCustomerId(customerId);
             customerRecord.setCustomerName(customerName);
             customerRecord.setAddressId(addressId);
-            rightNow = app.common.rightNow();
 
             try {
-                id = app.db.upsertCustomer(customerRecord, app.userName(), rightNow);
+                app.db.upsertCustomer(customerRecord, app.userName());
             }
             catch (SQLException ex) {
                 app.common.alertStatus(0);
             }
 
-            if (id > 0) {
-                app.common.alertStatus(1);
-                customerToCustomerIdMap.put(customerName, id);
-                customerIdToCustomerMap.put(id, customerName);
+            app.common.alertStatus(1);
+            customerToCustomerIdMap.put(customerName, id);
+            customerIdToCustomerMap.put(id, customerName);
 
-                customerList.stream().filter((item) -> (!item.equals(ADD_CUSTOMER))).forEachOrdered((item) -> {
-                    cboCustomer.getItems().remove(item);
-                });
+            customerList.stream().filter((item) -> (!item.equals(ADD_CUSTOMER))).forEachOrdered((item) -> {
+                cboCustomer.getItems().remove(item);
+            });
                     
-                customerList.add(customerName);
+            customerList.add(customerName);
 
-                customerList.stream().filter((item) -> (!item.equals(ADD_CUSTOMER))).forEachOrdered((item) -> {
-                    cboCustomer.getItems().add(item);
-                });
+            customerList.stream().filter((item) -> (!item.equals(ADD_CUSTOMER))).forEachOrdered((item) -> {
+                cboCustomer.getItems().add(item);
+            });
 
-                initializeForm();
-            }
-            else {
-                app.common.alertStatus(0);
-            }
+            initializeForm();
         }
     }
     

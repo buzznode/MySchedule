@@ -24,6 +24,7 @@
 package myschedule.service;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import myschedule.model.AddressModel;
+import myschedule.model.AppointmentModel;
 import myschedule.model.CityModel;
 import myschedule.model.CountryModel;
 import myschedule.model.CustomerModel;
@@ -1077,7 +1079,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public int upsertAddress(ObservableList<AddressModel> list, String userName, String rightNow) throws SQLException{
+    public int upsertAddress(ObservableList<AddressModel> list, String userName) throws SQLException{
         int cnt;
         int id;
         int rows = 0;
@@ -1103,7 +1105,7 @@ public class DB {
                         "   cityId = " + a.getCityId() + ",",
                         "   postalCode = \"" + a.getPostalCode().trim() + "\",",
                         "   phone = '" + a.getPhone().trim() + "',",
-                        "   lastUpdate = \"" + rightNow.trim() + "\",",
+                        "   lastUpdate = \"" + LocalDateTime.now().toString() + "\",",
                         "   lastUpdateBy  = \"" + userName.trim() + "\"",
                         "WHERE addressId = " + a.getAddressId()
                     );
@@ -1121,9 +1123,9 @@ public class DB {
                             a.getCityId() + "\",\"",
                             a.getPostalCode().trim() + "\",\"",
                             a.getPhone().trim() + "\",\"",
-                            rightNow.trim() + "\",\"",
+                            LocalDateTime.now().toString() + "\",\"",
                             userName.trim() + "\",\"",
-                            rightNow.trim() + "\",\"",
+                            LocalDateTime.now().toString() + "\",\"",
                             userName.trim() + "\")"
                     );
                     rows += stmt.executeUpdate(sql);
@@ -1190,71 +1192,89 @@ public class DB {
     
     /**
      * Insert Appointment record
-     * @param list
+     * @param appt
      * @param userName
-     * @param rightNow
      * @return boolean result
      * @throws SQLException 
      */
-//    @SuppressWarnings("unchecked")
-//    public int upsertAddress(ObservableList<AddressModel> list, String userName, String rightNow) throws SQLException{
-//        int cnt;
-//        int id;
-//        int rows = 0;
-//        String sql;
-//        connect();
-//        
-//        try {
-//            for (AddressModel a : list) {
-//                sql = String.join(" ",
-//                    "SELECT COUNT(*) AS cnt",
-//                    "FROM address",
-//                    "WHERE addressId = " + a.getAddressId()
-//                );
-//                rs = stmt.executeQuery(sql);
-//                rs.first();
-//                cnt = rs.getInt("cnt");
-//                
-//                if (cnt > 0) {  // update record
-//                    sql = String.join(" ",
-//                        "UPDATE address",
-//                        "SET address = \"" + a.getAddress().trim() + "\",",
-//                        "   address2 = \"" + a.getAddress2().trim() + "\",",
-//                        "   cityId = " + a.getCityId() + ",",
-//                        "   postalCode = \"" + a.getPostalCode().trim() + "\",",
-//                        "   phone = '" + a.getPhone().trim() + "',",
-//                        "   lastUpdate = \"" + rightNow.trim() + "\",",
-//                        "   lastUpdateBy  = \"" + userName.trim() + "\"",
-//                        "WHERE addressId = " + a.getAddressId()
-//                    );
-//                    rows += stmt.executeUpdate(sql);
-//                }
-//                else {  // insert new record
-//                    sql = String.join(" ",
-//                        "INSERT",
-//                        "INTO  address (addressId, address, address2, cityId, postalCode, phone,",
-//                        "   createDate, createdBy, lastUpdate, lastUpdateBy)",
-//                        "VALUES(" + 
-//                            a.getAddressId() + ",\"",
-//                            a.getAddress().trim() + "\",\"",
-//                            a.getAddress2().trim() + "\",\"",
-//                            a.getCityId() + "\",\"",
-//                            a.getPostalCode().trim() + "\",\"",
-//                            a.getPhone().trim() + "\",\"",
-//                            rightNow.trim() + "\",\"",
-//                            userName.trim() + "\",\"",
-//                            rightNow.trim() + "\",\"",
-//                            userName.trim() + "\")"
-//                    );
-//                    rows += stmt.executeUpdate(sql);
-//                }
-//            }
-//            return rows;
-//        }
-//        catch (SQLException ex) {
-//            throw new SQLException(exception(ex));
-//        }
-//    }
+    @SuppressWarnings("unchecked")
+    public void upsertAppointment(AppointmentModel appt, String userName) throws SQLException{
+        int cnt;
+        int id;
+        int rows = 0;
+        String sql;
+        connect();
+        
+        try {
+            sql = String.join(" ",
+                "SELECT COUNT(*) AS cnt",
+                "FROM appointment",
+                "WHERE appointmentId = " + appt.getAppointmentId()
+            );
+            rs = stmt.executeQuery(sql);
+            rs.first();
+            cnt = rs.getInt("cnt");
+
+            if (cnt > 0) {  // update record
+                sql = String.join(" ",
+                    "UPDATE appointment",
+                    "SET customerId=?,",
+                    "   title=?,",
+                    "   description=?,",
+                    "   location=?,",
+                    "   contact=?,",
+                    "   url=?,",
+                    "   start=?,",
+                    "   end=?,",
+                    "   createDate=?,",
+                    "   createdBy=?,",
+                    "   lastUpdate=?,",
+                    "   lastUpdateBy=?",
+                    "WHERE appointmentId =? "
+                );
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, appt.getCustomerId());
+                pstmt.setString(2, appt.getTitle().trim());
+                pstmt.setString(3, appt.getDescription().trim());
+                pstmt.setString(4, appt.getLocation().trim());
+                pstmt.setString(5, appt.getContact().trim());
+                pstmt.setString(6, appt.getUrl().trim());
+                pstmt.setString(7, appt.getStart().trim());
+                pstmt.setString(8, appt.getEnd().trim());
+                pstmt.setString(9, LocalDateTime.now().toString());
+                pstmt.setString(10, userName.trim());
+                pstmt.setString(11, LocalDateTime.now().toString());
+                pstmt.setString(12, userName.trim());
+                pstmt.setInt(13, appt.getAppointmentId());
+                pstmt.executeUpdate(sql);
+            }
+            else {  // insert new record
+                sql = String.join(" ",
+                    "INSERT",
+                    "INTO appointment (customerId, title, description, location, contact, url, start, end, createDate, createdBy,",
+                    "   lastUpdate, lastUpdateBy)",
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, appt.getCustomerId());
+                pstmt.setString(2, appt.getTitle().trim());
+                pstmt.setString(3, appt.getDescription().trim());
+                pstmt.setString(4, appt.getLocation().trim());
+                pstmt.setString(5, appt.getContact().trim());
+                pstmt.setString(6, appt.getUrl().trim());
+                pstmt.setString(7, appt.getStart().trim());
+                pstmt.setString(8, appt.getEnd().trim());
+                pstmt.setString(9, LocalDateTime.now().toString());
+                pstmt.setString(10, userName.trim());
+                pstmt.setString(11, LocalDateTime.now().toString());
+                pstmt.setString(12, userName.trim());
+                pstmt.executeUpdate();
+            }
+        }
+        catch (SQLException ex) {
+            throw new SQLException(exception(ex));
+        }
+    }
     
     /**
      * Update city table
@@ -1353,7 +1373,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public int upsertCustomer(CustomerModel customer, String userName, String rightNow) throws SQLException{
+    public void upsertCustomer(CustomerModel customer, String userName) throws SQLException{
         int id;
         int rows;
         String sql;
@@ -1381,37 +1401,25 @@ public class DB {
                     "   lastUpdateBy = \"" + userName.trim() + "\"",
                     "WHERE customerId = " + customer.getCustomerId()
                 );
-                rows = stmt.executeUpdate(sql);
-                id = customer.getCustomerId();
+                stmt.executeUpdate(sql);
             }
             else {
                 // insert new record
-                sql = String.join(" ",
-                    "SELECT MAX(customerId) AS id",
-                    "FROM customer"
-                );
-                rs = stmt.executeQuery(sql);
-                rs.first();
-                id = rs.getInt("id");
-                id++;
-                
                 sql = String.join(" ", 
                     "INSERT",
-                    "INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy)",
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                    "INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy)",
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)"
                 );
                 pstmt = conn.prepareStatement(sql);
-                pstmt.setInt(1, id);
-                pstmt.setString(2, escapeTicks(customer.getCustomerName().trim()));
-                pstmt.setInt(3, customer.getAddressId());
-                pstmt.setBoolean(4, customer.getActive());
-                pstmt.setString(5, rightNow.trim());
-                pstmt.setString(6, userName.trim());
-                pstmt.setString(7, rightNow.trim());
-                pstmt.setString(8, userName.trim());
-                rows = pstmt.executeUpdate();
+                pstmt.setString(1, escapeTicks(customer.getCustomerName().trim()));
+                pstmt.setInt(2, customer.getAddressId());
+                pstmt.setBoolean(3, customer.getActive());
+                pstmt.setString(4, LocalDateTime.now().toString());
+                pstmt.setString(5, userName.trim());
+                pstmt.setString(6, LocalDateTime.now().toString());
+                pstmt.setString(7, userName.trim());
+                pstmt.executeUpdate();
             }
-            return id;
         }
         catch (SQLException ex) {
             throw new SQLException(exception(ex));
