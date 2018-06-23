@@ -221,7 +221,7 @@ public class AddressController {
     @SuppressWarnings("unchecked")
     private void handleCommit() {
         try {
-            app.db.upsertAddress(addressList, app.userName(), app.common.rightNow());
+            app.db.upsertAddress(addressList, app.userName());
             unsavedChanges = false;
             app.common.alertStatus(1);
             refreshTableView();
