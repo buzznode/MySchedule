@@ -23,7 +23,10 @@
  */
 package myschedule;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 /**
@@ -32,10 +35,19 @@ import javafx.scene.layout.Pane;
  */
 @SuppressWarnings("unchecked")
 public class MonthCalendarController {
+    @FXML Label lblTitle;
     @FXML Pane monthCalendarPane;
 
     private App app;
     private MainController main;
+    
+    /**
+     * Add listeners
+     */
+    @SuppressWarnings("unchecked")
+    private void addListeners() {
+        
+    }
     
     /**
      * Inject App object
@@ -53,6 +65,17 @@ public class MonthCalendarController {
     @SuppressWarnings("unchecked")
     public void injectMainController(MainController _main) {
         main = _main;
+    }
+    
+    /**
+     * Start country maintenance
+     */
+    @SuppressWarnings("unchecked")
+    public void start() {
+        addListeners();
+        lblTitle.setText(app.localize("appointments_month_view"));
+        
+//        initializeForm();
     }
 }
 

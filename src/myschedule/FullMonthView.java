@@ -33,6 +33,7 @@ import javafx.scene.text.Text;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import javafx.scene.layout.Region;
 
 /**
  * @author bradd
@@ -60,14 +61,14 @@ public class FullMonthView {
             for (int j = 0; j < 7; j++) {
                 MonthAnchorPaneNode ap = new MonthAnchorPaneNode();
                 ap.setPrefSize(200,200);
-                calendar.add(ap,j,i);
+                calendar.add(ap, j, i);
                 allCalendarDays.add(ap);
             }
         }
         
         // Days of the week labels
-        Text[] dayNames = new Text[]{ new Text("Sunday"), new Text("Monday"), new Text("Tuesday"),
-            new Text("Wednesday"), new Text("Thursday"), new Text("Friday"), new Text("Saturday") };
+        Text[] dayNames = new Text[]{ new Text("Sun"), new Text("Mon"), new Text("Tue"),
+            new Text("Wed"), new Text("Thu"), new Text("Fri"), new Text("Sat") };
         GridPane dayLabels = new GridPane();
         dayLabels.setPrefWidth(300);
         Integer col = 0;
@@ -86,14 +87,20 @@ public class FullMonthView {
         previousMonth.setOnAction(e -> previousMonth());
         Button nextMonth = new Button(">>");
         nextMonth.setOnAction(e -> nextMonth());
-        HBox titleBar = new HBox(previousMonth, calendarTitle, nextMonth);
+        HBox titleBar = new HBox();
+        titleBar.setSpacing(10);
+        titleBar.getChildren().addAll(previousMonth, calendarTitle, nextMonth);
         titleBar.setAlignment(Pos.BASELINE_CENTER);
         
         // Populate calendar with the appropriate day numbers
         populateCalendar(yearMonth);
         
+        // Create HBox for spacing between titleBar and dayLabels
+        Region spacer = new Region();
+        spacer.setPrefSize(100.0, 20.0);
+        
         // Create the calendar view
-        view = new VBox(titleBar, dayLabels, calendar);
+        view = new VBox(titleBar, spacer, dayLabels, calendar);
     }
 
     /**
