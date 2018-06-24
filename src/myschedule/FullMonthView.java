@@ -111,7 +111,9 @@ public class FullMonthView {
     public void populateCalendar(YearMonth yearMonth) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = LocalDate.now().format(formatter);
-
+        int y = LocalDate.now().getYear();
+        int m = LocalDate.now().getMonthValue();
+        int d = LocalDate.now().getDayOfMonth();
         
         
         // Get the date we want to start with on the calendar
