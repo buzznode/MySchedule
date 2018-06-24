@@ -23,6 +23,7 @@
  */
 package myschedule;
 
+import java.time.YearMonth;
 import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -51,6 +52,8 @@ public class MainController {
     protected MenuItem miFileSaveAs;
     protected MenuItem miFileExit;
     protected MenuItem miAppointmentAdd;
+    protected MenuItem miAppointmentViewMonth;
+    protected MenuItem miAppointmentViewWeek;
     protected MenuItem miMaintAddress;
     protected MenuItem miMaintCity;
     protected MenuItem miMaintCustomer;
@@ -66,6 +69,8 @@ public class MainController {
     private void addListeners() {
         miFileExit.setOnAction(e -> { System.exit(0); } );
         miAppointmentAdd.setOnAction(e -> { handleAppointmentAdd(); } );
+        miAppointmentViewMonth.setOnAction(e -> { handleAppointmentViewMonth(); } );
+        miAppointmentViewWeek.setOnAction(e -> { handleAppointmentViewWeek(); } );
         miMaintAddress.setOnAction(e -> { handleAddressMaintenance(); } );
         miMaintCity.setOnAction(e -> { handleCityMaintenance(); } );
         miMaintCountry.setOnAction(e -> { handleCountryMaintenance(); } );
@@ -210,6 +215,9 @@ public class MainController {
         }
     }
 
+    /**
+     * Handle Appointment Add request
+     */
     @SuppressWarnings("unchecked")
     private void handleAppointmentAdd() {
         try {
@@ -224,6 +232,40 @@ public class MainController {
         catch (Exception ex) {
             app.common.alertStatus(0);
             app.log.write(Level.SEVERE, "Error starting Appointment Add");
+        }
+    }
+    
+    /**
+     * Handle Appointment View Month Calendar request
+     */
+    @SuppressWarnings("unchecked")
+    private void handleAppointmentViewMonth() {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("MonthCalendar.fxml"));
+            Node node = loader.load();
+            MonthCalendarController controller = loader.getController();
+            controller.injectMainController(this);
+            controller.injectApp(app);
+            controller.monthCalendarPane.getChildren().add(new FullMonthView(YearMonth.now()).getView());
+            
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Appointment View Month");
+        }
+    }
+    
+    /**
+     * Handle Appointment View Week request
+     */
+    @SuppressWarnings("unchecked")
+    private void handleAppointmentViewWeek() {
+        try {
+            
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Appointment View Week");
         }
     }
     
@@ -331,7 +373,9 @@ public class MainController {
         // Appointment menu [1]
         Menu menuAppointment = new Menu(app.localize("appointment"));
         miAppointmentAdd = new MenuItem(app.localize("add")); // [1.0]
-        menuAppointment.getItems().addAll(miAppointmentAdd); 
+        miAppointmentViewMonth = new MenuItem(app.localize("month_view")); // [2.0]
+        miAppointmentViewWeek = new MenuItem(app.localize("week_view")); // [3.0]
+        menuAppointment.getItems().addAll(miAppointmentAdd, miAppointmentViewMonth, miAppointmentViewWeek); 
 
         // Maintenance menu [2]
         Menu menuMaint = new Menu(app.localize("maintain"));
