@@ -32,6 +32,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javafx.scene.layout.Region;
 
@@ -108,6 +109,11 @@ public class FullMonthView {
      * @param yearMonth year and month of month to render
      */
     public void populateCalendar(YearMonth yearMonth) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String today = LocalDate.now().format(formatter);
+
+        
+        
         // Get the date we want to start with on the calendar
         LocalDate calendarDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), 1);
         
