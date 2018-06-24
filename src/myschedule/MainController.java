@@ -247,6 +247,7 @@ public class MainController {
             controller.injectMainController(this);
             controller.injectApp(app);
             controller.monthCalendarPane.getChildren().add(new FullMonthView(YearMonth.now()).getView());
+            mainContainer.setCenter(node);
             
         }
         catch (Exception ex) {
