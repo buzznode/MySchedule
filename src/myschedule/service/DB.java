@@ -422,9 +422,6 @@ public class DB {
         connect();
         
         sql = String.join(" ",
-//            "SELECT addressId, address, address2",
-//            "FROM address",
-//            "ORDER BY address, address2"
             "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
             "FROM address a",
             "JOIN city b ON b.cityId = a.cityId",
@@ -436,7 +433,6 @@ public class DB {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
-//            map.put("----  Select Address  ----", 0);
             
             while (rs.next()) {
                 address1 = rs.getString("address").trim();
@@ -490,7 +486,6 @@ public class DB {
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
-//            map.put(0, "----  Select Address  ----");
             
             while (rs.next()) {
                 address1 = rs.getString("address").trim();
@@ -1015,44 +1010,6 @@ public class DB {
     }
 
     /**
-     * Get a list of concatenated Addresses
-     * @return List Concatenated Address (String)
-     * @throws SQLException 
-     */
-//    @SuppressWarnings("unchecked")
-//    public List getFullAddressList() throws SQLException {
-//        ObservableList<String> list = FXCollections.observableArrayList();
-//        String sql;
-//        connect();
-//        
-//        sql = String.join(" ",
-//            "SELECT a.address, a.address2, b.city, c.country, a.postalCode, a.phone",
-//            "FROM address a",
-//            "JOIN city b ON a.cityId = b.cityId",
-//            "JOIN country c ON b.countryId = c.countryId",
-//            "ORDER BY a.address, a.address2, b.city"
-//        );
-//        
-//        try {
-//            rs = stmt.executeQuery(sql);
-//            rs.beforeFirst();
-//            
-//            while (rs.next()) {
-//                list.add(rs.getString("address").trim() + " " 
-//                       + rs.getString("address2").trim() + " " 
-//                       + rs.getString("city").trim() + " " 
-//                       + rs.getString("country").trim() + " " 
-//                       + rs.getString("postalCode").trim() + " " 
-//                       + rs.getString("phone").trim());
-//            }
-//        }
-//        catch (SQLException ex) {
-//            throw new SQLException(exception(ex));
-//        }
-//        return list;
-//    }
-    
-    /**
      * Execute query without result set
      * @param sql
      * @throws SQLException 
@@ -1074,7 +1031,6 @@ public class DB {
      * Update address table
      * @param list
      * @param userName
-     * @param rightNow
      * @return boolean result
      * @throws SQLException 
      */
@@ -1114,10 +1070,9 @@ public class DB {
                 else {  // insert new record
                     sql = String.join(" ",
                         "INSERT",
-                        "INTO  address (addressId, address, address2, cityId, postalCode, phone,",
+                        "INTO  address (address, address2, cityId, postalCode, phone,",
                         "   createDate, createdBy, lastUpdate, lastUpdateBy)",
-                        "VALUES(" + 
-                            a.getAddressId() + ",\"",
+                        "VALUES(\"" + 
                             a.getAddress().trim() + "\",\"",
                             a.getAddress2().trim() + "\",\"",
                             a.getCityId() + "\",\"",
@@ -1159,31 +1114,25 @@ public class DB {
                 return rs.getInt("addressId");
             }
             
-            sql = "SELECT MAX(addressId) + 1 AS id FROM address";
-            rs = stmt.executeQuery(sql);
-            rs.first();
-            id = rs.getInt("id");
-
             sql = String.join(" ",
                 "INSERT",
-                "INTO  address (addressId, address, address2, cityId, postalCode, phone,",
+                "INTO  address (address, address2, cityId, postalCode, phone,",
                 "   createDate, createdBy, lastUpdate, lastUpdateBy)",
-                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
             
             pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, id);
-            pstmt.setString(2, obj.getAddress().trim());
-            pstmt.setString(3, obj.getAddress2().trim());
-            pstmt.setInt(4, obj.getCityId());
-            pstmt.setString(5, obj.getPostalCode().trim());
-            pstmt.setString(6, obj.getPhone().trim());
-            pstmt.setString(7, obj.getCreateDate().trim());
-            pstmt.setString(8, obj.getCreatedBy().trim());
-            pstmt.setString(9, obj.getLastUpdate().trim());
-            pstmt.setString(10, obj.getLastUpdateBy().trim());
+            pstmt.setString(1, obj.getAddress().trim());
+            pstmt.setString(2, obj.getAddress2().trim());
+            pstmt.setInt(3, obj.getCityId());
+            pstmt.setString(4, obj.getPostalCode().trim());
+            pstmt.setString(5, obj.getPhone().trim());
+            pstmt.setString(6, obj.getCreateDate().trim());
+            pstmt.setString(7, obj.getCreatedBy().trim());
+            pstmt.setString(8, obj.getLastUpdate().trim());
+            pstmt.setString(9, obj.getLastUpdateBy().trim());
             pstmt.executeUpdate();
-            return id;
+            return 1;
         }
         catch (SQLException ex) {
             throw new SQLException(exception(ex));
@@ -1194,7 +1143,6 @@ public class DB {
      * Insert Appointment record
      * @param appt
      * @param userName
-     * @return boolean result
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
@@ -1218,18 +1166,8 @@ public class DB {
             if (cnt > 0) {  // update record
                 sql = String.join(" ",
                     "UPDATE appointment",
-                    "SET customerId=?,",
-                    "   title=?,",
-                    "   description=?,",
-                    "   location=?,",
-                    "   contact=?,",
-                    "   url=?,",
-                    "   start=?,",
-                    "   end=?,",
-                    "   createDate=?,",
-                    "   createdBy=?,",
-                    "   lastUpdate=?,",
-                    "   lastUpdateBy=?",
+                    "SET customerId=?, title=?, description=?, location=?, contact=?, url=?, start=?, end=?,",
+                    "   createDate=?, createdBy=?, lastUpdate=?, lastUpdateBy=?",
                     "WHERE appointmentId =? "
                 );
                 pstmt = conn.prepareStatement(sql);
@@ -1251,8 +1189,8 @@ public class DB {
             else {  // insert new record
                 sql = String.join(" ",
                     "INSERT",
-                    "INTO appointment (customerId, title, description, location, contact, url, start, end, createDate, createdBy,",
-                    "   lastUpdate, lastUpdateBy)",
+                    "INTO appointment (customerId, title, description, location, contact, url, start, end, createDate,",
+                    "   createdBy, lastUpdate, lastUpdateBy)",
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                 );
                 pstmt = conn.prepareStatement(sql);
@@ -1294,8 +1232,8 @@ public class DB {
             
             sql = String.join(" ", 
                 "INSERT",
-                "INTO city (cityId, city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy)",
-                "VALUES (?, ?, ?, ?, ?, ?, ?)"
+                "INTO city (city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy)",
+                "VALUES (?, ?, ?, ?, ?, ?)"
             );
 
             pstmt = conn.prepareStatement(sql);
@@ -1307,16 +1245,14 @@ public class DB {
                     "WHERE country = \"" + c.getCountry() + "\""
                 );
                 rs = stmt.executeQuery(lookup);
-                rs.beforeFirst();
-                rs.next();
+                rs.first();
                 countryId = rs.getInt("countryId");
-                pstmt.setInt(1, c.getCityId());
-                pstmt.setString(2, escapeTicks(c.getCity().trim()));
-                pstmt.setInt(3, countryId);
-                pstmt.setString(4, c.getCreateDate().trim());
-                pstmt.setString(5, c.getCreatedBy().trim());
-                pstmt.setString(6, c.getLastUpdate().trim());
-                pstmt.setString(7, c.getLastUpdateBy().trim());
+                pstmt.setString(1, escapeTicks(c.getCity().trim()));
+                pstmt.setInt(2, countryId);
+                pstmt.setString(3, c.getCreateDate().trim());
+                pstmt.setString(4, c.getCreatedBy().trim());
+                pstmt.setString(5, c.getLastUpdate().trim());
+                pstmt.setString(6, c.getLastUpdateBy().trim());
                 pstmt.executeUpdate();
             }
             return true;
@@ -1343,19 +1279,18 @@ public class DB {
             
             sql = String.join(" ", 
                 "INSERT",
-                "INTO country (countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy)",
-                "VALUES (?, ?, ?, ?, ?, ?)"
+                "INTO country (country, createDate, createdBy, lastUpdate, lastUpdateBy)",
+                "VALUES (?, ?, ?, ?, ?)"
             );
             
             pstmt = conn.prepareStatement(sql);
             
             for (CountryModel c : list) {
-                pstmt.setInt(1, c.getCountryId());
-                pstmt.setString(2, escapeTicks(c.getCountry().trim()));
-                pstmt.setString(3, c.getCreateDate().trim());
-                pstmt.setString(4, c.getCreatedBy().trim());
-                pstmt.setString(5, c.getLastUpdate().trim());
-                pstmt.setString(6, c.getLastUpdateBy().trim());
+                pstmt.setString(1, escapeTicks(c.getCountry().trim()));
+                pstmt.setString(2, c.getCreateDate().trim());
+                pstmt.setString(3, c.getCreatedBy().trim());
+                pstmt.setString(4, c.getLastUpdate().trim());
+                pstmt.setString(5, c.getLastUpdateBy().trim());
                 pstmt.executeUpdate();
             }
             return true;
@@ -1369,7 +1304,6 @@ public class DB {
      * Insert / Update Customer table
      * @param customer (CustomerModel)
      * @param userName (String)
-     * @return boolean result
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
