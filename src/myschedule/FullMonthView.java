@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Formatter;
 import javafx.scene.layout.Region;
 
 /**
@@ -111,10 +112,12 @@ public class FullMonthView {
     public void populateCalendar(YearMonth yearMonth) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = LocalDate.now().format(formatter);
-        int y = LocalDate.now().getYear();
-        int m = LocalDate.now().getMonthValue();
-        int d = LocalDate.now().getDayOfMonth();
-        
+        String yyyy = Integer.toString(LocalDate.now().getYear());
+        String mm = Integer.toString(LocalDate.now().getMonthValue());
+        mm = mm.length() < 2 ? "0" + mm : mm;
+        String dd = Integer.toString(LocalDate.now().getDayOfMonth());
+        dd = dd.length() < 2 ? "0" + dd : dd;
+        System.out.println("yyyy: " + yyyy + "; mm: " + mm + "; dd: " + dd);
         
         // Get the date we want to start with on the calendar
         LocalDate calendarDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), 1);
