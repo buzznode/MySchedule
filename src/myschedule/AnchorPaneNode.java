@@ -35,7 +35,7 @@ import java.time.LocalDate;
 /**
  * Create an anchor pane that can store additional data.
  */
-public class MonthAnchorPaneNode extends AnchorPane {
+public class AnchorPaneNode extends AnchorPane {
     // Date associated with this pane
     private LocalDate date;
 
@@ -43,7 +43,7 @@ public class MonthAnchorPaneNode extends AnchorPane {
      * Create a anchor pane node. Date is not assigned in the constructor.
      * @param children children of the anchor pane
      */
-    public MonthAnchorPaneNode(Node... children) {
+    public AnchorPaneNode(Node... children) {
         super(children);
         
         // Add action handler for mouse clicked

@@ -23,6 +23,8 @@
  */
 package myschedule;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -34,25 +36,31 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Formatter;
 import javafx.scene.layout.Region;
 
 /**
  * @author bradd
  * @version 0.5.0
  */
-public class FullMonthView {
-    private ArrayList<MonthAnchorPaneNode> allCalendarDays = new ArrayList<>(35);
-    private final VBox view;
-    private final Text calendarTitle;
+public class MonthView {
+    private ArrayList<AnchorPaneNode> allCalendarDays = new ArrayList<>(35);
+    private VBox view;
+    private Text calendarTitle;
     private YearMonth currentYearMonth;
+
+    private App app;
+    private MainController main;
+    
 
     /**
      * Create a calendar view
      * @param yearMonth year month to create the calendar of
      */
-    public FullMonthView(YearMonth yearMonth) {
+    public MonthView(YearMonth yearMonth) {
         currentYearMonth = yearMonth;
+    }
+    
+    public void buildCalendar() {
         // Create the calendar grid pane
         GridPane calendar = new GridPane();
         calendar.setPrefSize(300, 200);
@@ -61,7 +69,7 @@ public class FullMonthView {
         // Create rows and columns with anchor panes for the calendar
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
-                MonthAnchorPaneNode ap = new MonthAnchorPaneNode();
+                AnchorPaneNode ap = new AnchorPaneNode();
                 ap.setPrefSize(200,200);
                 calendar.add(ap, j, i);
                 allCalendarDays.add(ap);
@@ -95,7 +103,7 @@ public class FullMonthView {
         titleBar.setAlignment(Pos.BASELINE_CENTER);
         
         // Populate calendar with the appropriate day numbers
-        populateCalendar(yearMonth);
+        populateCalendar(currentYearMonth);
         
         // Create HBox for spacing between titleBar and dayLabels
         Region spacer = new Region();
@@ -104,7 +112,25 @@ public class FullMonthView {
         // Create the calendar view
         view = new VBox(titleBar, spacer, dayLabels, calendar);
     }
+    
+    /**
+     * Inject App object
+     * @param _app 
+     */
+    @SuppressWarnings("unchecked")
+    public void injectApp(App _app) {
+        this.app = _app;
+    }
 
+    /**
+     * Inject MainController object
+     * @param _main 
+     */
+    @SuppressWarnings("unchecked")
+    public void injectMainController(MainController _main) {
+        main = _main;
+    }
+    
     /**
      * Set the days of the calendar to correspond to the appropriate date
      * @param yearMonth year and month of month to render
@@ -119,6 +145,15 @@ public class FullMonthView {
         dd = dd.length() < 2 ? "0" + dd : dd;
         System.out.println("yyyy: " + yyyy + "; mm: " + mm + "; dd: " + dd);
         
+        // Get resultset of appointments for given month / year
+        try {
+            ResultSet rs = app.db.getAppointments(mm, yyyy);
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
+        
+        
         // Get the date we want to start with on the calendar
         LocalDate calendarDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), 1);
         
@@ -128,7 +163,7 @@ public class FullMonthView {
         }
         
         // Populate the calendar with day numbers
-        for (MonthAnchorPaneNode ap : allCalendarDays) {
+        for (AnchorPaneNode ap : allCalendarDays) {
             if (!ap.getChildren().isEmpty()) {
                 ap.getChildren().remove(0);
             }
@@ -141,8 +176,8 @@ public class FullMonthView {
            
             Text txt = new Text(String.valueOf(calendarDate.getDayOfMonth()));
             ap.setDate(calendarDate);
-            MonthAnchorPaneNode.setTopAnchor(txt, 5.0);
-            MonthAnchorPaneNode.setLeftAnchor(txt, 5.0);
+            AnchorPaneNode.setTopAnchor(txt, 5.0);
+            AnchorPaneNode.setLeftAnchor(txt, 5.0);
             ap.getChildren().add(txt);
             
             if (txt.getText().equals("15")) {
@@ -174,11 +209,11 @@ public class FullMonthView {
         return view;
     }
 
-    public ArrayList<MonthAnchorPaneNode> getAllCalendarDays() {
+    public ArrayList<AnchorPaneNode> getAllCalendarDays() {
         return allCalendarDays;
     }
 
-    public void setAllCalendarDays(ArrayList<MonthAnchorPaneNode> allCalendarDays) {
+    public void setAllCalendarDays(ArrayList<AnchorPaneNode> allCalendarDays) {
         this.allCalendarDays = allCalendarDays;
     }
 }
