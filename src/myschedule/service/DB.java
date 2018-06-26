@@ -246,6 +246,35 @@ public class DB {
     }
 
     /**
+     * Get Appointments for a given month / year
+     * @param mm
+     * @param yyyy
+     * @return ResultSet
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public ResultSet getAppointments(String mm, String yyyy) throws SQLException {
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT *",
+            "FROM appointment",
+            "WHERE (month(start) = ? AND year(start) = ?",
+            "OR (month(end) = ? AND year(end) = ?"
+        );
+        
+        try {
+            rs = stmt.executeQuery(sql);
+            rs.first();
+        }
+        catch (SQLException ex) {
+            throw new SQLException(exception(ex));
+        }
+        return rs;
+    }
+    
+    /**
      * Get list of Cities
      * @param sortColumn
      * @param direction
