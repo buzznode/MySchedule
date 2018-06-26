@@ -23,7 +23,6 @@
  */
 package myschedule;
 
-import java.time.YearMonth;
 import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,8 +51,8 @@ public class MainController {
     protected MenuItem miFileSaveAs;
     protected MenuItem miFileExit;
     protected MenuItem miAppointmentAdd;
-    protected MenuItem miAppointmentViewMonth;
-    protected MenuItem miAppointmentViewWeek;
+    protected MenuItem miAppointmentMonthView;
+    protected MenuItem miAppointmentWeekView;
     protected MenuItem miMaintAddress;
     protected MenuItem miMaintCity;
     protected MenuItem miMaintCustomer;
@@ -69,8 +68,8 @@ public class MainController {
     private void addListeners() {
         miFileExit.setOnAction(e -> { System.exit(0); } );
         miAppointmentAdd.setOnAction(e -> { handleAppointmentAdd(); } );
-        miAppointmentViewMonth.setOnAction(e -> { handleAppointmentViewMonth(); } );
-        miAppointmentViewWeek.setOnAction(e -> { handleAppointmentViewWeek(); } );
+        miAppointmentMonthView.setOnAction(e -> { handleAppointmentMonthView(); } );
+        miAppointmentWeekView.setOnAction(e -> { handleAppointmentWeekView(); } );
         miMaintAddress.setOnAction(e -> { handleAddressMaintenance(); } );
         miMaintCity.setOnAction(e -> { handleCityMaintenance(); } );
         miMaintCountry.setOnAction(e -> { handleCountryMaintenance(); } );
@@ -239,20 +238,19 @@ public class MainController {
      * Handle Appointment View Month Calendar request
      */
     @SuppressWarnings("unchecked")
-    private void handleAppointmentViewMonth() {
+    private void handleAppointmentMonthView() {
         try {
-            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("MonthCalendar.fxml"));
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Calendar.fxml"));
             Node node = loader.load();
-            MonthCalendarController controller = loader.getController();
+            CalendarController controller = loader.getController();
             controller.injectMainController(this);
             controller.injectApp(app);
-            controller.monthCalendarPane.getChildren().add(new FullMonthView(YearMonth.now()).getView());
             mainContainer.setCenter(node);
-            
+            controller.start("month");
         }
         catch (Exception ex) {
             app.common.alertStatus(0);
-            app.log.write(Level.SEVERE, "Error starting Appointment View Month");
+            app.log.write(Level.SEVERE, "Error starting Appointment Month View");
         }
     }
     
@@ -260,13 +258,19 @@ public class MainController {
      * Handle Appointment View Week request
      */
     @SuppressWarnings("unchecked")
-    private void handleAppointmentViewWeek() {
+    private void handleAppointmentWeekView() {
         try {
-            
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Calendar.fxml"));
+            Node node = loader.load();
+            CalendarController controller = loader.getController();
+            controller.injectMainController(this);
+            controller.injectApp(app);
+            mainContainer.setCenter(node);
+            controller.start("week");
         }
         catch (Exception ex) {
             app.common.alertStatus(0);
-            app.log.write(Level.SEVERE, "Error starting Appointment View Week");
+            app.log.write(Level.SEVERE, "Error starting Appointment Week View");
         }
     }
     
@@ -374,9 +378,9 @@ public class MainController {
         // Appointment menu [1]
         Menu menuAppointment = new Menu(app.localize("appointment"));
         miAppointmentAdd = new MenuItem(app.localize("add")); // [1.0]
-        miAppointmentViewMonth = new MenuItem(app.localize("month_view")); // [2.0]
-        miAppointmentViewWeek = new MenuItem(app.localize("week_view")); // [3.0]
-        menuAppointment.getItems().addAll(miAppointmentAdd, miAppointmentViewMonth, miAppointmentViewWeek); 
+        miAppointmentMonthView = new MenuItem(app.localize("month_view")); // [2.0]
+        miAppointmentWeekView = new MenuItem(app.localize("week_view")); // [3.0]
+        menuAppointment.getItems().addAll(miAppointmentAdd, miAppointmentMonthView, miAppointmentWeekView); 
 
         // Maintenance menu [2]
         Menu menuMaint = new Menu(app.localize("maintain"));

@@ -2,14 +2,58 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-06-25T21:39:20</date>
-  <millis>1529980760471</millis>
+  <date>2018-06-26T07:28:31</date>
+  <millis>1530016111973</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
   <class>myschedule.service.Logging</class>
   <method>write</method>
-  <thread>14</thread>
+  <thread>17</thread>
   <message>Starting application...</message>
 </record>
-</log>
+<record>
+  <date>2018-06-26T07:29:52</date>
+  <millis>1530016192659</millis>
+  <sequence>1</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '? AND year(start) = ? OR (month(end) = ? AND year(end) = ?' at line 1</message>
+  <param>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '? AND year(start) = ? OR (month(end) = ? AND year(end) = ?' at line 1</param>
+</record>
+<record>
+  <date>2018-06-26T07:29:52</date>
+  <millis>1530016192662</millis>
+  <sequence>2</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>SQLException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '? AND year(start) = ? OR (month(end) = ? AND year(end) = ?' at line 1</message>
+</record>
+<record>
+  <date>2018-06-26T07:29:52</date>
+  <millis>1530016192663</millis>
+  <sequence>3</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>SQLState: 42000</message>
+</record>
+<record>
+  <date>2018-06-26T07:29:52</date>
+  <millis>1530016192665</millis>
+  <sequence>4</sequence>
+  <logger>myschedule</logger>
+  <level>SEVERE</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>17</thread>
+  <message>VendorError: 1,064</message>
+</record>

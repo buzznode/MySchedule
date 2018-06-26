@@ -24,6 +24,7 @@
 package myschedule;
 
 import java.sql.SQLException;
+import java.time.YearMonth;
 import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -34,9 +35,9 @@ import javafx.scene.layout.Pane;
  * @version 0.5.0
  */
 @SuppressWarnings("unchecked")
-public class MonthCalendarController {
+public class CalendarController {
     @FXML Label lblTitle;
-    @FXML Pane monthCalendarPane;
+    @FXML Pane calendarPane;
 
     private App app;
     private MainController main;
@@ -69,13 +70,26 @@ public class MonthCalendarController {
     
     /**
      * Start country maintenance
+     * @param version (String)
      */
     @SuppressWarnings("unchecked")
-    public void start() {
+    public void start(String version) {
         addListeners();
         lblTitle.setText(app.localize("appointments_month_view"));
         
-//        initializeForm();
+        if (version.equals("month")) {
+            MonthView monthView = new MonthView(YearMonth.now());
+            monthView.injectApp(app);
+            monthView.injectMainController(main);
+            monthView.buildCalendar();
+            calendarPane.getChildren().add(monthView.getView());
+        }
+        else {
+            MonthView monthView = new MonthView(YearMonth.now());
+            monthView.injectApp(app);
+            monthView.injectMainController(main);
+            calendarPane.getChildren().add(monthView.getView());
+        }
     }
 }
 
