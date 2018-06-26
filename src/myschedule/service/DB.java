@@ -260,12 +260,18 @@ public class DB {
         sql = String.join(" ",
             "SELECT *",
             "FROM appointment",
-            "WHERE (month(start) = ? AND year(start) = ?",
-            "OR (month(end) = ? AND year(end) = ?"
+            "WHERE (month(start) = ? AND year(start) = ?)",
+            "OR (month(end) = ? AND year(end) = ?)"
         );
         
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, mm.trim());
+        pstmt.setString(2, yyyy.trim());
+        pstmt.setString(3, mm.trim());
+        pstmt.setString(4, yyyy.trim());
+        
         try {
-            rs = stmt.executeQuery(sql);
+            rs = pstmt.executeQuery();
             rs.first();
         }
         catch (SQLException ex) {
