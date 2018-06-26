@@ -133,6 +133,12 @@ public class FullMonthView {
                 ap.getChildren().remove(0);
             }
             
+            // here's where we're looping through stuff and building te calendar. Perhaps we should
+           // have code here to add a background color or count of scheduled appointments or soemthing 
+           
+           //  java resultset filtering on condition
+           // https://stackoverflow.com/questions/33817166/multiple-conditions-to-filter-a-result-set-using-java-8
+           
             Text txt = new Text(String.valueOf(calendarDate.getDayOfMonth()));
             ap.setDate(calendarDate);
             MonthAnchorPaneNode.setTopAnchor(txt, 5.0);
