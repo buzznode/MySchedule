@@ -66,7 +66,8 @@ public class MonthView {
         calendar.setPrefSize(300, 200);
         calendar.setGridLinesVisible(true);
         
-        // Create rows and columns with anchor panes for the calendar
+        // Create rows and columns with each cell being an anchor pane
+        // for a given calendar date
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
                 AnchorPaneNode ap = new AnchorPaneNode();
@@ -83,6 +84,7 @@ public class MonthView {
         dayLabels.setPrefWidth(300);
         Integer col = 0;
         
+        // Add DOW column headers
         for (Text txt : dayNames) {
             AnchorPane ap = new AnchorPane();
             ap.setPrefSize(200, 10);
@@ -154,7 +156,8 @@ public class MonthView {
         }
         
         
-        // Get the date we want to start with on the calendar
+        // Get the date we want to start with on the calendar. calendarDate ends up being the first
+        // of the month for the current month (or chosen month) hence the "1" second parameter below
         LocalDate calendarDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), 1);
         
         // Dial back the day until it is SUNDAY (unless the month starts on a sunday)
@@ -174,15 +177,19 @@ public class MonthView {
            //  java resultset filtering on condition
            // https://stackoverflow.com/questions/33817166/multiple-conditions-to-filter-a-result-set-using-java-8
            
+           // This is where to lookup month & day to see if there's an appointment by using
+           // calendar.getMonthValue() - int
+           // calendar.getDayOfMonth() - int
+           
             Text txt = new Text(String.valueOf(calendarDate.getDayOfMonth()));
             ap.setDate(calendarDate);
             AnchorPaneNode.setTopAnchor(txt, 5.0);
             AnchorPaneNode.setLeftAnchor(txt, 5.0);
             ap.getChildren().add(txt);
             
-            if (txt.getText().equals("15")) {
-                ap.setStyle("-fx-background-color: lime");
-            }
+//            if (txt.getText().equals("15")) {
+//                ap.setStyle("-fx-background-color: lime");
+//            }
             calendarDate = calendarDate.plusDays(1);
         }
         // Change the title of the calendar
