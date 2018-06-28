@@ -253,7 +253,8 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ResultSet getAppointments(String mm, String yyyy) throws SQLException {
+    public ObservableList<AppointmentModel> getAppointments(String mm, String yyyy) throws SQLException {
+        ObservableList<AppointmentModel> list = FXCollections.observableArrayList();
         String sql;
         connect();
         
@@ -272,12 +273,30 @@ public class DB {
         
         try {
             rs = pstmt.executeQuery();
-            rs.first();
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new AppointmentModel (
+                    rs.getInt("appointmentId"), 
+                    rs.getInt("customerId"),
+                    rs.getString("title").trim(), 
+                    rs.getString("description").trim(), 
+                    rs.getString("location").trim(),
+                    rs.getString("contact"),
+                    rs.getString("url").trim(), 
+                    rs.getString("start").trim(),
+                    rs.getString("end").trim(),
+                    rs.getString("createDate").trim(), 
+                    rs.getString("createdBy").trim(), 
+                    rs.getString("lastUpdate").trim(), 
+                    rs.getString("lastUpdateBy").trim()
+                ));
+            }
         }
         catch (SQLException ex) {
             throw new SQLException(exception(ex));
         }
-        return rs;
+        return list;
     }
     
     /**
