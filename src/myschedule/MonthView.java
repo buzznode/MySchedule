@@ -142,18 +142,27 @@ public class MonthView {
      * @param yearMonth year and month of month to render
      */
     public void populateCalendar(YearMonth yearMonth) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String dd = Integer.toString(LocalDate.now().getDayOfMonth());
-        String mm = Integer.toString(LocalDate.now().getMonthValue());
-        ResultSet rs;
-        String today = LocalDate.now().format(formatter);
-        String yyyy = Integer.toString(LocalDate.now().getYear());
+        String mm;
+        String yyyy;
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        String dd = Integer.toString(LocalDate.now().getDayOfMonth());
+//        String mm = Integer.toString(LocalDate.now().getMonthValue());
+//        ResultSet rs;
+//        String today = LocalDate.now().format(formatter);
+//        String yyyy = Integer.toString(LocalDate.now().getYear());
 
-        dd = dd.length() < 2 ? "0" + dd : dd;
-        mm = mm.length() < 2 ? "0" + mm : mm;
+//        dd = dd.length() < 2 ? "0" + dd : dd;
+//        mm = mm.length() < 2 ? "0" + mm : mm;
+//        
+//        System.out.println("yyyy: " + yyyy + "; mm: " + mm + "; dd: " + dd);
         
-        System.out.println("yyyy: " + yyyy + "; mm: " + mm + "; dd: " + dd);
         
+        // Get the date we want to start with on the calendar. calendarDate ends up being the first
+        // of the month for the current month (or chosen month) hence the "1" second parameter below 
+        LocalDate calendarDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), 1);
+        yyyy = Integer.toString(yearMonth.getYear());
+        mm = yearMonth.getMonthValue() < 10 ? "0" + Integer.toString(yearMonth.getMonthValue()) : Integer.toString(yearMonth.getMonthValue());
+
         // Get resultset of appointments for given month / year
         try {
             appointmentList = app.db.getAppointments(mm, yyyy);
@@ -161,11 +170,6 @@ public class MonthView {
         catch (SQLException ex) {
             app.common.alertStatus(0);
         }
-        
-        
-        // Get the date we want to start with on the calendar. calendarDate ends up being the first
-        // of the month for the current month (or chosen month) hence the "1" second parameter below 
-        LocalDate calendarDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), 1);
         
         // Dial back the day until it is SUNDAY (unless the month starts on a sunday)
         while (!calendarDate.getDayOfWeek().toString().equals("SUNDAY") ) {
