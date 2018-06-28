@@ -138,18 +138,26 @@ public class MonthView {
      * @param yearMonth year and month of month to render
      */
     public void populateCalendar(YearMonth yearMonth) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String today = LocalDate.now().format(formatter);
-        String yyyy = Integer.toString(LocalDate.now().getYear());
-        String mm = Integer.toString(LocalDate.now().getMonthValue());
-        mm = mm.length() < 2 ? "0" + mm : mm;
-        String dd = Integer.toString(LocalDate.now().getDayOfMonth());
+        DateTimeFormatter formatter;
+        String dd;
+        String mm;
+        ResultSet rs;
+        String today;
+        String yyyy;
+
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        dd = Integer.toString(LocalDate.now().getDayOfMonth());
         dd = dd.length() < 2 ? "0" + dd : dd;
+        mm = Integer.toString(LocalDate.now().getMonthValue());
+        mm = mm.length() < 2 ? "0" + mm : mm;
+        today = LocalDate.now().format(formatter);
+        yyyy = Integer.toString(LocalDate.now().getYear());
+        
         System.out.println("yyyy: " + yyyy + "; mm: " + mm + "; dd: " + dd);
         
         // Get resultset of appointments for given month / year
         try {
-            ResultSet rs = app.db.getAppointments(mm, yyyy);
+            rs = app.db.getAppointments(mm, yyyy);
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);
