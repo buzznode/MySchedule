@@ -36,7 +36,10 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
+import myschedule.model.AppointmentModel;
 
 /**
  * @author bradd
@@ -51,6 +54,7 @@ public class MonthView {
     private App app;
     private MainController main;
     
+    private ObservableList<AppointmentModel> appointmentList = FXCollections.observableArrayList();
 
     /**
      * Create a calendar view
@@ -138,26 +142,21 @@ public class MonthView {
      * @param yearMonth year and month of month to render
      */
     public void populateCalendar(YearMonth yearMonth) {
-        DateTimeFormatter formatter;
-        String dd;
-        String mm;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String dd = Integer.toString(LocalDate.now().getDayOfMonth());
+        String mm = Integer.toString(LocalDate.now().getMonthValue());
         ResultSet rs;
-        String today;
-        String yyyy;
+        String today = LocalDate.now().format(formatter);
+        String yyyy = Integer.toString(LocalDate.now().getYear());
 
-        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        dd = Integer.toString(LocalDate.now().getDayOfMonth());
         dd = dd.length() < 2 ? "0" + dd : dd;
-        mm = Integer.toString(LocalDate.now().getMonthValue());
         mm = mm.length() < 2 ? "0" + mm : mm;
-        today = LocalDate.now().format(formatter);
-        yyyy = Integer.toString(LocalDate.now().getYear());
         
         System.out.println("yyyy: " + yyyy + "; mm: " + mm + "; dd: " + dd);
         
         // Get resultset of appointments for given month / year
         try {
-            rs = app.db.getAppointments(mm, yyyy);
+            appointmentList = app.db.getAppointments(mm, yyyy);
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);
@@ -165,7 +164,7 @@ public class MonthView {
         
         
         // Get the date we want to start with on the calendar. calendarDate ends up being the first
-        // of the month for the current month (or chosen month) hence the "1" second parameter below
+        // of the month for the current month (or chosen month) hence the "1" second parameter below 
         LocalDate calendarDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), 1);
         
         // Dial back the day until it is SUNDAY (unless the month starts on a sunday)
