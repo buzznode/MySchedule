@@ -259,10 +259,11 @@ public class DB {
         connect();
         
         sql = String.join(" ",
-            "SELECT *",
-            "FROM appointment",
-            "WHERE (month(start) = ? AND year(start) = ?)",
-            "OR (month(end) = ? AND year(end) = ?)"
+            "SELECT a.*, b.customerName",
+            "FROM appointment a",
+            "JOIN customer b ON b.customerId = a.customerId",
+            "WHERE (month(a.start) = ? AND year(a.start) = ?)",
+            "OR (month(a.end) = ? AND year(a.end) = ?)"
         );
         
         pstmt = conn.prepareStatement(sql);
@@ -279,6 +280,7 @@ public class DB {
                 list.add(new AppointmentModel (
                     rs.getInt("appointmentId"), 
                     rs.getInt("customerId"),
+                    rs.getString("customerName"),
                     rs.getString("title").trim(), 
                     rs.getString("description").trim(), 
                     rs.getString("location").trim(),
