@@ -34,6 +34,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class AppointmentModel {
     private final SimpleIntegerProperty appointmentId;
     private final SimpleIntegerProperty customerId;
+    private final SimpleStringProperty customerName;
     private final SimpleStringProperty title;
     private final SimpleStringProperty description;
     private final SimpleStringProperty location;
@@ -49,6 +50,7 @@ public class AppointmentModel {
     public AppointmentModel() {
         this.appointmentId = new SimpleIntegerProperty(0);
         this.customerId = new SimpleIntegerProperty(0);
+        this.customerName = new SimpleStringProperty("");
         this.title = new SimpleStringProperty("");
         this.description = new SimpleStringProperty("");
         this.location = new SimpleStringProperty("");
@@ -62,10 +64,11 @@ public class AppointmentModel {
         this.lastUpdateBy = new SimpleStringProperty("");
     }
     
-    public AppointmentModel(int _appointmentId, int _customerId, String _title, String _description, String _location,
+    public AppointmentModel(int _appointmentId, int _customerId, String _customerName, String _title, String _description, String _location,
             String _contact, String _url, String _start, String _end, String _createDate, String _createdBy, String _lastUpdate, String _lastUpdateBy) {
         this.appointmentId = new SimpleIntegerProperty(_appointmentId);
         this.customerId = new SimpleIntegerProperty(_customerId);
+        this.customerName = new SimpleStringProperty(_customerName);
         this.title = new SimpleStringProperty(_title);
         this.description = new SimpleStringProperty(_description);
         this.location = new SimpleStringProperty(_location);
@@ -109,6 +112,22 @@ public class AppointmentModel {
      */
     public void setCustomerId(int _customerId) {
         customerId.set(_customerId);
+    }
+
+    /**
+     * Get customerName value
+     * @return custoimerName value
+     */
+    public String getCustomerName() {
+        return customerName.get();
+    }
+    
+    /**
+     * Set customerName value
+     * @param _customerName
+     */
+    public void setCustomerName(String _customerName) {
+        customerName.set(_customerName);
     }
     
     /**

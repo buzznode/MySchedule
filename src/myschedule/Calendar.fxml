@@ -22,24 +22,33 @@
             </Label>
          </children>
       </HBox>
-      <BorderPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="850.0">
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="850.0">
           <top>
             <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="900.0">
             </HBox>
           </top>
           <center>
-            <Pane fx:id="calendarPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" />
+            <Pane fx:id="calendarPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" />
           </center>
       </BorderPane>
-      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="880.0">
+      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="880.0">
          <children>
-            <TableView fx:id="table" prefHeight="200.0" prefWidth="860.0">
+            <TableView fx:id="table" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="860.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="customerColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Customer" />
+                <TableColumn fx:id="titleColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Title" />
+                  <TableColumn fx:id="descriptionColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Description" />
+                  <TableColumn fx:id="locationColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Location" />
+                  <TableColumn fx:id="contactColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Contact" />
+                  <TableColumn fx:id="urlColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="URL" />
+                  <TableColumn fx:id="startColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Start Date" />
+                  <TableColumn fx:id="endColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="End Date" />
               </columns>
             </TableView>
          </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
       </HBox>
    </children>
    <stylesheets>

@@ -174,6 +174,7 @@ public class AppointmentController {
             AppointmentModel appt = new AppointmentModel();
             appt.setAppointmentId(0);
             appt.setCustomerId(customerToCustomerIdMap.get(cboCustomer.getSelectionModel().getSelectedItem()));
+            appt.setCustomerName(cboCustomer.getSelectionModel().getSelectedItem());
             appt.setTitle(txtTitle.getText());
             appt.setDescription(txtDescription.getText());
             appt.setLocation(txtLocation.getText());
