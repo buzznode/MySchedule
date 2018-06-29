@@ -54,6 +54,8 @@ public class CalendarController {
 
     private App app;
     private MainController main;
+    private ObservableList<AppointmentModel> appointmentList = FXCollections.observableArrayList();
+
     
     /**
      * Add listeners
@@ -107,9 +109,7 @@ public class CalendarController {
         private VBox view;
         private Text calendarTitle;
         private YearMonth currentYearMonth;
-
-        private ObservableList<AppointmentModel> appointmentList = FXCollections.observableArrayList();
-
+        
         /**
          * Create a calendar view
          * @param yearMonth year month to create the calendar of
@@ -195,7 +195,7 @@ public class CalendarController {
 
             // Get resultset of appointments for given month / year
             try {
-                appointmentList = app.db.getAppointments(mm, yyyy);
+                CalendarController.this.appointmentList = app.db.getAppointments(mm, yyyy);
             }
             catch (SQLException ex) {
                 app.common.alertStatus(0);
