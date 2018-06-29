@@ -23,12 +23,8 @@
          </children>
       </HBox>
       <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="850.0">
-          <top>
-            <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="900.0">
-            </HBox>
-          </top>
           <center>
-            <Pane fx:id="calendarPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" />
+            <Pane fx:id="calendarPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="500.0" />
           </center>
       </BorderPane>
       <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="880.0">
@@ -47,7 +43,7 @@
             </TableView>
          </children>
          <VBox.margin>
-            <Insets top="10.0" />
+            <Insets top="15.0" />
          </VBox.margin>
       </HBox>
    </children>
