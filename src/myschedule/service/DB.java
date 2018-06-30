@@ -255,6 +255,7 @@ public class DB {
     @SuppressWarnings("unchecked")
     public ObservableList<AppointmentModel> getAppointments(String mm, String yyyy) throws SQLException {
         ObservableList<AppointmentModel> list = FXCollections.observableArrayList();
+        int cnt;
         String sql;
         connect();
         
