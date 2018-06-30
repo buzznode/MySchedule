@@ -28,12 +28,18 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -41,6 +47,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import myschedule.model.AddressModel;
 import myschedule.model.AppointmentModel;
 
 /**
@@ -49,13 +56,23 @@ import myschedule.model.AppointmentModel;
  */
 @SuppressWarnings("unchecked")
 public class CalendarController {
-    @FXML Label lblTitle;
     @FXML Pane calendarPane;
+    @FXML Label lblTitle;
+    
+    // Table and Columns
+    @FXML TableView table;
+    @FXML TableColumn<AppointmentModel, String> customerColumn;
+    @FXML TableColumn<AppointmentModel, String> titleColumn;
+    @FXML TableColumn<AppointmentModel, String> descriptionColumn;
+    @FXML TableColumn<AppointmentModel, String> locationColumn;
+    @FXML TableColumn<AppointmentModel, String> contactColumn;
+    @FXML TableColumn<AppointmentModel, String> urlColumn;
+    @FXML TableColumn<AppointmentModel, String> startColumn;
+    @FXML TableColumn<AppointmentModel, String> endColumn;
 
     private App app;
     private MainController main;
     private ObservableList<AppointmentModel> appointmentList = FXCollections.observableArrayList();
-
     
     /**
      * Add listeners
@@ -82,6 +99,31 @@ public class CalendarController {
     public void injectMainController(MainController _main) {
         main = _main;
     }
+
+    /**
+     * Populate table
+     */
+    @SuppressWarnings("unchecked")
+    private void populateTable() {
+        // Customer Name column
+        customerColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCustomerName()));
+        // Title column
+        titleColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getTitle()));
+        // Description column
+        descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
+        // Location column
+        locationColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLocation()));
+        // Contact column
+        contactColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getContact()));
+        // URL column
+        urlColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getUrl()));
+        // Start column
+        startColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getStart()));
+        //End column
+        endColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getEnd()));
+        
+        table.setItems(appointmentList);
+     }
     
     /**
      * Start country maintenance
@@ -196,6 +238,7 @@ public class CalendarController {
             // Get resultset of appointments for given month / year
             try {
                 CalendarController.this.appointmentList = app.db.getAppointments(mm, yyyy);
+                CalendarController.this.populateTable();
             }
             catch (SQLException ex) {
                 app.common.alertStatus(0);
