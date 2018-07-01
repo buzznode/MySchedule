@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,9 +36,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -47,7 +43,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import myschedule.model.AddressModel;
 import myschedule.model.AppointmentModel;
 
 /**
@@ -58,9 +53,11 @@ import myschedule.model.AppointmentModel;
 public class CalendarController {
     @FXML Pane calendarPane;
     @FXML Label lblTitle;
+    @FXML Label lblAppointments;
     
     // Table and Columns
     @FXML TableView table;
+    @FXML TableColumn<AppointmentModel, Integer> appointmentIdColumn;
     @FXML TableColumn<AppointmentModel, String> customerColumn;
     @FXML TableColumn<AppointmentModel, String> titleColumn;
     @FXML TableColumn<AppointmentModel, String> descriptionColumn;
@@ -105,6 +102,8 @@ public class CalendarController {
      */
     @SuppressWarnings("unchecked")
     private void populateTable() {
+        // Appointment Id column
+        appointmentIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getAppointmentId()));
         // Customer Name column
         customerColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCustomerName()));
         // Title column
@@ -132,7 +131,7 @@ public class CalendarController {
     @SuppressWarnings("unchecked")
     public void start(String version) {
         addListeners();
-        lblTitle.setText(app.localize("appointments_month_view"));
+//        lblTitle.setText(app.localize("appointments_month_view"));
         
         if (version.equals("month")) {
             MonthView monthView = new MonthView(YearMonth.now());
@@ -148,9 +147,10 @@ public class CalendarController {
     // Define MonthView as inner class of CalendarController class
     public class MonthView {
         private ArrayList<AnchorPaneNode> allCalendarDays = new ArrayList<>(35);
-        private VBox view;
         private Text calendarTitle;
+        private CalendarController cc;
         private YearMonth currentYearMonth;
+        private VBox view;
         
         /**
          * Create a calendar view
@@ -235,10 +235,12 @@ public class CalendarController {
             yyyy = Integer.toString(yearMonth.getYear());
             mm = yearMonth.getMonthValue() < 10 ? "0" + Integer.toString(yearMonth.getMonthValue()) : Integer.toString(yearMonth.getMonthValue());
 
-            // Get resultset of appointments for given month / year
+            // Query database to get appointments for the given month
             try {
-                CalendarController.this.appointmentList = app.db.getAppointments(mm, yyyy);
-                CalendarController.this.populateTable();
+                cc = CalendarController.this;
+                cc.appointmentList = app.db.getAppointments(mm, yyyy);
+                cc.lblAppointments.setText("Appointments: " + Integer.toString(cc.appointmentList.size()));
+                cc.populateTable();
             }
             catch (SQLException ex) {
                 app.common.alertStatus(0);
@@ -249,7 +251,7 @@ public class CalendarController {
                 calendarDate = calendarDate.minusDays(1);
             }
 
-            // Populate the calendar with day numbers
+            // Loop through calendar anchor panes, removing children
             for (AnchorPaneNode ap : allCalendarDays) {
                 if (!ap.getChildren().isEmpty()) {
                     ap.getChildren().remove(0);
@@ -260,6 +262,12 @@ public class CalendarController {
                // calendar.getDayOfMonth() - int
 
                 Text txt = new Text(String.valueOf(calendarDate.getDayOfMonth()));
+                String str = calendarDate.toString();
+                AppointmentModel result = cc.appointmentList.stream()
+                    .filter(x -> x.getStart().startsWith(str))
+                    .findAny()
+                    .orElse(null);
+                
                 ap.setDate(calendarDate);
                 AnchorPaneNode.setTopAnchor(txt, 5.0);
                 AnchorPaneNode.setLeftAnchor(txt, 5.0);
