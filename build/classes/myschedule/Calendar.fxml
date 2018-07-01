@@ -2,12 +2,16 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox id="calendar" fx:id="calendar" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="900.0" styleClass="calendar" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.CalendarController">
@@ -31,6 +35,7 @@
          <children>
             <TableView fx:id="table" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="860.0">
               <columns>
+                  <TableColumn fx:id="appointmentIdColumn" maxWidth="10.0" prefWidth="10.0" text="Id" visible="false" />
                 <TableColumn fx:id="customerColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Customer" />
                 <TableColumn fx:id="titleColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Title" />
                   <TableColumn fx:id="descriptionColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Description" />
@@ -45,6 +50,29 @@
          <VBox.margin>
             <Insets top="15.0" />
          </VBox.margin>
+      </HBox>
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="880.0">
+         <children>
+            <GridPane prefHeight="50.0" prefWidth="880.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="625.0" minWidth="10.0" prefWidth="625.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="539.0" minWidth="0.0" prefWidth="50.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="529.0" minWidth="10.0" prefWidth="99.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="286.0" minWidth="10.0" prefWidth="89.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="lblAppointments" text="Appointments: 0">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Button fx:id="btnClose" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Close" GridPane.columnIndex="3" />
+               </children>
+            </GridPane>
+         </children>
       </HBox>
    </children>
    <stylesheets>
