@@ -32,3 +32,12 @@ THE SOFTWARE.
     -fx-border-width: 2px;
 }
 
+.default {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #828282;
+}
+
+.busy {
+    -fx-background-color: lime;
+    -fx-border-color: #828282;
+}
