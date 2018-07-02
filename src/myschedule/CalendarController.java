@@ -32,11 +32,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -51,9 +54,13 @@ import myschedule.model.AppointmentModel;
  */
 @SuppressWarnings("unchecked")
 public class CalendarController {
-    @FXML Pane calendarPane;
-    @FXML Label lblTitle;
+    @FXML protected BorderPane calendarContainer;
+    @FXML Button btnClose;
+//    @FXML Pane calendarPane;
     @FXML Label lblAppointments;
+    @FXML Label lblTitle;
+    @FXML RadioButton radioMonth;
+    @FXML RadioButton radioWeek;
     
     // Table and Columns
     @FXML TableView table;
@@ -76,7 +83,35 @@ public class CalendarController {
      */
     @SuppressWarnings("unchecked")
     private void addListeners() {
+        btnClose.setOnMouseClicked(e -> { closeCalendar(); } );
+        radioMonth.setOnAction(e -> { createCalendar(); } );
+        radioWeek.setOnAction(e -> { createCalendar(); } );
+    }
+    
+    /**
+     * Check for un-saved changes; display warning message
+     * as needed; close city maintenance function.
+     */
+    @SuppressWarnings("unchecked")
+    private void closeCalendar() {
+        main.endProcess();
+    }
+
+    /**
+     * Fires the build of the calendar
+     */
+    @SuppressWarnings("unchecked")
+    private void createCalendar() {
+        Node node = calendarContainer.getCenter();
+        calendarContainer.getChildren().removeAll(node);
         
+        Pane calendarPane = new Pane();
+        calendarContainer.setCenter(calendarPane);
+        calendarPane.setPrefSize(500.0, 250.0);
+        
+        CalendarView calendarView = new CalendarView(YearMonth.now());
+        calendarView.buildCalendar();
+        calendarPane.getChildren().add(calendarView.getView());
     }
     
     /**
@@ -125,27 +160,16 @@ public class CalendarController {
      }
     
     /**
-     * Start country maintenance
-     * @param version (String)
+     * Start Calendar View
      */
     @SuppressWarnings("unchecked")
-    public void start(String version) {
+    public void start() {
         addListeners();
-//        lblTitle.setText(app.localize("appointments_month_view"));
-        
-        if (version.equals("month")) {
-            MonthView monthView = new MonthView(YearMonth.now());
-            monthView.buildCalendar();
-            calendarPane.getChildren().add(monthView.getView());
-        }
-        else {
-            MonthView monthView = new MonthView(YearMonth.now());
-            calendarPane.getChildren().add(monthView.getView());
-        }
+        createCalendar();
     }
     
-    // Define MonthView as inner class of CalendarController class
-    public class MonthView {
+    // Define CalendarView as inner class of CalendarController class
+    public class CalendarView {
         private ArrayList<AnchorPaneNode> allCalendarDays = new ArrayList<>(35);
         private Text calendarTitle;
         private CalendarController cc;
@@ -156,7 +180,7 @@ public class CalendarController {
          * Create a calendar view
          * @param yearMonth year month to create the calendar of
          */
-        public MonthView(YearMonth yearMonth) {
+        public CalendarView(YearMonth yearMonth) {
             currentYearMonth = yearMonth;
         }
 
@@ -168,18 +192,28 @@ public class CalendarController {
 
             // Create rows and columns with each cell being an anchor pane
             // for a given calendar date
-            for (int i = 0; i < 5; i++) {
+            if (radioMonth.isSelected()) {
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 7; j++) {
+                        AnchorPaneNode ap = new AnchorPaneNode();
+                        ap.setPrefSize(200,200);
+                        calendar.add(ap, j, i);
+                        allCalendarDays.add(ap);
+                    }
+                }
+            }
+            else {
                 for (int j = 0; j < 7; j++) {
                     AnchorPaneNode ap = new AnchorPaneNode();
                     ap.setPrefSize(200,200);
-                    calendar.add(ap, j, i);
+                    calendar.add(ap, j, 0);
                     allCalendarDays.add(ap);
                 }
             }
 
             // Days of the week labels
-            Text[] dayNames = new Text[]{ new Text("Sun"), new Text("Mon"), new Text("Tue"),
-                new Text("Wed"), new Text("Thu"), new Text("Fri"), new Text("Sat") };
+            Text[] dayNames = new Text[]{ new Text("Sunday"), new Text("Monday"), new Text("Tuesday"),
+                new Text("Wednesday"), new Text("Thursday"), new Text("Friday"), new Text("Saturday") };
             GridPane dayLabels = new GridPane();
             dayLabels.setPrefWidth(500);
             Integer col = 0;
@@ -222,12 +256,6 @@ public class CalendarController {
         public void populateCalendar(YearMonth yearMonth) {
             String mm;
             String yyyy;
-    //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    //        String dd = Integer.toString(LocalDate.now().getDayOfMonth());
-    //        String mm = Integer.toString(LocalDate.now().getMonthValue());
-    //        ResultSet rs;
-    //        String today = LocalDate.now().format(formatter);
-    //        String yyyy = Integer.toString(LocalDate.now().getYear());
 
             // Get the date we want to start with on the calendar. calendarDate ends up being the first
             // of the month for the current month (or chosen month) hence the "1" second parameter below 
@@ -257,17 +285,16 @@ public class CalendarController {
                     ap.getChildren().remove(0);
                 }
 
-               // This is where to lookup month & day to see if there's an appointment by using
-               // calendar.getMonthValue() - int
-               // calendar.getDayOfMonth() - int
-
                 Text txt = new Text(String.valueOf(calendarDate.getDayOfMonth()));
                 String str = calendarDate.toString();
-                AppointmentModel result = cc.appointmentList.stream()
-                    .filter(x -> x.getStart().startsWith(str))
-                    .findAny()
-                    .orElse(null);
-                
+//                AppointmentModel result = cc.appointmentList.stream().filter(x -> x.getStart().startsWith(str)).findAny().orElse(null);
+//                boolean tf = result==null;
+//                if (tf) {
+//                    ap.setStyle("-fx-background-color: lime; -fx-border-color: #828282");
+//                }
+//                else {
+//                    ap.setStyle("-fx-background-color: #ffffff; -fx-border-color: #828282");
+//                }
                 ap.setDate(calendarDate);
                 AnchorPaneNode.setTopAnchor(txt, 5.0);
                 AnchorPaneNode.setLeftAnchor(txt, 5.0);
