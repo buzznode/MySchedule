@@ -253,7 +253,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AppointmentModel> getAppointments(String mm, String yyyy) throws SQLException {
+    public ObservableList<AppointmentModel> getAppointmentsByMonth(String mm, String yyyy) throws SQLException {
         ObservableList<AppointmentModel> list = FXCollections.observableArrayList();
         int cnt;
         String sql;
@@ -264,7 +264,8 @@ public class DB {
             "FROM appointment a",
             "JOIN customer b ON b.customerId = a.customerId",
             "WHERE (month(a.start) = ? AND year(a.start) = ?)",
-            "OR (month(a.end) = ? AND year(a.end) = ?)"
+            "OR (month(a.end) = ? AND year(a.end) = ?)",
+            "ORDER BY start, end"
         );
         
         pstmt = conn.prepareStatement(sql);
