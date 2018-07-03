@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -93,6 +94,7 @@ public class CalendarController {
         c.add(Calendar.WEEK_OF_YEAR, 2);
         System.out.println("Next first DOW: " + c.getFirstDayOfWeek());
         c.setWeekDate(2018, 27, c.getFirstDayOfWeek());
+        System.out.println("Date is: " + c.getDisplayName(Calendar.DATE, Calendar.SHORT_FORMAT, Locale.ENGLISH));
     }
     
     /**
