@@ -90,6 +90,9 @@ public class CalendarController {
         
         Calendar c = Calendar.getInstance();
         System.out.println("First DOW: " + c.getFirstDayOfWeek());
+        c.add(Calendar.WEEK_OF_YEAR, 2);
+        System.out.println("Next first DOW: " + c.getFirstDayOfWeek());
+        c.setWeekDate(2018, 27, c.getFirstDayOfWeek());
     }
     
     /**
