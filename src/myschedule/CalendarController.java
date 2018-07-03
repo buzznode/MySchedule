@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Calendar;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -86,6 +87,9 @@ public class CalendarController {
         btnClose.setOnMouseClicked(e -> { closeCalendar(); } );
         radioMonth.setOnAction(e -> { createCalendar(); } );
         radioWeek.setOnAction(e -> { createCalendar(); } );
+        
+        Calendar c = Calendar.getInstance();
+        System.out.println("First DOW: " + c.getFirstDayOfWeek());
     }
     
     /**
@@ -184,6 +188,10 @@ public class CalendarController {
             currentYearMonth = yearMonth;
         }
 
+        /**
+         * Build calendar (either monthly or weekly)
+         */
+        @SuppressWarnings("unchecked")
         public void buildCalendar() {
             // Create the calendar grid pane
             GridPane calendar = new GridPane();
@@ -226,20 +234,34 @@ public class CalendarController {
                 ap.getChildren().add(txt);
                 dayLabels.add(ap, col++, 0);
             }
-
-            // Create calendarTitle and buttons to change current month
-            calendarTitle = new Text();
-            Button previousMonth = new Button("<<");
-            previousMonth.setOnAction(e -> previousMonth());
-            Button nextMonth = new Button(">>");
-            nextMonth.setOnAction(e -> nextMonth());
+            
             HBox titleBar = new HBox();
-            titleBar.setSpacing(10);
-            titleBar.getChildren().addAll(previousMonth, calendarTitle, nextMonth);
-            titleBar.setAlignment(Pos.BASELINE_CENTER);
 
-            // Populate calendar with the appropriate day numbers
-            populateCalendar(currentYearMonth);
+            if (radioMonth.isSelected()) {
+                // Create calendar title and buttons to change current month
+                calendarTitle = new Text();
+                Button previousMonth = new Button("<<");
+                previousMonth.setOnAction(e -> previousMonth());
+                Button nextMonth = new Button(">>");
+                nextMonth.setOnAction(e -> nextMonth());
+                titleBar.setSpacing(10);
+                titleBar.getChildren().addAll(previousMonth, calendarTitle, nextMonth);
+                titleBar.setAlignment(Pos.BASELINE_CENTER);
+
+                // Populate calendar with the appropriate day numbers
+                populateMonthCalendar(currentYearMonth);
+            }
+            else {
+                // Create callendar title and buttons to change current week
+                calendarTitle = new Text();
+                Button previousWeek = new Button("<<");
+                previousWeek.setOnAction(e -> previousWeek());
+                Button nextWeek = new Button(">>");
+                nextWeek.setOnAction(e -> nextWeek());
+                titleBar.setSpacing(10);
+                titleBar.getChildren().addAll(previousWeek, calendarTitle, nextWeek);
+                titleBar.setAlignment(Pos.BASELINE_CENTER);
+            }
 
             // Create HBox for spacing between titleBar and dayLabels
             Region spacer = new Region();
@@ -253,7 +275,8 @@ public class CalendarController {
          * Set the days of the calendar to correspond to the appropriate date
          * @param yearMonth year and month of month to render
          */
-        public void populateCalendar(YearMonth yearMonth) {
+        @SuppressWarnings("unchecked")
+        public void populateMonthCalendar(YearMonth yearMonth) {
             String mm;
             String yyyy;
 
@@ -266,7 +289,7 @@ public class CalendarController {
             // Query database to get appointments for the given month
             try {
                 cc = CalendarController.this;
-                cc.appointmentList = app.db.getAppointments(mm, yyyy);
+                cc.appointmentList = app.db.getAppointmentsByMonth(mm, yyyy);
                 cc.lblAppointments.setText("Appointments: " + Integer.toString(cc.appointmentList.size()));
                 cc.populateTable();
             }
@@ -287,14 +310,6 @@ public class CalendarController {
 
                 Text txt = new Text(String.valueOf(calendarDate.getDayOfMonth()));
                 String str = calendarDate.toString();
-//                AppointmentModel result = cc.appointmentList.stream().filter(x -> x.getStart().startsWith(str)).findAny().orElse(null);
-//                boolean tf = result==null;
-//                if (tf) {
-//                    ap.setStyle("-fx-background-color: lime; -fx-border-color: #828282");
-//                }
-//                else {
-//                    ap.setStyle("-fx-background-color: #ffffff; -fx-border-color: #828282");
-//                }
                 ap.setDate(calendarDate);
                 AnchorPaneNode.setTopAnchor(txt, 5.0);
                 AnchorPaneNode.setLeftAnchor(txt, 5.0);
@@ -306,29 +321,63 @@ public class CalendarController {
         }
 
         /**
-         * Move the month back by one. Re-populate the calendar with the correct dates.
+         * Move the month forward by one. Re-populate the calendar with the correct dates.
          */
-        private void previousMonth() {
-            currentYearMonth = currentYearMonth.minusMonths(1);
-            populateCalendar(currentYearMonth);
+        @SuppressWarnings("unchecked")
+        private void nextMonth() {
+            currentYearMonth = currentYearMonth.plusMonths(1);
+            populateMonthCalendar(currentYearMonth);
         }
 
         /**
-         * Move the month forward by one. Re-populate the calendar with the correct dates.
+         * Move the week forward by one. Re-populate the calendar with the correct dates.
          */
-        private void nextMonth() {
+        @SuppressWarnings("unchecked")
+        private void nextWeek() {
             currentYearMonth = currentYearMonth.plusMonths(1);
-            populateCalendar(currentYearMonth);
+            populateMonthCalendar(currentYearMonth);
         }
 
+        /**
+         * Move the month back by one. Re-populate the calendar with the correct dates.
+         */
+        @SuppressWarnings("unchecked")
+        private void previousMonth() {
+            currentYearMonth = currentYearMonth.minusMonths(1);
+            populateMonthCalendar(currentYearMonth);
+        }
+
+        /**
+         * Move the week back by one. Re-populate the calendar with the correct dates.
+         */
+        @SuppressWarnings("unchecked")
+        private void previousWeek() {
+            currentYearMonth = currentYearMonth.minusMonths(1);
+            populateMonthCalendar(currentYearMonth);
+        }
+        /**
+         * Return View
+         * @return view
+         */
+        @SuppressWarnings("unchecked")
         public VBox getView() {
             return view;
         }
 
+        /**
+         * Get all calendar days
+         * @return allCalendarDays
+         */
+        @SuppressWarnings("unchecked")
         public ArrayList<AnchorPaneNode> getAllCalendarDays() {
             return allCalendarDays;
         }
 
+        /**
+         * Set all calendar days
+         * @param allCalendarDays 
+         */
+        @SuppressWarnings("unchecked")
         public void setAllCalendarDays(ArrayList<AnchorPaneNode> allCalendarDays) {
             this.allCalendarDays = allCalendarDays;
         }
