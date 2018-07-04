@@ -167,7 +167,7 @@ public class MainController {
      * @param nextAction 
      */
     @SuppressWarnings("unchecked")
-    protected void endProcess(String nextAction) {
+    protected void endProcess(String nextAction, String param) {
         Node node = mainContainer.getCenter();
         mainContainer.getChildren().removeAll(node);
         
@@ -181,6 +181,9 @@ public class MainController {
                     break;
                 case "countryMaint":
                     handleCountryMaintenance();
+                    break;
+                case "appointmentEdit":
+                    handleAppointmentEdit(param);
                     break;
                 default:
                     break;
@@ -229,6 +232,27 @@ public class MainController {
         catch (Exception ex) {
             app.common.alertStatus(0);
             app.log.write(Level.SEVERE, "Error starting Appointment Add");
+        }
+    }
+
+    /**
+     * Handle Appointment Edit request
+     */
+    @SuppressWarnings("unchecked")
+    private void handleAppointmentEdit(String id) {
+        int appointmentId = Integer.parseInt(id);
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Appointment.fxml"));
+            Node node = loader.load();
+            AppointmentController controller = loader.getController();
+            controller.injectMainController(this);
+            controller.injectApp(app);
+            mainContainer.setCenter(node);
+            controller.start(appointmentId);
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Appointment Edit");
         }
     }
     

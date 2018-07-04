@@ -268,15 +268,17 @@ class MouseClickEventHandler implements EventHandler<MouseEvent> {
     public void handle(MouseEvent t) {
         TableCell c = (TableCell) t.getSource();
         int index = c.getIndex();
-        System.out.println("appointmentId: " + appointmentList.get(index).getAppointmentId());
-        System.out.println("customerName: " + appointmentList.get(index).getCustomerName());
-        System.out.println("title: " + appointmentList.get(index).getTitle());
-        System.out.println("description: " + appointmentList.get(index).getDescription());
-        System.out.println("location: " + appointmentList.get(index).getLocation());
-        System.out.println("contact: " + appointmentList.get(index).getContact());
-        System.out.println("url: " + appointmentList.get(index).getUrl());
-        System.out.println("start: " + appointmentList.get(index).getStart());
-        System.out.println("end: " + appointmentList.get(index).getEnd());
+        main.endProcess("appointmentEdit", Integer.toString(appointmentList.get(index).getAppointmentId()));
+        
+//        System.out.println("appointmentId: " + appointmentList.get(index).getAppointmentId());
+//        System.out.println("customerName: " + appointmentList.get(index).getCustomerName());
+//        System.out.println("title: " + appointmentList.get(index).getTitle());
+//        System.out.println("description: " + appointmentList.get(index).getDescription());
+//        System.out.println("location: " + appointmentList.get(index).getLocation());
+//        System.out.println("contact: " + appointmentList.get(index).getContact());
+//        System.out.println("url: " + appointmentList.get(index).getUrl());
+//        System.out.println("start: " + appointmentList.get(index).getStart());
+//        System.out.println("end: " + appointmentList.get(index).getEnd());
     }
 }    
     

@@ -244,7 +244,15 @@ public class AppointmentController {
      */
     @SuppressWarnings("unchecked")
     private void loadAppointment(int appointmentId) {
+        AppointmentModel appt = new AppointmentModel();
         
+        try {
+            appt = app.db.getAppointment(appointmentId);
+            System.out.println("back from getAppointment");
+        }
+        catch (SQLException ex) {
+            app.common.alertStatus(0);
+        }
     }
     
     /**
