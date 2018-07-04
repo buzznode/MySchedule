@@ -247,6 +247,57 @@ public class DB {
 
     /**
      * Get Appointments for a given month / year
+     * @param appointmentId
+     * @return AppointmentModel
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public AppointmentModel getAppointment(int appointmentId) throws SQLException {
+        int cnt;
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT a.*, b.customerName",
+            "FROM appointment a",
+            "JOIN customer b ON b.customerId = a.customerId",
+            "WHERE a.appointmentId = ?"
+        );
+        
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, appointmentId);
+        
+        try {
+            rs = pstmt.executeQuery();
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new AppointmentModel (
+                    rs.getInt("appointmentId"), 
+                    rs.getInt("customerId"),
+                    rs.getString("customerName"),
+                    rs.getString("title").trim(), 
+                    rs.getString("description").trim(), 
+                    rs.getString("location").trim(),
+                    rs.getString("contact"),
+                    rs.getString("url").trim(), 
+                    rs.getString("start").trim(),
+                    rs.getString("end").trim(),
+                    rs.getString("createDate").trim(), 
+                    rs.getString("createdBy").trim(), 
+                    rs.getString("lastUpdate").trim(), 
+                    rs.getString("lastUpdateBy").trim()
+                ));
+            }
+        }
+        catch (SQLException ex) {
+            throw new SQLException(exception(ex));
+        }
+        return list;
+    }
+    
+    /**
+     * Get Appointments for a given month / year
      * @param mm
      * @param yyyy
      * @return List of AppointmentModel

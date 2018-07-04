@@ -85,7 +85,7 @@ public class CalendarController {
 
     private App app;
     private MainController main;
-    private TableView<AppointmentModel> tableView = new TableView<>();
+    private final TableView<AppointmentModel> tableView = new TableView<>();
     private ObservableList<AppointmentModel> appointmentList = FXCollections.observableArrayList();
     
     /**
@@ -171,56 +171,47 @@ public class CalendarController {
         };
         
         // Appointment Id column
-//        appointmentIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getAppointmentId()));
         TableColumn appointmentIdColumn = new TableColumn("Appointment Id");
         appointmentIdColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         appointmentIdColumn.setCellFactory(integerCellFactory);
         appointmentIdColumn.setVisible(false);
         
         // Customer Name column
-//        customerColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCustomerName()));
         TableColumn  customerNameColumn = new TableColumn("Customer Name");
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         customerNameColumn.setCellFactory(stringCellFactory);
 
         // Title column
-//        titleColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getTitle()));
         TableColumn  titleColumn = new TableColumn("Title");
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         titleColumn.setCellFactory(stringCellFactory);
 
         // Description column
-//        descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
         TableColumn  descriptionColumn = new TableColumn("Description");
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         descriptionColumn.setCellFactory(stringCellFactory);
         
         // Location column
-//        locationColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLocation()));
         TableColumn  locationColumn = new TableColumn("Location");
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
         locationColumn.setCellFactory(stringCellFactory);
         
         // Contact column
-//        contactColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getContact()));
         TableColumn  contactColumn = new TableColumn("Contact");
         contactColumn.setCellValueFactory(new PropertyValueFactory<>("contact"));
         contactColumn.setCellFactory(stringCellFactory);
         
         // URL column
-//        urlColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getUrl()));
         TableColumn  urlColumn = new TableColumn("URL");
         urlColumn.setCellValueFactory(new PropertyValueFactory<>("url"));
         urlColumn.setCellFactory(stringCellFactory);
         
         // Start column
-//        startColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getStart()));
         TableColumn  startColumn = new TableColumn("Start");
         startColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
         startColumn.setCellFactory(stringCellFactory);
         
         //End column
-//        endColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getEnd()));
         TableColumn  endColumn = new TableColumn("End");
         endColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
         endColumn.setCellFactory(stringCellFactory);
