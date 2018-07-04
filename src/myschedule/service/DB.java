@@ -249,7 +249,7 @@ public class DB {
      * Get Appointments for a given month / year
      * @param mm
      * @param yyyy
-     * @return ResultSet
+     * @return List of AppointmentModel
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
@@ -273,6 +273,67 @@ public class DB {
         pstmt.setString(2, yyyy.trim());
         pstmt.setString(3, mm.trim());
         pstmt.setString(4, yyyy.trim());
+        
+        try {
+            rs = pstmt.executeQuery();
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new AppointmentModel (
+                    rs.getInt("appointmentId"), 
+                    rs.getInt("customerId"),
+                    rs.getString("customerName"),
+                    rs.getString("title").trim(), 
+                    rs.getString("description").trim(), 
+                    rs.getString("location").trim(),
+                    rs.getString("contact"),
+                    rs.getString("url").trim(), 
+                    rs.getString("start").trim(),
+                    rs.getString("end").trim(),
+                    rs.getString("createDate").trim(), 
+                    rs.getString("createdBy").trim(), 
+                    rs.getString("lastUpdate").trim(), 
+                    rs.getString("lastUpdateBy").trim()
+                ));
+            }
+        }
+        catch (SQLException ex) {
+            throw new SQLException(exception(ex));
+        }
+        return list;
+    }
+    
+    /**
+     * Get Appointments for a given week
+     * @param startDate
+     * @param endDate
+     * @return List AppointmentModel
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public ObservableList<AppointmentModel> getAppointmentsByWeek(String startDate, String endDate) throws SQLException {
+        ObservableList<AppointmentModel> list = FXCollections.observableArrayList();
+        int cnt;
+        String sql;
+        connect();
+        
+        startDate += " 00:00:00";
+        endDate += " 23:59:59";
+        
+        sql = String.join(" ",
+            "SELECT a.*, b.customerName",
+            "FROM appointment a",
+            "JOIN customer b ON b.customerId = a.customerId",
+            "WHERE start BETWEEN ? AND ?",
+            "OR end BETWEEN ? AND ?",
+            "ORDER BY start, end"
+        );
+        
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, startDate.trim());
+        pstmt.setString(2, endDate.trim());
+        pstmt.setString(3, startDate.trim());
+        pstmt.setString(4, endDate.trim());
         
         try {
             rs = pstmt.executeQuery();

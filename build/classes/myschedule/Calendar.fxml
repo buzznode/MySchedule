@@ -5,8 +5,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -41,22 +39,7 @@
          </children>
       </HBox>
       <BorderPane fx:id="calendarContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="500.0" />
-      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="880.0">
-         <children>
-            <TableView fx:id="table" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="860.0">
-              <columns>
-                  <TableColumn fx:id="appointmentIdColumn" maxWidth="10.0" prefWidth="10.0" text="Id" visible="false" />
-                <TableColumn fx:id="customerColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Customer" />
-                <TableColumn fx:id="titleColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Title" />
-                  <TableColumn fx:id="descriptionColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Description" />
-                  <TableColumn fx:id="locationColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" text="Location" />
-                  <TableColumn fx:id="contactColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Contact" />
-                  <TableColumn fx:id="urlColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="URL" />
-                  <TableColumn fx:id="startColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="130.0" text="Start Date" />
-                  <TableColumn fx:id="endColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="130.0" text="End Date" />
-              </columns>
-            </TableView>
-         </children>
+      <HBox fx:id="tableViewContainer" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="880.0">
          <VBox.margin>
             <Insets top="15.0" />
          </VBox.margin>
