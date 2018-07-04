@@ -28,18 +28,23 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -48,6 +53,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import myschedule.model.AppointmentModel;
 
 /**
@@ -65,19 +71,21 @@ public class CalendarController {
     @FXML RadioButton radioWeek;
     
     // Table and Columns
-    @FXML TableView table;
-    @FXML TableColumn<AppointmentModel, Integer> appointmentIdColumn;
-    @FXML TableColumn<AppointmentModel, String> customerColumn;
-    @FXML TableColumn<AppointmentModel, String> titleColumn;
-    @FXML TableColumn<AppointmentModel, String> descriptionColumn;
-    @FXML TableColumn<AppointmentModel, String> locationColumn;
-    @FXML TableColumn<AppointmentModel, String> contactColumn;
-    @FXML TableColumn<AppointmentModel, String> urlColumn;
-    @FXML TableColumn<AppointmentModel, String> startColumn;
-    @FXML TableColumn<AppointmentModel, String> endColumn;
+    @FXML HBox tableViewContainer;
+//    @FXML TableView table;
+//    @FXML TableColumn<AppointmentModel, Integer> appointmentIdColumn;
+//    @FXML TableColumn<AppointmentModel, String> customerColumn;
+//    @FXML TableColumn<AppointmentModel, String> titleColumn;
+//    @FXML TableColumn<AppointmentModel, String> descriptionColumn;
+//    @FXML TableColumn<AppointmentModel, String> locationColumn;
+//    @FXML TableColumn<AppointmentModel, String> contactColumn;
+//    @FXML TableColumn<AppointmentModel, String> urlColumn;
+//    @FXML TableColumn<AppointmentModel, String> startColumn;
+//    @FXML TableColumn<AppointmentModel, String> endColumn;
 
     private App app;
     private MainController main;
+    private TableView<AppointmentModel> tableView = new TableView<>();
     private ObservableList<AppointmentModel> appointmentList = FXCollections.observableArrayList();
     
     /**
@@ -88,13 +96,6 @@ public class CalendarController {
         btnClose.setOnMouseClicked(e -> { closeCalendar(); } );
         radioMonth.setOnAction(e -> { createCalendar(); } );
         radioWeek.setOnAction(e -> { createCalendar(); } );
-        
-        Calendar c = Calendar.getInstance();
-        System.out.println("First DOW: " + c.getFirstDayOfWeek());
-        c.add(Calendar.WEEK_OF_YEAR, 2);
-        System.out.println("Next first DOW: " + c.getFirstDayOfWeek());
-        c.setWeekDate(2018, 27, c.getFirstDayOfWeek());
-        System.out.println("Date is: " + c.getDisplayName(Calendar.DATE, Calendar.SHORT_FORMAT, Locale.ENGLISH));
     }
     
     /**
@@ -146,26 +147,94 @@ public class CalendarController {
      */
     @SuppressWarnings("unchecked")
     private void populateTable() {
-        // Appointment Id column
-        appointmentIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getAppointmentId()));
-        // Customer Name column
-        customerColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCustomerName()));
-        // Title column
-        titleColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getTitle()));
-        // Description column
-        descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
-        // Location column
-        locationColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLocation()));
-        // Contact column
-        contactColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getContact()));
-        // URL column
-        urlColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getUrl()));
-        // Start column
-        startColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getStart()));
-        //End column
-        endColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getEnd()));
+        tableView.getColumns().remove(0, tableView.getColumns().size());
+        tableView.setEditable(false);
         
-        table.setItems(appointmentList);
+        Callback<TableColumn, TableCell> integerCellFactory = 
+            new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn p) {
+                IntegerTableCell cell = new IntegerTableCell();
+                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MouseClickEventHandler());
+                return cell;
+            }
+        };
+                
+        Callback<TableColumn, TableCell> stringCellFactory = 
+            new Callback<TableColumn, TableCell>() {
+                @Override
+                public TableCell call(TableColumn p) {
+                    StringTableCell cell = new StringTableCell();
+                    cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MouseClickEventHandler());
+                    return cell;
+            }
+        };
+        
+        // Appointment Id column
+//        appointmentIdColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getAppointmentId()));
+        TableColumn appointmentIdColumn = new TableColumn("Appointment Id");
+        appointmentIdColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
+        appointmentIdColumn.setCellFactory(integerCellFactory);
+        appointmentIdColumn.setVisible(false);
+        
+        // Customer Name column
+//        customerColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCustomerName()));
+        TableColumn  customerNameColumn = new TableColumn("Customer Name");
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        customerNameColumn.setCellFactory(stringCellFactory);
+
+        // Title column
+//        titleColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getTitle()));
+        TableColumn  titleColumn = new TableColumn("Title");
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        titleColumn.setCellFactory(stringCellFactory);
+
+        // Description column
+//        descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
+        TableColumn  descriptionColumn = new TableColumn("Description");
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        descriptionColumn.setCellFactory(stringCellFactory);
+        
+        // Location column
+//        locationColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLocation()));
+        TableColumn  locationColumn = new TableColumn("Location");
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        locationColumn.setCellFactory(stringCellFactory);
+        
+        // Contact column
+//        contactColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getContact()));
+        TableColumn  contactColumn = new TableColumn("Contact");
+        contactColumn.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        contactColumn.setCellFactory(stringCellFactory);
+        
+        // URL column
+//        urlColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getUrl()));
+        TableColumn  urlColumn = new TableColumn("URL");
+        urlColumn.setCellValueFactory(new PropertyValueFactory<>("url"));
+        urlColumn.setCellFactory(stringCellFactory);
+        
+        // Start column
+//        startColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getStart()));
+        TableColumn  startColumn = new TableColumn("Start");
+        startColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
+        startColumn.setCellFactory(stringCellFactory);
+        
+        //End column
+//        endColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getEnd()));
+        TableColumn  endColumn = new TableColumn("End");
+        endColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
+        endColumn.setCellFactory(stringCellFactory);
+        
+        tableView.setItems(appointmentList);
+        tableView.getColumns().addAll(
+            appointmentIdColumn, customerNameColumn, titleColumn, descriptionColumn, 
+            locationColumn, contactColumn, urlColumn, startColumn, endColumn
+        );
+        
+        if (tableViewContainer.getChildren().size() > 0) {
+            tableViewContainer.getChildren().remove(tableView);
+        }
+        tableViewContainer.getChildren().add(tableView);
      }
     
     /**
@@ -177,13 +246,60 @@ public class CalendarController {
         createCalendar();
     }
     
+class IntegerTableCell extends TableCell<AppointmentModel, Integer> {
+    @Override
+    public void updateItem(Integer item, boolean empty) {
+        super.updateItem(item, empty);
+        setText(empty ? null : getString());
+        setGraphic(null);
+    }
+
+    private String getString() {
+        return getItem() == null ? "" : getItem().toString();
+    }
+}
+ 
+class StringTableCell extends TableCell<AppointmentModel, String> {
+    @Override
+    public void updateItem(String item, boolean empty) {
+        super.updateItem(item, empty);
+        setText(empty ? null : getString());
+        setGraphic(null);
+    }
+
+    private String getString() {
+        return getItem() == null ? "" : getItem().toString();
+    }
+}
+ 
+class MouseClickEventHandler implements EventHandler<MouseEvent> {
+    @Override
+    public void handle(MouseEvent t) {
+        TableCell c = (TableCell) t.getSource();
+        int index = c.getIndex();
+        System.out.println("appointmentId: " + appointmentList.get(index).getAppointmentId());
+        System.out.println("customerName: " + appointmentList.get(index).getCustomerName());
+        System.out.println("title: " + appointmentList.get(index).getTitle());
+        System.out.println("description: " + appointmentList.get(index).getDescription());
+        System.out.println("location: " + appointmentList.get(index).getLocation());
+        System.out.println("contact: " + appointmentList.get(index).getContact());
+        System.out.println("url: " + appointmentList.get(index).getUrl());
+        System.out.println("start: " + appointmentList.get(index).getStart());
+        System.out.println("end: " + appointmentList.get(index).getEnd());
+    }
+}    
+    
     // Define CalendarView as inner class of CalendarController class
     public class CalendarView {
         private ArrayList<AnchorPaneNode> allCalendarDays = new ArrayList<>(35);
+        private ArrayList<AnchorPaneNode> allWeekDays = new ArrayList<>(7);
+        private Calendar cal = Calendar.getInstance();
         private Text calendarTitle;
         private CalendarController cc;
         private YearMonth currentYearMonth;
         private VBox view;
+        private int weekOfYear;
+        private int weekYear;
         
         /**
          * Create a calendar view
@@ -218,9 +334,9 @@ public class CalendarController {
             else {
                 for (int j = 0; j < 7; j++) {
                     AnchorPaneNode ap = new AnchorPaneNode();
-                    ap.setPrefSize(200,200);
+                    ap.setPrefSize(200,75);
                     calendar.add(ap, j, 0);
-                    allCalendarDays.add(ap);
+                    allWeekDays.add(ap);
                 }
             }
 
@@ -266,6 +382,11 @@ public class CalendarController {
                 titleBar.setSpacing(10);
                 titleBar.getChildren().addAll(previousWeek, calendarTitle, nextWeek);
                 titleBar.setAlignment(Pos.BASELINE_CENTER);
+                
+                // Populate calendar with appropriate day numbers
+                weekYear = cal.get(Calendar.YEAR);
+                weekOfYear = cal.get(Calendar.WEEK_OF_YEAR);
+                populateWeekCalendar(weekYear, weekOfYear);
             }
 
             // Create HBox for spacing between titleBar and dayLabels
@@ -321,9 +442,78 @@ public class CalendarController {
                 ap.getChildren().add(txt);
                 calendarDate = calendarDate.plusDays(1);
             }
-            // Change the title of the calendar
+            // Change the title of the month calendar
             calendarTitle.setText(yearMonth.getMonth().toString() + " " + String.valueOf(yearMonth.getYear()));
         }
+
+        /**
+         * Set the days of the calendar to correspond to the appropriate date (week)
+         * @param weekYear year for the specified week
+         * @param weekOfYear week of the year
+         */
+        @SuppressWarnings("unchecked")
+        public void populateWeekCalendar(int weekYear, int weekOfYear) {
+            int[] days = new int[7];
+            String endDate;
+            int idx = 0;
+            int mm;
+            int saturday;
+            String startDate;
+            int sunday;
+            
+            
+            cal.setWeekDate(weekYear, weekOfYear, 1);
+            sunday = cal.get(Calendar.DATE);
+            cal.add(Calendar.DATE, 6);
+            saturday = cal.get(Calendar.DATE);
+            mm = cal.get(Calendar.MONTH) + 1;
+            cal.set(Calendar.DATE, sunday - 1);
+            
+            for (int i = 0; i <= 6; i++ ) {
+                cal.add(Calendar.DATE, 1);
+                days[i] = cal.get(Calendar.DATE);
+            }
+            
+            startDate = String.join("-",
+                Integer.toString(weekYear),
+                Integer.toString(mm),
+                Integer.toString(sunday)
+            );
+            
+            endDate = String.join("-",
+                Integer.toString(weekYear),
+                Integer.toString(mm),
+                Integer.toString(saturday)
+            );
+            
+            // Query database to get appointments for the given month
+            try {
+                cc = CalendarController.this;
+                cc.appointmentList = app.db.getAppointmentsByWeek(startDate, endDate);
+                cc.lblAppointments.setText("Appointments: " + Integer.toString(cc.appointmentList.size()));
+                cc.populateTable();
+            }
+            catch (SQLException ex) {
+                app.common.alertStatus(0);
+            }
+
+            // Loop through calendar anchor panes, removing children
+            idx = 0;
+            for (AnchorPaneNode ap : allWeekDays) {
+                if (!ap.getChildren().isEmpty()) {
+                    ap.getChildren().remove(0);
+                }
+
+                Text txt = new Text(Integer.toString(days[idx]));
+                AnchorPaneNode.setTopAnchor(txt, 5.0);
+                AnchorPaneNode.setLeftAnchor(txt, 5.0);
+                ap.getChildren().add(txt);
+                idx++;
+            }
+            // Change the title of the week calendar
+            calendarTitle.setText("Week Ending " + Integer.toString(mm) + "/" + Integer.toString(saturday));
+        }
+
 
         /**
          * Move the month forward by one. Re-populate the calendar with the correct dates.
@@ -339,8 +529,8 @@ public class CalendarController {
          */
         @SuppressWarnings("unchecked")
         private void nextWeek() {
-            currentYearMonth = currentYearMonth.plusMonths(1);
-            populateMonthCalendar(currentYearMonth);
+            weekOfYear++;
+            populateWeekCalendar(weekYear, weekOfYear);
         }
 
         /**
@@ -357,8 +547,8 @@ public class CalendarController {
          */
         @SuppressWarnings("unchecked")
         private void previousWeek() {
-            currentYearMonth = currentYearMonth.minusMonths(1);
-            populateMonthCalendar(currentYearMonth);
+            weekOfYear--;
+            populateWeekCalendar(weekYear, weekOfYear);
         }
         /**
          * Return View

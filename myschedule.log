@@ -2,13 +2,14 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-07-03T08:34:02</date>
-  <millis>1530624842840</millis>
+  <date>2018-07-03T19:54:24</date>
+  <millis>1530665664190</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
   <class>myschedule.service.Logging</class>
   <method>write</method>
-  <thread>17</thread>
+  <thread>14</thread>
   <message>Starting application...</message>
 </record>
+</log>
