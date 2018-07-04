@@ -151,7 +151,7 @@ public class CustomerController {
         String msg = "Are you sure you want to continue?";
 
         if (app.common.displayConfirmation(hdr, msg)) {
-            main.endProcess(routine);
+            main.endProcess(routine, null);
         }
     }
 

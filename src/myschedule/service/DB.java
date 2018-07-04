@@ -253,6 +253,7 @@ public class DB {
      */
     @SuppressWarnings("unchecked")
     public AppointmentModel getAppointment(int appointmentId) throws SQLException {
+        AppointmentModel appt = new AppointmentModel();
         int cnt;
         String sql;
         connect();
@@ -269,31 +270,26 @@ public class DB {
         
         try {
             rs = pstmt.executeQuery();
-            rs.beforeFirst();
-            
-            while (rs.next()) {
-                list.add(new AppointmentModel (
-                    rs.getInt("appointmentId"), 
-                    rs.getInt("customerId"),
-                    rs.getString("customerName"),
-                    rs.getString("title").trim(), 
-                    rs.getString("description").trim(), 
-                    rs.getString("location").trim(),
-                    rs.getString("contact"),
-                    rs.getString("url").trim(), 
-                    rs.getString("start").trim(),
-                    rs.getString("end").trim(),
-                    rs.getString("createDate").trim(), 
-                    rs.getString("createdBy").trim(), 
-                    rs.getString("lastUpdate").trim(), 
-                    rs.getString("lastUpdateBy").trim()
-                ));
-            }
+            rs.first();
+            appt.setAppointmentId(rs.getInt("appointmentId"));
+            appt.setCustomerId(rs.getInt("customerId"));
+            appt.setCustomerName(rs.getString("customerName").trim());
+            appt.setTitle(rs.getString("title").trim());
+            appt.setDescription(rs.getString("description").trim());
+            appt.setLocation(rs.getString("location").trim());
+            appt.setContact(rs.getString("contact").trim());
+            appt.setUrl(rs.getString("url").trim()); 
+            appt.setStart(rs.getString("start").trim());
+            appt.setEnd(rs.getString("end").trim());
+            appt.setCreateDate(rs.getString("createDate").trim()); 
+            appt.setCreatedBy(rs.getString("createdBy").trim()); 
+            appt.setLastUpdate(rs.getString("lastUpdate").trim());
+            appt.setLastUpdateBy(rs.getString("lastUpdateBy").trim());
         }
         catch (SQLException ex) {
             throw new SQLException(exception(ex));
         }
-        return list;
+        return appt;
     }
     
     /**
