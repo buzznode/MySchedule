@@ -238,7 +238,18 @@ public class AppointmentController {
         main = _main;
     }
 
+    /**
+     * Load Appointment
+     * @param appointmentId 
+     */
+    @SuppressWarnings("unchecked")
+    private void loadAppointment(int appointmentId) {
+        
+    }
     
+    /**
+     * Load ComboBoxes
+     */
     @SuppressWarnings("unchecked")
     private void loadComboBoxes() {
         String hours[] =  {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
@@ -263,13 +274,25 @@ public class AppointmentController {
     }
     
     /**
-     * Start address maintenance
+     * Start appointment maintenance
      */
     @SuppressWarnings("unchecked")
     public void start() {
         addListeners();
         loadComboBoxes();
         initializeForm();
+    }
+
+    /**
+     * Start appointment maintenance (edit)
+     * @param appointmentId 
+     */
+    @SuppressWarnings("unchecked")
+    public void start(int appointmentId) {
+        addListeners();
+        loadComboBoxes();
+        initializeForm();
+        loadAppointment(appointmentId);
     }
 
     /**
