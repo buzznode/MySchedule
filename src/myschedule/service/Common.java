@@ -68,18 +68,38 @@ public class Common  {
     @SuppressWarnings("unchecked")
     public void alertStatus(int status) {
         if (status == 1) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Information Dialog");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Database commit was successful. Record(s) added.");
+//            alert.showAndWait();
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(null);
-            alert.setContentText("Database commit was successful. Record(s) added.");
-            alert.showAndWait();
+            alert.setContentText("Database commit was successful. Record(s) added / updated.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    return;
+                }
+            }));
         }
         else {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Error Dialog");
+//            alert.setHeaderText("Error processing request.");
+//            alert.setContentText("There was an error processing your request. Please try again.");
+//            alert.showAndWait();
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("Error processing request.");
             alert.setContentText("There was an error processing your request. Please try again.");
-            alert.showAndWait();
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    return;
+                }
+            }));
         }
     }
 
@@ -91,18 +111,38 @@ public class Common  {
     @SuppressWarnings("unchecked")
     public void alertStatus(int status, String msg) {
         if (status == 1) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Information Dialog");
+//            alert.setHeaderText(null);
+//            alert.setContentText(msg);
+//            alert.showAndWait();
+            
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(null);
             alert.setContentText(msg);
-            alert.showAndWait();
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    return;
+                }
+            }));
         }
         else {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Error Dialog");
+//            alert.setHeaderText("Error processing request.");
+//            alert.setContentText(msg);
+//            alert.showAndWait();
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("Error processing request.");
             alert.setContentText(msg);
-            alert.showAndWait();
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    return;
+                }
+            }));
         }
     }
 
@@ -115,18 +155,38 @@ public class Common  {
     @SuppressWarnings("unchecked")
     public void alertStatus(int status, String hdr, String msg) {
         if (status == 1) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Information Dialog");
+//            alert.setHeaderText(hdr);
+//            alert.setContentText(msg);
+//            alert.showAndWait();
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(hdr);
             alert.setContentText(msg);
-            alert.showAndWait();
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    return;
+                }
+            }));
         }
         else {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Error Dialog");
+//            alert.setHeaderText(hdr);
+//            alert.setContentText(msg);
+//            alert.showAndWait();
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText(hdr);
             alert.setContentText(msg);
-            alert.showAndWait();
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    return;
+                }
+            }));
         }
     }
     
