@@ -28,9 +28,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -64,7 +61,6 @@ import myschedule.model.AppointmentModel;
 public class CalendarController {
     @FXML protected BorderPane calendarContainer;
     @FXML Button btnClose;
-//    @FXML Pane calendarPane;
     @FXML Label lblAppointments;
     @FXML Label lblTitle;
     @FXML RadioButton radioMonth;
@@ -72,16 +68,6 @@ public class CalendarController {
     
     // Table and Columns
     @FXML HBox tableViewContainer;
-//    @FXML TableView table;
-//    @FXML TableColumn<AppointmentModel, Integer> appointmentIdColumn;
-//    @FXML TableColumn<AppointmentModel, String> customerColumn;
-//    @FXML TableColumn<AppointmentModel, String> titleColumn;
-//    @FXML TableColumn<AppointmentModel, String> descriptionColumn;
-//    @FXML TableColumn<AppointmentModel, String> locationColumn;
-//    @FXML TableColumn<AppointmentModel, String> contactColumn;
-//    @FXML TableColumn<AppointmentModel, String> urlColumn;
-//    @FXML TableColumn<AppointmentModel, String> startColumn;
-//    @FXML TableColumn<AppointmentModel, String> endColumn;
 
     private App app;
     private MainController main;
@@ -150,24 +136,18 @@ public class CalendarController {
         tableView.getColumns().remove(0, tableView.getColumns().size());
         tableView.setEditable(false);
         
-        Callback<TableColumn, TableCell> integerCellFactory = 
-            new Callback<TableColumn, TableCell>() {
-            @Override
-            public TableCell call(TableColumn p) {
-                IntegerTableCell cell = new IntegerTableCell();
-                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MouseClickEventHandler());
-                return cell;
-            }
+        Callback<TableColumn, TableCell> integerCellFactory;
+        integerCellFactory = (TableColumn p) -> {
+            IntegerTableCell cell = new IntegerTableCell();
+            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MouseClickEventHandler());
+            return cell;
         };
                 
-        Callback<TableColumn, TableCell> stringCellFactory = 
-            new Callback<TableColumn, TableCell>() {
-                @Override
-                public TableCell call(TableColumn p) {
-                    StringTableCell cell = new StringTableCell();
-                    cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MouseClickEventHandler());
-                    return cell;
-            }
+        Callback<TableColumn, TableCell> stringCellFactory;
+        stringCellFactory = (TableColumn p) -> {
+            StringTableCell cell = new StringTableCell();
+            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MouseClickEventHandler());
+            return cell;
         };
         
         // Appointment Id column
@@ -216,6 +196,7 @@ public class CalendarController {
         endColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
         endColumn.setCellFactory(stringCellFactory);
         
+        tableView.setPrefSize(860.0, 360.0);
         tableView.setItems(appointmentList);
         tableView.getColumns().addAll(
             appointmentIdColumn, customerNameColumn, titleColumn, descriptionColumn, 
@@ -259,7 +240,7 @@ class StringTableCell extends TableCell<AppointmentModel, String> {
     }
 
     private String getString() {
-        return getItem() == null ? "" : getItem().toString();
+        return getItem() == null ? "" : getItem();
     }
 }
  
@@ -268,25 +249,16 @@ class MouseClickEventHandler implements EventHandler<MouseEvent> {
     public void handle(MouseEvent t) {
         TableCell c = (TableCell) t.getSource();
         int index = c.getIndex();
+        // Fire off Appointment Edit
         main.endProcess("appointmentEdit", Integer.toString(appointmentList.get(index).getAppointmentId()));
-        
-//        System.out.println("appointmentId: " + appointmentList.get(index).getAppointmentId());
-//        System.out.println("customerName: " + appointmentList.get(index).getCustomerName());
-//        System.out.println("title: " + appointmentList.get(index).getTitle());
-//        System.out.println("description: " + appointmentList.get(index).getDescription());
-//        System.out.println("location: " + appointmentList.get(index).getLocation());
-//        System.out.println("contact: " + appointmentList.get(index).getContact());
-//        System.out.println("url: " + appointmentList.get(index).getUrl());
-//        System.out.println("start: " + appointmentList.get(index).getStart());
-//        System.out.println("end: " + appointmentList.get(index).getEnd());
     }
 }    
     
     // Define CalendarView as inner class of CalendarController class
     public class CalendarView {
         private ArrayList<AnchorPaneNode> allCalendarDays = new ArrayList<>(35);
-        private ArrayList<AnchorPaneNode> allWeekDays = new ArrayList<>(7);
-        private Calendar cal = Calendar.getInstance();
+        private final ArrayList<AnchorPaneNode> allWeekDays = new ArrayList<>(7);
+        private final Calendar cal = Calendar.getInstance();
         private Text calendarTitle;
         private CalendarController cc;
         private YearMonth currentYearMonth;
@@ -429,7 +401,6 @@ class MouseClickEventHandler implements EventHandler<MouseEvent> {
 
                 Text txt = new Text(String.valueOf(calendarDate.getDayOfMonth()));
                 String str = calendarDate.toString();
-                ap.setDate(calendarDate);
                 AnchorPaneNode.setTopAnchor(txt, 5.0);
                 AnchorPaneNode.setLeftAnchor(txt, 5.0);
                 ap.getChildren().add(txt);
