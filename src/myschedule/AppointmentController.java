@@ -24,9 +24,9 @@
 package myschedule;
 
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -37,11 +37,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import myschedule.model.AppointmentModel;
 
 /**
@@ -64,9 +66,8 @@ public class AppointmentController {
     @FXML private Label lblURL;
     @FXML private TextField txtURL;
     @FXML private Label lblStartDate;
-    @FXML private DatePicker dteStartDate;
+    @FXML private GridPane gridLayout;
     @FXML private Label lblEndDate;
-    @FXML private DatePicker dteEndDate;
     @FXML private Label lblStartTime;
     @FXML private ComboBox<String> cboStartHour;
     @FXML private ComboBox<String> cboStartMinute;
@@ -88,6 +89,10 @@ public class AppointmentController {
     // Lists
     private List customerList;
 
+    // Miscellaneous
+    private int appointmentId = 0;
+    private DatePicker dteEndDate;
+    private DatePicker dteStartDate;
     private final boolean unsavedChanges = false;
     
     /**
@@ -95,7 +100,7 @@ public class AppointmentController {
      */
     @SuppressWarnings("unchecked")
     private void addListeners() {
-        btnCancel.setOnMouseClicked(e -> { closeAppointmentAdd(); } );
+        btnCancel.setOnMouseClicked(e -> { closeAppointmentMaint(); } );
         btnSave.setOnAction(e -> { handleSave(); } );
     }
     
@@ -103,14 +108,24 @@ public class AppointmentController {
      * Close appointment add
      */
     @SuppressWarnings("unchecked")
-    private void closeAppointmentAdd() {
+    private void closeAppointmentMaint() {
         if (unsavedChanges) {
             if (confirmUnsaved()) {
-                main.endProcess();
+                if (this.appointmentId > 0) {
+                    main.endProcess("appointmentView", null);
+                }
+                else {
+                    main.endProcess();
+                }
             }
         }
         else {
-            main.endProcess();
+            if (this.appointmentId > 0) {
+                main.endProcess("appointmentView", null);
+            }
+            else {
+                main.endProcess();
+            }
         }
     }
     
@@ -172,7 +187,7 @@ public class AppointmentController {
 
         if (validateForm()) {
             AppointmentModel appt = new AppointmentModel();
-            appt.setAppointmentId(0);
+            appt.setAppointmentId(this.appointmentId);
             appt.setCustomerId(customerToCustomerIdMap.get(cboCustomer.getSelectionModel().getSelectedItem()));
             appt.setCustomerName(cboCustomer.getSelectionModel().getSelectedItem());
             appt.setTitle(txtTitle.getText());
@@ -198,6 +213,26 @@ public class AppointmentController {
             try {
                 app.db.upsertAppointment(appt, app.userName());
                 app.common.alertStatus(1);
+                
+                if (this.appointmentId > 0) {
+                    main.endProcess("appointmentView", null);
+                }
+                else {
+                    cboCustomer.setValue("");
+                    txtTitle.setText("");
+                    txtDescription.setText("");
+                    txtLocation.setText("");
+                    txtContact.setText("");
+                    txtURL.setText("");
+                    dteStartDate.setValue(null);
+                    dteEndDate.setValue(null);
+                    cboStartHour.setValue(null);
+                    cboStartMinute.setValue(null);
+                    cboStartAMPM.setValue(null);
+                    cboEndHour.setValue(null);
+                    cboEndMinute.setValue(null);
+                    cboEndAMPM.setValue(null);
+                }
             }
             catch (SQLException ex) {
                 app.common.alertStatus(0);
@@ -218,6 +253,30 @@ public class AppointmentController {
         txtLocation.setText("");
         txtContact.setText("");
         txtURL.setText("");
+        
+        dteStartDate = new DatePicker();
+        dteStartDate.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY);
+                setDisable(empty || date.getDayOfWeek() == DayOfWeek.SUNDAY);
+            }
+        });
+        dteStartDate.setEditable(false);
+        gridLayout.add(dteStartDate, 1, 3);
+        
+        dteEndDate = new DatePicker();
+        dteEndDate.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY);
+                setDisable(empty || date.getDayOfWeek() == DayOfWeek.SUNDAY);
+            }
+        });
+        dteEndDate.setDisable(false);
+        gridLayout.add(dteEndDate, 4, 3);
     }  
     
     /**
@@ -244,11 +303,41 @@ public class AppointmentController {
      */
     @SuppressWarnings("unchecked")
     private void loadAppointment(int appointmentId) {
-        AppointmentModel appt = new AppointmentModel();
+        AppointmentModel appt;
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        int hh;
+        String ampm;
+        String mm;
+        String time;
         
         try {
             appt = app.db.getAppointment(appointmentId);
-            System.out.println("back from getAppointment");
+            cboCustomer.setValue(appt.getCustomerName());
+            txtTitle.setText(appt.getTitle());
+            txtDescription.setText(appt.getDescription());
+            txtLocation.setText(appt.getLocation());
+            txtContact.setText(appt.getContact());
+            txtURL.setText(appt.getUrl());
+            dteStartDate.setValue(LocalDate.parse(appt.getStart().substring(0, 10), dateFormatter));
+            dteEndDate.setValue(LocalDate.parse(appt.getEnd().substring(0, 10), dateFormatter));
+            // Process Start time
+            time = appt.getStart().substring(11);
+            hh = Integer.parseInt(time.substring(0, 2));
+            mm = time.substring(3, 5);
+            ampm = hh > 12 ? "PM" : "AM";
+            hh = hh > 12 ? hh - 12 : hh;
+            cboStartHour.setValue(Integer.toString(hh));
+            cboStartMinute.setValue(mm);
+            cboStartAMPM.setValue(ampm);
+            //Process End time
+            time = appt.getEnd().substring(11);
+            hh = Integer.parseInt(time.substring(0, 2));
+            mm = time.substring(3, 5);
+            ampm = hh > 12 ? "PM" : "AM";
+            hh = hh > 12 ? hh - 12 : hh;
+            cboEndHour.setValue(Integer.toString(hh));
+            cboEndMinute.setValue(mm);
+            cboEndAMPM.setValue(ampm);
         }
         catch (SQLException ex) {
             app.common.alertStatus(0);
@@ -286,6 +375,7 @@ public class AppointmentController {
      */
     @SuppressWarnings("unchecked")
     public void start() {
+        this.appointmentId = 0;
         addListeners();
         loadComboBoxes();
         initializeForm();
@@ -297,6 +387,7 @@ public class AppointmentController {
      */
     @SuppressWarnings("unchecked")
     public void start(int appointmentId) {
+        this.appointmentId = appointmentId;
         addListeners();
         loadComboBoxes();
         initializeForm();
@@ -314,7 +405,7 @@ public class AppointmentController {
               && app.common.isValidString(txtDescription.getText(), false)
               && app.common.isValidString(txtLocation.getText(), false)
               && app.common.isValidString(txtContact.getText(), false)
-              && app.common.isValidString(txtURL.getText(), false)
+              && app.common.isValidString(txtURL.getText(), true)
               && app.common.isValidString(dteStartDate.getValue().toString(), false)
               && app.common.isValidString(dteEndDate.getValue().toString(), false)
               && app.common.isValidString(cboStartHour.getValue(), false)

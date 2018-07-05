@@ -185,6 +185,9 @@ public class MainController {
                 case "appointmentEdit":
                     handleAppointmentEdit(param);
                     break;
+                case "appointmentView":
+                    handleAppointmentView();
+                    break;
                 default:
                     break;
             }

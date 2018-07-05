@@ -1320,21 +1320,21 @@ public class DB {
         connect();
         
         try {
-            sql = String.join(" ",
-                "SELECT COUNT(*) AS cnt",
-                "FROM appointment",
-                "WHERE appointmentId = " + appt.getAppointmentId()
-            );
-            rs = stmt.executeQuery(sql);
-            rs.first();
-            cnt = rs.getInt("cnt");
+//            sql = String.join(" ",
+//                "SELECT COUNT(*) AS cnt",
+//                "FROM appointment",
+//                "WHERE appointmentId = " + appt.getAppointmentId()
+//            );
+//            rs = stmt.executeQuery(sql);
+//            rs.first();
+//            cnt = rs.getInt("cnt");
 
-            if (cnt > 0) {  // update record
+            if (appt.getAppointmentId() > 0) {  // update record
                 sql = String.join(" ",
                     "UPDATE appointment",
                     "SET customerId=?, title=?, description=?, location=?, contact=?, url=?, start=?, end=?,",
                     "   createDate=?, createdBy=?, lastUpdate=?, lastUpdateBy=?",
-                    "WHERE appointmentId =? "
+                    "WHERE appointmentId=? "
                 );
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, appt.getCustomerId());
@@ -1350,7 +1350,7 @@ public class DB {
                 pstmt.setString(11, LocalDateTime.now().toString());
                 pstmt.setString(12, userName.trim());
                 pstmt.setInt(13, appt.getAppointmentId());
-                pstmt.executeUpdate(sql);
+                pstmt.executeUpdate();
             }
             else {  // insert new record
                 sql = String.join(" ",
