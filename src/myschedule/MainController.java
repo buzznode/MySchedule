@@ -56,6 +56,7 @@ public class MainController {
     protected MenuItem miMaintCity;
     protected MenuItem miMaintCustomer;
     protected MenuItem miMaintCountry;
+    protected MenuItem miReportRun;
     protected MenuItem miUserLogin;
     protected MenuItem miUserLogout;
     protected MenuItem miHelpAbout;
@@ -72,7 +73,8 @@ public class MainController {
         miMaintCity.setOnAction(e -> { handleCityMaintenance(); } );
         miMaintCountry.setOnAction(e -> { handleCountryMaintenance(); } );
         miMaintCustomer.setOnAction(e -> { handleCustomerMaintenance(); } );
-        miUserLogin.setOnAction(e -> { handleLogin(); } ); 
+        miReportRun.setOnAction(e -> { handleReportRun(); } );
+        miUserLogin.setOnAction(e -> { handleLogin(); } );
     }
 
     /**
@@ -80,7 +82,7 @@ public class MainController {
      */
     @SuppressWarnings("unchecked")
     public void disableLogin() {
-        menuBar.getMenus().get(3).getItems().get(0).setDisable(true);
+        menuBar.getMenus().get(4).getItems().get(0).setDisable(true);
     }
     
     /**
@@ -88,7 +90,7 @@ public class MainController {
      */
     @SuppressWarnings("unchecked")
     public void disableLogout() {
-        menuBar.getMenus().get(3).getItems().get(1).setDisable(false);
+        menuBar.getMenus().get(4).getItems().get(1).setDisable(false);
     }
     
     /**
@@ -108,7 +110,7 @@ public class MainController {
      */
     @SuppressWarnings("unchecked")
     public void enableAbout() {
-        menuBar.getMenus().get(4).getItems().get(0).setDisable(false);
+        menuBar.getMenus().get(5).getItems().get(0).setDisable(false);
     }
     
     /**
@@ -124,7 +126,7 @@ public class MainController {
      */
     @SuppressWarnings("unchecked")
     public void enableLogin() {
-        menuBar.getMenus().get(3).getItems().get(0).setDisable(false);
+        menuBar.getMenus().get(4).getItems().get(0).setDisable(false);
     }
     
     /**
@@ -132,7 +134,7 @@ public class MainController {
      */
     @SuppressWarnings("unchecked")
     public void enableLogout() {
-        menuBar.getMenus().get(3).getItems().get(1).setDisable(false);
+        menuBar.getMenus().get(4).getItems().get(1).setDisable(false);
     }
     
     /**
@@ -362,7 +364,9 @@ public class MainController {
         }
     }
     
-    
+    /**
+     * Handle Login request
+     */
     @SuppressWarnings("unchecked")
     private void handleLogin() {
         try {
@@ -377,6 +381,23 @@ public class MainController {
         catch (Exception ex) {
             app.common.alertStatus(0);
             app.log.write(Level.SEVERE, "Error starting Login");
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void handleReportRun() {
+        try {
+           FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Report.fxml"));
+           Node node = loader.load();
+           ReportController controller = loader.getController();
+           controller.injectMainController(this);
+           controller.injectApp(app);
+           mainContainer.setCenter(node);
+           controller.start();
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Report Run");
         }
     }
     
@@ -407,7 +428,7 @@ public class MainController {
         // Appointment menu [1]
         Menu menuAppointment = new Menu(app.localize("appointment"));
         miAppointmentAdd = new MenuItem(app.localize("add")); // [1.0]
-        miAppointmentView = new MenuItem(app.localize("view")); // [2.0]
+        miAppointmentView = new MenuItem(app.localize("view")); // [1.1]
         menuAppointment.getItems().addAll(miAppointmentAdd, miAppointmentView); 
 
         // Maintenance menu [2]
@@ -418,19 +439,24 @@ public class MainController {
         miMaintCustomer = new MenuItem(app.localize("customer")); // [2.3]
         menuMaint.getItems().addAll(miMaintAddress, miMaintCity, miMaintCountry, miMaintCustomer);
         
-        // User menu [3]
+        // Report menu [3]
+        Menu menuReport = new Menu(app.localize("report"));
+        miReportRun = new MenuItem(app.localize("run")); // {3.0]
+        menuReport.getItems().addAll(miReportRun);
+        
+        // User menu [4]
         Menu menuUser = new Menu(app.localize("user"));
-        miUserLogin = new MenuItem(app.localize("login")); // [3.0]
-        miUserLogout = new MenuItem(app.localize("logout")); // [3.1]
+        miUserLogin = new MenuItem(app.localize("login")); // [4.0]
+        miUserLogout = new MenuItem(app.localize("logout")); // [4.1]
         menuUser.getItems().addAll(miUserLogin, miUserLogout);
 
-        // Help menu [4]
+        // Help menu [5]
         Menu menuHelp = new Menu(app.localize("help"));
-        miHelpAbout = new MenuItem(app.localize("about")); // [4.0]
+        miHelpAbout = new MenuItem(app.localize("about")); // [5.0]
         menuHelp.getItems().addAll(miHelpAbout);
 
         addListeners();
-        menuBar.getMenus().addAll(menuFile, menuAppointment, menuMaint, menuUser, menuHelp);
+        menuBar.getMenus().addAll(menuFile, menuAppointment, menuMaint, menuReport, menuUser, menuHelp);
         mainContainer.setTop(menuBar);
         
         if (!app.loggedIn()) {
