@@ -397,6 +397,20 @@ public class CustomerController {
     }
 
     /**
+     * Load customer record
+     * @param customerId 
+     */
+    @SuppressWarnings("unchecked")
+    public void loadCustomer(int customerId) {
+        String customerName;
+        
+        customerName = customerIdToCustomerMap.get(customerId);
+        cboCustomer.setValue(customerName);
+        handleCustomerChange();
+        handleAddressChange();
+    }
+    
+    /**
      * Load Maps and Lists
      */
     @SuppressWarnings("unchecked")
@@ -427,6 +441,19 @@ public class CustomerController {
         lblTitle.setText(app.localize("customers"));
         loadMapsAndLists();
         initializeForm();
+    }
+    
+    /**
+     * Start address maintenance with customer
+     * @param customerId 
+     */
+    @SuppressWarnings("unchecked")
+    public void start(int customerId) {
+        addListeners();
+        lblTitle.setText(app.localize("customers"));
+        loadMapsAndLists();
+        initializeForm();
+        loadCustomer(customerId);
     }
     
     /**

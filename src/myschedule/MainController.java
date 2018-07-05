@@ -176,17 +176,20 @@ public class MainController {
                 case "addressMaint":
                     handleAddressMaintenance();
                     break;
+                case "appointmentEdit":
+                    handleAppointmentEdit(param);
+                    break;
+                case "appointmentView":
+                    handleAppointmentView();
+                    break;
                 case "cityMaint":
                     handleCityMaintenance();
                     break;
                 case "countryMaint":
                     handleCountryMaintenance();
                     break;
-                case "appointmentEdit":
-                    handleAppointmentEdit(param);
-                    break;
-                case "appointmentView":
-                    handleAppointmentView();
+                case "customerMaint":
+                    handleCustomerMaintenance(Integer.parseInt(param));
                     break;
                 default:
                     break;
@@ -338,6 +341,27 @@ public class MainController {
             app.log.write(Level.SEVERE, "Error starting Customer Maintenance");
         }
     }
+
+    /**
+     * Handle CustomerMaintenance request with parameter
+     */
+    @SuppressWarnings("unchecked")
+    private void handleCustomerMaintenance(int customerId) {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.this.getClass().getResource("Customer.fxml"));
+            Node node = loader.load();
+            CustomerController controller = loader.getController();
+            controller.injectMainController(this);
+            controller.injectApp(app);
+            mainContainer.setCenter(node);
+            controller.start(customerId);
+        }
+        catch (Exception ex) {
+            app.common.alertStatus(0);
+            app.log.write(Level.SEVERE, "Error starting Customer Maintenance with parameter");
+        }
+    }
+    
     
     @SuppressWarnings("unchecked")
     private void handleLogin() {

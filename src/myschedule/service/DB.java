@@ -33,9 +33,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import myschedule.model.AddressModel;
 import myschedule.model.AppointmentModel;
+import myschedule.model.AppointmentTypeCountModel;
 import myschedule.model.CityModel;
+import myschedule.model.ConsultantScheduleModel;
 import myschedule.model.CountryModel;
 import myschedule.model.CustomerModel;
+import myschedule.model.TotalAppointmentsModel;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 
@@ -410,6 +413,47 @@ public class DB {
         }
         return list;
     }
+
+    /**
+     * Get Appointment-Type-Count report
+     * @return List of AppointmentTypeCountModel
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public ObservableList<AppointmentTypeCountModel> getAppointmentsTypeCountReport() throws SQLException {
+        ObservableList<AppointmentTypeCountModel> list = FXCollections.observableArrayList();
+        int cnt;
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT description, COUNT(*) AS cnt, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName",
+            "FROM appointment",
+            "GROUP BY description, MONTH(start)",
+            "HAVING cnt > 0",
+            "ORDER BY MONTH(start), description"
+        );
+        
+        pstmt = conn.prepareStatement(sql);
+        
+        try {
+            rs = pstmt.executeQuery();
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new AppointmentTypeCountModel (
+                    rs.getString("description"), 
+                    rs.getInt("cnt"),
+                    rs.getInt("month"),
+                    rs.getString("monthName").trim()
+                ));
+            }
+        }
+        catch (SQLException ex) {
+            throw new SQLException(exception(ex));
+        }
+        return list;
+    }
     
     /**
      * Get list of Cities
@@ -450,6 +494,53 @@ public class DB {
             }
         }
         catch(SQLException ex) {
+            throw new SQLException(exception(ex));
+        }
+        return list;
+    }
+
+    /**
+     * Get Consultant-Schedule report
+     * @return List of ConsultantScheduleModel
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public ObservableList<ConsultantScheduleModel> getConsultantScheduleReport() throws SQLException {
+        ObservableList<ConsultantScheduleModel> list = FXCollections.observableArrayList();
+        int cnt;
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.start, MONTH(start) AS month",
+            "   MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName, a.end",
+            "FROM appointment a",
+            "JOIN customer b ON b.customerId = a.customerId",
+            "ORDER BY a.contact, MONTH(a.start), a.start, a.end"
+        );
+        
+        pstmt = conn.prepareStatement(sql);
+        
+        try {
+            rs = pstmt.executeQuery();
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new ConsultantScheduleModel (
+                    rs.getInt("customerId"), 
+                    rs.getString("customerName").trim(),
+                    rs.getString("title").trim(),
+                    rs.getString("description").trim(),
+                    rs.getString("location").trim(),
+                    rs.getString("contact").trim(),
+                    rs.getString("start").trim(),
+                    rs.getInt("month"), 
+                    rs.getString("monthName").trim(),
+                    rs.getString("end").trim()
+                ));
+            }
+        }
+        catch (SQLException ex) {
             throw new SQLException(exception(ex));
         }
         return list;
@@ -1175,6 +1266,48 @@ public class DB {
         return list;
     }
 
+    /**
+     * Get Total-Appointments report
+     * @return List of TotalAppointmentsModel
+     * @throws SQLException 
+     */
+    @SuppressWarnings("unchecked")
+    public ObservableList<TotalAppointmentsModel> getTotalAppointmentsReport() throws SQLException {
+        ObservableList<TotalAppointmentsModel> list = FXCollections.observableArrayList();
+        int cnt;
+        String sql;
+        connect();
+        
+        sql = String.join(" ",
+            "SELECT contact, description, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName, COUNT(*) AS cnt",
+            "FROM appointment",
+            "GROUP BY contact, description, MONTH(start)",
+            "ORDER BY MONTH(start), contact, description"
+        );
+        
+        pstmt = conn.prepareStatement(sql);
+        
+        try {
+            rs = pstmt.executeQuery();
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                list.add(new TotalAppointmentsModel (
+                    rs.getString("contact").trim(), 
+                    rs.getString("description").trim(),
+                    rs.getInt("month"),
+                    rs.getString("monthName").trim(),
+                    rs.getInt("cnt")
+                ));
+            }
+        }
+        catch (SQLException ex) {
+            throw new SQLException(exception(ex));
+        }
+        return list;
+    }
+    
+    
     /**
      * Execute query without result set
      * @param sql

@@ -76,8 +76,9 @@ public class AppointmentController {
     @FXML private ComboBox<String> cboEndHour;
     @FXML private ComboBox<String> cboEndMinute;
     @FXML private ComboBox<String> cboEndAMPM;
-    @FXML private Button btnSave;
     @FXML private Button btnCancel;
+    @FXML private Button btnCustomer;
+    @FXML private Button btnSave;
     @FXML private Tab tabView;
 
     private App app;
@@ -101,6 +102,7 @@ public class AppointmentController {
     @SuppressWarnings("unchecked")
     private void addListeners() {
         btnCancel.setOnMouseClicked(e -> { closeAppointmentMaint(); } );
+        btnCustomer.setOnAction(e -> { handleCustomer(); } );
         btnSave.setOnAction(e -> { handleSave(); } );
     }
     
@@ -170,6 +172,24 @@ public class AppointmentController {
         
         tme = hh + ":" + mm ;
         return LocalDateTime.parse(yyyymmdd + " " + tme, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+
+    /**
+     * Handle Edit Customer
+     */
+    @SuppressWarnings("unchecked")
+    private void handleCustomer() {
+        int customerId;
+        String customerName;
+        
+        if (cboCustomer.getValue() == null) {
+            app.common.alertStatus(0, "Customer Required", "You must first select a customer.");
+            return;
+        }
+        
+        customerName = cboCustomer.getValue();
+        customerId = customerToCustomerIdMap.get(customerName);
+        main.endProcess("customerMaint", Integer.toString(customerId));
     }
     
     /**
