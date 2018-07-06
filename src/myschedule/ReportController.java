@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -56,6 +57,8 @@ import myschedule.model.AppointmentModel;
 import myschedule.model.AppointmentTypeCountModel;
 import myschedule.model.ConsultantScheduleModel;
 import myschedule.model.TotalAppointmentsModel;
+import myschedule.Report;
+import myschedule.model.CityModel;
 
 /**
  * @author bradd
@@ -66,7 +69,7 @@ public class ReportController {
     @FXML protected BorderPane reportContainer;
     @FXML Button btnClose;
     @FXML Button btnRun;
-    @FXML ComboBox cboReport;
+    @FXML ComboBox<Report> cboReport;
     @FXML Label lblReports;
     @FXML Label lblTitle;
     
@@ -104,10 +107,29 @@ public class ReportController {
      */
     @SuppressWarnings("unchecked")
     private void handleRun() {
+        String reportName;
+        
         if (cboReport.getValue() == null) {
             app.common.alertStatus(0, "Report Name Required", "A report must be selected first.");
             return;
         }
+        
+        Report rpt = cboReport.getSelectionModel().getSelectedItem();
+        reportName = rpt.getName();
+        
+            switch (reportName) {
+                case "atcReport":
+                    runATCReport();
+                    break;
+                case "csReport":
+                    runCSReport();
+                    break;
+                case "taReport":
+                    runTAReport();
+                    break;
+                default:
+                    break;
+            }
     }
     
     /**
@@ -150,7 +172,11 @@ public class ReportController {
      */
     @SuppressWarnings("unchecked")
     private void loadReports() {
-        
+        cboReport.getItems().addAll(
+            new Report("Appointment Counts by Type Report", "atcReport"),
+            new Report("Consultants Schedule Report", "csReport"),
+            new Report("Total Appointments Report", "taReport")
+        );
     }
     
     /**
@@ -232,6 +258,70 @@ public class ReportController {
 //            tableViewContainer.getChildren().remove(tableView);
 //        }
 //        tableViewContainer.getChildren().add(tableView);
+    }
+    
+    /**
+     * Run the Appointment Type Count Report
+     */
+    @SuppressWarnings("unchecked")
+    private void runATCReport() {
+        try {
+            atcList = app.db.getAppointmentsTypeCountReport();
+            tableViewATC.getColumns().remove(0, tableViewATC.getColumns().size());
+            tableViewATC.setEditable(false);
+
+            TableColumn<AppointmentTypeCountModel, String> description = new TableColumn<>();
+            description.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
+            TableColumn<AppointmentTypeCountModel, Integer> cnt = new TableColumn<>();
+            cnt.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCnt()));
+            TableColumn<AppointmentTypeCountModel, Integer> month = new TableColumn<>();
+            month.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonth()));
+            TableColumn<AppointmentTypeCountModel, String> monthName = new TableColumn<>();
+            monthName.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonthName()));
+            
+            tableViewATC.setPrefSize(880.0, 590.0);
+            tableViewATC.setItems(atcList);
+            tableViewATC.getColumns().addAll(
+                description, cnt, month, monthName
+            );
+            
+            if (tableViewContainer.getChildren().size() > 0) {
+                tableViewContainer.getChildren().add(tableViewATC);
+            }
+        }
+        catch (SQLException ex) {
+            
+        }
+    }
+    
+    /**
+     * Run the Consultants Schedule Report
+     */
+    @SuppressWarnings("unchecked")
+    private void runCSReport() {
+        try {
+            csList = app.db.getConsultantScheduleReport();
+            tableViewCS.getColumns().remove(0, tableViewCS.getColumns().size());
+            tableViewCS.setEditable(false);
+        }
+        catch (SQLException ex) {
+            
+        }
+    }
+    
+    /**
+     * Run the Total Appointments Report
+     */
+    @SuppressWarnings("unchecked")
+    private void runTAReport() {
+        try {
+            taList = app.db.getTotalAppointmentsReport();
+            tableViewTA.getColumns().remove(0, tableViewTA.getColumns().size());
+            tableViewTA.setEditable(false);
+        }
+        catch (SQLException ex) {
+            
+        }
     }
     
     /**
