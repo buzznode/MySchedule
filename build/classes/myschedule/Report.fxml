@@ -28,17 +28,20 @@
          <center>
             <GridPane BorderPane.alignment="CENTER">
               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="187.0" minWidth="0.0" prefWidth="0.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="376.0" minWidth="10.0" prefWidth="376.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="187.0" minWidth="0.0" prefWidth="25.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="484.0" minWidth="10.0" prefWidth="474.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.0" minWidth="10.0" prefWidth="74.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="lblReport" text="Report" />
-                  <ComboBox fx:id="cboReport" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="350.0" GridPane.columnIndex="1" />
+                  <Label fx:id="lblReport" text="Report">
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin></Label>
+                  <ComboBox fx:id="cboReport" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="450.0" GridPane.columnIndex="1" />
                   <Button fx:id="btnRun" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Run" GridPane.columnIndex="2" />
                </children>
             </GridPane>
