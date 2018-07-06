@@ -270,24 +270,25 @@ public class ReportController {
             tableViewATC.getColumns().remove(0, tableViewATC.getColumns().size());
             tableViewATC.setEditable(false);
 
-            TableColumn<AppointmentTypeCountModel, String> description = new TableColumn<>();
-            description.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
-            TableColumn<AppointmentTypeCountModel, Integer> cnt = new TableColumn<>();
-            cnt.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCnt()));
-            TableColumn<AppointmentTypeCountModel, Integer> month = new TableColumn<>();
-            month.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonth()));
-            TableColumn<AppointmentTypeCountModel, String> monthName = new TableColumn<>();
-            monthName.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonthName()));
+            TableColumn<AppointmentTypeCountModel, String> descriptionColumn = new TableColumn<>();
+            descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
+            TableColumn<AppointmentTypeCountModel, Integer> cntColumn = new TableColumn<>();
+            cntColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCnt()));
+            TableColumn<AppointmentTypeCountModel, Integer> monthColumn = new TableColumn<>();
+            monthColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonth()));
+            TableColumn<AppointmentTypeCountModel, String> monthNameColumn = new TableColumn<>();
+            monthNameColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonthName()));
             
             tableViewATC.setPrefSize(880.0, 590.0);
             tableViewATC.setItems(atcList);
             tableViewATC.getColumns().addAll(
-                description, cnt, month, monthName
+                descriptionColumn, cntColumn, monthColumn, monthNameColumn
             );
             
             if (tableViewContainer.getChildren().size() > 0) {
-                tableViewContainer.getChildren().add(tableViewATC);
+                tableViewContainer.getChildren().remove(tableViewATC);
             }
+            tableViewContainer.getChildren().add(tableViewATC);
         }
         catch (SQLException ex) {
             
