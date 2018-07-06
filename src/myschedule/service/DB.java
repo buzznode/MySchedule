@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import myschedule.model.AddressModel;
 import myschedule.model.AppointmentModel;
 import myschedule.model.AppointmentTypeCountModel;
@@ -105,6 +107,26 @@ public class DB {
         }
     }
 
+    public void deleteCustomer(int customerId) {
+        String sql;
+        
+        try {
+            sql = "DELETE FROM customer WHERE customerId =" + customerId;
+            assert exec(sql) : "There was an error deleting the customer with customerId: " + customerId;
+        }
+        catch (AssertionError ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    return;
+                }
+            }));
+        }
+    }
+    
     /**
      * Replace tick-marks with escaped flavor
      * @param str (String)
@@ -132,10 +154,32 @@ public class DB {
      * Execute SQL and return result
      * @param sql
      * @return Query ResultSet
+     */
+    @SuppressWarnings("unchecked")
+    protected boolean exec(String sql) {
+        boolean result = false;
+        
+        try {
+            if (conn == null || conn.isClosed()) {
+                connect();
+            }
+            stmt.executeQuery(sql);
+            result = true;
+        }
+        catch (SQLException ex) {
+            result = false;
+        }
+        return result;
+    }
+    
+    /**
+     * Execute SQL and return result
+     * @param sql
+     * @return Query ResultSet
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    protected ResultSet exec(String sql) throws SQLException {
+    protected ResultSet execWithResultSet(String sql) throws SQLException {
         ResultSet rset = null;
 
         try {
@@ -426,14 +470,11 @@ public class DB {
         String sql;
         connect();
         
-        sql = String.join(" ",
-            "SELECT description, COUNT(*) AS cnt, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName",
-            "FROM appointment",
-            "GROUP BY description, MONTH(start)",
-            "HAVING cnt > 0",
-            "ORDER BY MONTH(start), description"
-        );
-        
+        sql = "SELECT description, COUNT(*) AS cnt, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName " +
+                  "FROM appointment " +
+                  "GROUP BY description, MONTH(start) " +
+                  "HAVING cnt > 0 " +
+                  "ORDER BY MONTH(start), description";
         pstmt = conn.prepareStatement(sql);
         
         try {
@@ -511,14 +552,11 @@ public class DB {
         String sql;
         connect();
         
-        sql = String.join(" ",
-            "SELECT a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.start, MONTH(start) AS month",
-            "   MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName, a.end",
-            "FROM appointment a",
-            "JOIN customer b ON b.customerId = a.customerId",
-            "ORDER BY a.contact, MONTH(a.start), a.start, a.end"
-        );
-        
+        sql = "SELECT a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.start, " +
+                  "MONTH(a.start) AS month, MONTHNAME(STR_TO_DATE(MONTH(a.start), '%m')) as monthName, a.end " +
+                  "FROM appointment a " +
+                  "JOIN customer b on b.customerId = a.customerId " +
+                  "ORDER BY a.contact, MONTH(a.start), a.start, a.description";
         pstmt = conn.prepareStatement(sql);
         
         try {
@@ -1278,13 +1316,10 @@ public class DB {
         String sql;
         connect();
         
-        sql = String.join(" ",
-            "SELECT contact, description, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName, COUNT(*) AS cnt",
-            "FROM appointment",
-            "GROUP BY contact, description, MONTH(start)",
-            "ORDER BY MONTH(start), contact, description"
-        );
-        
+        sql = "SELECT contact, description, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName, COUNT(*) AS cnt " +
+                  "FROM appointment " +
+                  "GROUP BY MONTH(start), description, contact " +
+                  "ORDER BY MONTH(start), description, contact ";
         pstmt = conn.prepareStatement(sql);
         
         try {

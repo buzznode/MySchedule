@@ -68,12 +68,6 @@ public class Common  {
     @SuppressWarnings("unchecked")
     public void alertStatus(int status) {
         if (status == 1) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("Information Dialog");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Database commit was successful. Record(s) added.");
-//            alert.showAndWait();
-
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(null);
@@ -85,12 +79,6 @@ public class Common  {
             }));
         }
         else {
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Error Dialog");
-//            alert.setHeaderText("Error processing request.");
-//            alert.setContentText("There was an error processing your request. Please try again.");
-//            alert.showAndWait();
-
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("Error processing request.");
@@ -111,12 +99,6 @@ public class Common  {
     @SuppressWarnings("unchecked")
     public void alertStatus(int status, String msg) {
         if (status == 1) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("Information Dialog");
-//            alert.setHeaderText(null);
-//            alert.setContentText(msg);
-//            alert.showAndWait();
-            
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(null);
@@ -128,12 +110,6 @@ public class Common  {
             }));
         }
         else {
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Error Dialog");
-//            alert.setHeaderText("Error processing request.");
-//            alert.setContentText(msg);
-//            alert.showAndWait();
-
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("Error processing request.");
@@ -155,12 +131,6 @@ public class Common  {
     @SuppressWarnings("unchecked")
     public void alertStatus(int status, String hdr, String msg) {
         if (status == 1) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("Information Dialog");
-//            alert.setHeaderText(hdr);
-//            alert.setContentText(msg);
-//            alert.showAndWait();
-
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(hdr);
@@ -172,12 +142,6 @@ public class Common  {
             }));
         }
         else {
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Error Dialog");
-//            alert.setHeaderText(hdr);
-//            alert.setContentText(msg);
-//            alert.showAndWait();
-
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText(hdr);
@@ -288,7 +252,7 @@ public class Common  {
             DB db = new DB(log);
             db.connect();
             String sql = "select userName, password from user";
-            ResultSet results =  db.exec( sql );
+            ResultSet results =  db.execWithResultSet( sql );
             int recordCount = 0;
            
             while (results.next()) {

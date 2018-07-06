@@ -51,6 +51,7 @@ public class CustomerController {
     @FXML private Button btnAddCity;
     @FXML private Button btnAddCountry;
     @FXML private Button btnCancel;
+    @FXML private Button btnDelete;
     @FXML private Button btnSave;
     @FXML private ComboBox cboCustomer;
     @FXML private ComboBox cboAddress;
@@ -90,6 +91,7 @@ public class CustomerController {
         btnAddCity.setOnAction(e -> { handleAddOther("cityMaint"); } );
         btnAddCountry.setOnAction(e -> { handleAddOther("countryMaint"); } );
         btnCancel.setOnMouseClicked(e -> { closeCustomerMaint(); } );
+        btnDelete.setOnAction(e -> { handleDelete(); }  );
         btnSave.setOnAction(e -> { handleSave(); } );
         cboAddress.setOnAction(e -> { handleAddressChange(); } );
         cboCustomer.setOnAction(e -> { handleCustomerChange(); } );
@@ -263,6 +265,27 @@ public class CustomerController {
         }
     }
 
+    /**
+     * Handle Delete Customer
+     */
+    @SuppressWarnings("unchecked")
+    private void handleDelete() {
+        int customerId;
+        String customerName;
+        
+        if (cboCustomer.getSelectionModel().getSelectedIndex() < 0) {
+            app.common.alertStatus(0, "Customer Required", "You must select a customer to delete.");
+            return;
+        }
+        
+        customerName = cboCustomer.getValue().toString().trim();
+        customerId = customerToCustomerIdMap.get(customerName);
+        app.db.deleteCustomer(customerId);
+        customerToCustomerIdMap.remove(customerName);
+        customerIdToCustomerMap.remove(customerId);
+        cboCustomer.getItems().remove(cboCustomer.getSelectionModel().getSelectedIndex());
+    }
+    
     /**
      * Handle Customer Save
      */
