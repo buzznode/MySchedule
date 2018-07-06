@@ -5,10 +5,8 @@
         <group>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/MainController.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/service/DB.java</file>
-            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/CityController.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/service/Common.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/CalendarController.java</file>
-            <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/Report.java</file>
             <file>file:/D:/Development/Java/Projects/mySchedule/src/myschedule/ReportController.java</file>
         </group>
     </open-files>
