@@ -23,8 +23,6 @@
  */
 package myschedule;
 
-import java.util.Calendar;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,10 +45,6 @@ public class MainController {
     @FXML protected BorderPane mainContainer;
 
     // Protected MenuItem variables
-    protected MenuItem miFileNew;     
-    protected MenuItem miFileOpen;
-    protected MenuItem miFileSave;
-    protected MenuItem miFileSaveAs;
     protected MenuItem miFileExit;
     protected MenuItem miAppointmentAdd;
     protected MenuItem miAppointmentView;
@@ -120,7 +114,7 @@ public class MainController {
      */
     @SuppressWarnings("unchecked")
     public void enableExit() {
-        menuBar.getMenus().get(0).getItems().get(4).setDisable(false);
+        menuBar.getMenus().get(0).getItems().get(0).setDisable(false);
     }
     
     /**
@@ -169,6 +163,7 @@ public class MainController {
     /**
      * End currently running process and start the next action
      * @param nextAction 
+     * @param param
      */
     @SuppressWarnings("unchecked")
     protected void endProcess(String nextAction, String param) {
@@ -420,12 +415,8 @@ public class MainController {
 
         // File menu [0]
         Menu menuFile = new Menu(app.localize("file"));
-        miFileNew = new MenuItem(app.localize("new")); // [0.0]
-        miFileOpen = new MenuItem(app.localize("open")); // [0.1]
-        miFileSave = new MenuItem(app.localize("save")); // [0.2]
-        miFileSaveAs = new MenuItem(app.localize("save_as")); // [0.3]
         miFileExit = new MenuItem(app.localize("exit")); // [0.4]
-        menuFile.getItems().addAll(miFileNew, miFileOpen, miFileSave, miFileSaveAs, miFileExit);
+        menuFile.getItems().addAll(miFileExit);
 
         // Appointment menu [1]
         Menu menuAppointment = new Menu(app.localize("appointment"));
@@ -472,15 +463,5 @@ public class MainController {
             enableMenu();
             disableLogin();
         }
-        
-//        Calendar cal = Calendar.getInstance();
-//        long milliDiff = cal.get(Calendar.ZONE_OFFSET);
-//        System.out.println("milliDiff: " + milliDiff);
-//        int hoursOffset = (int) (milliDiff / (1000 * 60 * 60)) % 24;
-//        System.out.println("hoursOffset: " + hoursOffset);
-//        TimeZone tz = cal.getTimeZone();
-//        System.out.println("TimeZone: " + tz);
-//        System.out.println("End of logic");
-        System.out.println("zoneOffset: " + app.strZoneOffset());
     }
 }

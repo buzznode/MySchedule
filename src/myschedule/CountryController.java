@@ -146,6 +146,7 @@ public class CountryController {
     private void handleAdd() {
         String rightNow = app.common.rightNow();
         String user = app.userName();
+        int userId = app.userId();
 
         if (validateCountryRecord()) {
             countryList.add(new CountryModel(

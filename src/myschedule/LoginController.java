@@ -90,14 +90,17 @@ public class LoginController extends AnchorPane {
 
             if (app.common.validateUser(user, password)) {
                 app.userName(user);
+                app.userId(app.common.USER2ID.get(user));
                 app.loggedIn(true);
                 main.enableMenu();
                 main.disableLogin();
                 main.endProcess();
                 app.log.write(Level.INFO, user + " has logged in");
+                app.common.checkForAppointments(user);
             }
             else {
                 lblFeedback.setText(app.localize("invalid_username_password"));
+                app.log.write(Level.INFO, "Bad login attempt for " + user);
             }
         }
         else {

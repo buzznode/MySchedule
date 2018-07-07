@@ -380,7 +380,7 @@ class MouseClickEventHandler implements EventHandler<MouseEvent> {
             // Query database to get appointments for the given month
             try {
                 cc = CalendarController.this;
-                cc.appointmentList = app.db.getAppointmentsByMonth(mm, yyyy);
+                cc.appointmentList = app.db.getAppointmentsByMonth(mm, yyyy, app.strZoneOffset());
                 cc.lblAppointments.setText("Appointments: " + Integer.toString(cc.appointmentList.size()));
                 cc.populateTable();
             }
@@ -453,7 +453,7 @@ class MouseClickEventHandler implements EventHandler<MouseEvent> {
             // Query database to get appointments for the given month
             try {
                 cc = CalendarController.this;
-                cc.appointmentList = app.db.getAppointmentsByWeek(startDate, endDate);
+                cc.appointmentList = app.db.getAppointmentsByWeek(startDate, endDate, app.strZoneOffset());
                 cc.lblAppointments.setText("Appointments: " + Integer.toString(cc.appointmentList.size()));
                 cc.populateTable();
             }

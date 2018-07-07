@@ -42,12 +42,14 @@ import myschedule.service.Logging;
  */
 public class App extends Application {
     
-    // Private general variables   
-//    private boolean loggedIn = false;
-//    private String userName = "";
+    private boolean loggedIn = false;
+    private String userName = "";
+    private int userId = 0;
     
-    private boolean loggedIn = true;
-    private String userName = "bradd";
+    
+//    private boolean loggedIn = true;
+//    private String userName = "bradd";
+//    private int userId = 1;
     private final int zoneOffset = calcZoneOffset();
     
     protected Stage mainStage;
@@ -69,10 +71,12 @@ public class App extends Application {
         return (int) (milliDiff / (1000 * 60 * 60) % 24);
     }
     
+    @SuppressWarnings("unchecked")
     public int intZoneOffset() {
         return zoneOffset;
     }
     
+    @SuppressWarnings("unchecked")
     public String strZoneOffset() {
         String zone = Integer.toString(zoneOffset);
         
@@ -105,6 +109,7 @@ public class App extends Application {
      * @param str
      * @return 
      */
+    @SuppressWarnings("unchecked")
     public String localize(String str) {
         return rb.getString(str).trim();
     }
@@ -113,7 +118,8 @@ public class App extends Application {
      * Get loggedIn value
      * @return loggedIn as boolean
      */
-    protected boolean loggedIn() {
+    @SuppressWarnings("unchecked")
+    public boolean loggedIn() {
         return loggedIn;
     }
     
@@ -122,7 +128,8 @@ public class App extends Application {
      * @param _loggedIn
      * @return  _loggedIn as boolean
      */
-    protected boolean loggedIn(boolean _loggedIn) {
+    @SuppressWarnings("unchecked")
+    public boolean loggedIn(boolean _loggedIn) {
         return loggedIn = _loggedIn;
     }
     
@@ -130,6 +137,7 @@ public class App extends Application {
      * Main routine
      * @param args the command line arguments
      */
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         launch(args);
     }
@@ -140,10 +148,11 @@ public class App extends Application {
      * @throws Exception 
      */
     @Override
+    @SuppressWarnings("unchecked")
     public void start(Stage stage) throws Exception {
-        log.write(Level.INFO, "Starting application...");
+//        log.write(Level.INFO, "Starting application...");
         Locale.setDefault(new Locale("en", "EN"));
-//        Locale.setDefault(new Locale("de", "DE"));
+        Locale.setDefault(new Locale("de", "DE"));
         rb = ResourceBundle.getBundle("language_files/rb");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainContainer.fxml"));
         Parent node = loader.load();
@@ -160,7 +169,8 @@ public class App extends Application {
      * Get userName value
      * @return userName
      */
-    protected String userName() {
+    @SuppressWarnings("unchecked")
+    public String userName() {
         return userName;
     }
 
@@ -169,7 +179,27 @@ public class App extends Application {
      * @param _userName
      * @return userName 
      */
-    protected String userName(String _userName) {
+    @SuppressWarnings("unchecked")
+    public String userName(String _userName) {
         return userName = _userName;
+    }
+    
+    /**
+     * Get userId value
+     * @return userId
+     */
+    @SuppressWarnings("uncheccked")
+    public int userId() {
+        return userId;
+    }
+    
+    /**
+     * Set userId value
+     * @param _userId
+     * @return userId
+     */
+    @SuppressWarnings("unchecked")
+    public int userId(int _userId) {
+        return userId = _userId;
     }
 }

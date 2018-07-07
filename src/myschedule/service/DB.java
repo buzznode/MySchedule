@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -179,7 +180,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    protected ResultSet execWithResultSet(String sql) throws SQLException {
+    protected ResultSet execWithResultSet(String sql) {
         ResultSet rset = null;
 
         try {
@@ -189,7 +190,22 @@ public class DB {
             rset =  stmt.executeQuery(sql);
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            String msg = "There was an error executing a SQL statement.\n\n";
+            msg += "SQL Statement: " + sql + "\n\n";
+            msg += "SQLState: " + ex.getSQLState();
+            msg += "ErrorCode: " + ex.getErrorCode();
+            msg += "Message: " + ex.getMessage();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("SQL Error");
+            alert.setContentText(msg);
+            alert.showAndWait().ifPresent((new Consumer<ButtonType>() {
+                @Override
+                public void accept(ButtonType response) {
+                    if (response == ButtonType.OK) {
+                    }
+                }
+            }));
         }
         return rset;
     }
@@ -295,25 +311,32 @@ public class DB {
     /**
      * Get Appointments for a given month / year
      * @param appointmentId
+     * @param localTZ
      * @return AppointmentModel
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public AppointmentModel getAppointment(int appointmentId) throws SQLException {
+    public AppointmentModel getAppointment(int appointmentId, String localTZ) throws SQLException {
         AppointmentModel appt = new AppointmentModel();
         int cnt;
         String sql;
         connect();
         
         sql = String.join(" ",
-            "SELECT a.*, b.customerName",
+            "SELECT a.appointmentId, a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.url,",
+            "CONVERT_TZ(a.start, ?, ?) AS startOffset, CONVERT_TZ(a.end, ?, ?) AS endOffset, a.createDate, a.createdBy,",
+            "a.lastUpdate, a.lastUpdateBy",
             "FROM appointment a",
             "JOIN customer b ON b.customerId = a.customerId",
             "WHERE a.appointmentId = ?"
         );
         
         pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, appointmentId);
+        pstmt.setString(1, "+00:00");
+        pstmt.setString(2, localTZ);
+        pstmt.setString(3, "+00:00");
+        pstmt.setString(4, localTZ);
+        pstmt.setInt(5, appointmentId);
         
         try {
             rs = pstmt.executeQuery();
@@ -326,8 +349,8 @@ public class DB {
             appt.setLocation(rs.getString("location").trim());
             appt.setContact(rs.getString("contact").trim());
             appt.setUrl(rs.getString("url").trim()); 
-            appt.setStart(rs.getString("start").trim());
-            appt.setEnd(rs.getString("end").trim());
+            appt.setStart(rs.getString("startOffset").trim());
+            appt.setEnd(rs.getString("endOffset").trim());
             appt.setCreateDate(rs.getString("createDate").trim()); 
             appt.setCreatedBy(rs.getString("createdBy").trim()); 
             appt.setLastUpdate(rs.getString("lastUpdate").trim());
@@ -347,26 +370,32 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AppointmentModel> getAppointmentsByMonth(String mm, String yyyy) throws SQLException {
+    public ObservableList<AppointmentModel> getAppointmentsByMonth(String mm, String yyyy, String localTZ) throws SQLException {
         ObservableList<AppointmentModel> list = FXCollections.observableArrayList();
         int cnt;
         String sql;
         connect();
         
         sql = String.join(" ",
-            "SELECT a.*, b.customerName",
+            "SELECT a.appointmentId, a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.url,",
+            "CONVERT_TZ(a.start, ?, ?) AS startOffset, CONVERT_TZ(a.end, ?, ?) AS endOffset, a.createDate, a.createdBy,",
+            "a.lastUpdate, a.lastUpdateBy",
             "FROM appointment a",
             "JOIN customer b ON b.customerId = a.customerId",
             "WHERE (month(a.start) = ? AND year(a.start) = ?)",
             "OR (month(a.end) = ? AND year(a.end) = ?)",
-            "ORDER BY start, end"
+            "ORDER BY a.start, a.end"
         );
         
         pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, mm.trim());
-        pstmt.setString(2, yyyy.trim());
-        pstmt.setString(3, mm.trim());
-        pstmt.setString(4, yyyy.trim());
+        pstmt.setString(1, "+00:00");
+        pstmt.setString(2, localTZ);
+        pstmt.setString(3, "+00:00");
+        pstmt.setString(4, localTZ);
+        pstmt.setString(5, mm.trim());
+        pstmt.setString(6, yyyy.trim());
+        pstmt.setString(7, mm.trim());
+        pstmt.setString(8, yyyy.trim());
         
         try {
             rs = pstmt.executeQuery();
@@ -382,8 +411,8 @@ public class DB {
                     rs.getString("location").trim(),
                     rs.getString("contact"),
                     rs.getString("url").trim(), 
-                    rs.getString("start").trim(),
-                    rs.getString("end").trim(),
+                    rs.getString("startOffset").trim(),
+                    rs.getString("endOffset").trim(),
                     rs.getString("createDate").trim(), 
                     rs.getString("createdBy").trim(), 
                     rs.getString("lastUpdate").trim(), 
@@ -405,7 +434,7 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AppointmentModel> getAppointmentsByWeek(String startDate, String endDate) throws SQLException {
+    public ObservableList<AppointmentModel> getAppointmentsByWeek(String startDate, String endDate, String localTZ) throws SQLException {
         ObservableList<AppointmentModel> list = FXCollections.observableArrayList();
         int cnt;
         String sql;
@@ -415,19 +444,29 @@ public class DB {
         endDate += " 23:59:59";
         
         sql = String.join(" ",
-            "SELECT a.*, b.customerName",
+            "SELECT a.appointmentId, a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.url,",
+            "CONVERT_TZ(a.start, ?, ?) AS startOffset, CONVERT_TZ(a.end, ?, ?) AS endOffset, a.createDate, a.createdBy,",
+            "a.lastUpdate, a.lastUpdateBy",
             "FROM appointment a",
             "JOIN customer b ON b.customerId = a.customerId",
-            "WHERE start BETWEEN ? AND ?",
-            "OR end BETWEEN ? AND ?",
-            "ORDER BY start, end"
+            "WHERE CONVERT_TZ(a.start, ?, ?) BETWEEN ? AND ?",
+            "OR CONVERT_TZ(a.end, ?, ?) BETWEEN ? AND ?",
+            "ORDER BY a.start, a.end"
         );
         
         pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, startDate.trim());
-        pstmt.setString(2, endDate.trim());
-        pstmt.setString(3, startDate.trim());
-        pstmt.setString(4, endDate.trim());
+        pstmt.setString(1, "+00:00");
+        pstmt.setString(2, localTZ);
+        pstmt.setString(3, "+00:00");
+        pstmt.setString(4, localTZ);
+        pstmt.setString(5, "+00:00");
+        pstmt.setString(6, localTZ);
+        pstmt.setString(7, startDate.trim());
+        pstmt.setString(8, endDate.trim());
+        pstmt.setString(9, "+00:00");
+        pstmt.setString(10, localTZ);
+        pstmt.setString(11, startDate.trim());
+        pstmt.setString(12, endDate.trim());
         
         try {
             rs = pstmt.executeQuery();
@@ -443,8 +482,8 @@ public class DB {
                     rs.getString("location").trim(),
                     rs.getString("contact"),
                     rs.getString("url").trim(), 
-                    rs.getString("start").trim(),
-                    rs.getString("end").trim(),
+                    rs.getString("startOffset").trim(),
+                    rs.getString("endOffset").trim(),
                     rs.getString("createDate").trim(), 
                     rs.getString("createdBy").trim(), 
                     rs.getString("lastUpdate").trim(), 
@@ -546,18 +585,22 @@ public class DB {
      * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<ConsultantScheduleModel> getConsultantScheduleReport() throws SQLException {
+    public ObservableList<ConsultantScheduleModel> getConsultantScheduleReport(String localTZ) throws SQLException {
         ObservableList<ConsultantScheduleModel> list = FXCollections.observableArrayList();
         int cnt;
         String sql;
         connect();
         
-        sql = "SELECT a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.start, " +
-                  "MONTH(a.start) AS month, MONTHNAME(STR_TO_DATE(MONTH(a.start), '%m')) as monthName, a.end " +
+        sql = "SELECT a.customerId, b.customerName, a.title, a.description, a.location, a.contact, CONVERT_TZ(a.start, ?, ?) AS startOffset, " +
+                  "MONTH(a.start) AS month, MONTHNAME(STR_TO_DATE(MONTH(a.start), '%m')) as monthName, CONVERT_TZ(a.end, ?, ?) AS endOffset " +
                   "FROM appointment a " +
                   "JOIN customer b on b.customerId = a.customerId " +
                   "ORDER BY a.contact, MONTH(a.start), a.start, a.description";
         pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, "+00:00");
+        pstmt.setString(2, localTZ);
+        pstmt.setString(3, "+00:00");
+        pstmt.setString(4, localTZ);
         
         try {
             rs = pstmt.executeQuery();
@@ -571,10 +614,10 @@ public class DB {
                     rs.getString("description").trim(),
                     rs.getString("location").trim(),
                     rs.getString("contact").trim(),
-                    rs.getString("start").trim(),
+                    rs.getString("startOffset").trim(),
                     rs.getInt("month"), 
                     rs.getString("monthName").trim(),
-                    rs.getString("end").trim()
+                    rs.getString("endOffset").trim()
                 ));
             }
         }
@@ -1477,31 +1520,48 @@ public class DB {
      * Insert Appointment record
      * @param appt
      * @param userName
-     * @throws SQLException 
+     * @param localTZ
+     * @throws Exception 
+     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public void upsertAppointment(AppointmentModel appt, String userName) throws SQLException{
+    public void upsertAppointment(AppointmentModel appt, String userName, String localTZ) throws Exception, SQLException {
         int cnt;
         int id;
         int rows = 0;
         String sql;
         connect();
         
+        // Check to ensure this won't create an overlapping appointment
+        sql = String.join(" ",
+            "SELECT COUNT(*) AS cnt",
+            "FROM appointment",
+            "WHERE contact = ?",
+            "AND ((CONVERT_TZ(?, ?, ?) BETWEEN start AND end)",
+            "OR (CONVERT_TZ(?, ?, ?) BETWEEN start AND end))"
+        );
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, userName);
+        pstmt.setString(2, appt.getStart());
+        pstmt.setString(3, localTZ);
+        pstmt.setString(4, "+00:00");
+        pstmt.setString(5, appt.getEnd());
+        pstmt.setString(6, localTZ);
+        pstmt.setString(7, "+00:00");
+        rs = pstmt.executeQuery();
+        rs.first();
+        cnt = rs.getInt("cnt");
+        
+        if (cnt > 0) {
+            throw new Exception("Creating this appointment would create overlapping appointments for " + userName);
+        }
+        
         try {
-//            sql = String.join(" ",
-//                "SELECT COUNT(*) AS cnt",
-//                "FROM appointment",
-//                "WHERE appointmentId = " + appt.getAppointmentId()
-//            );
-//            rs = stmt.executeQuery(sql);
-//            rs.first();
-//            cnt = rs.getInt("cnt");
-
             if (appt.getAppointmentId() > 0) {  // update record
                 sql = String.join(" ",
                     "UPDATE appointment",
-                    "SET customerId=?, title=?, description=?, location=?, contact=?, url=?, start=?, end=?,",
-                    "   createDate=?, createdBy=?, lastUpdate=?, lastUpdateBy=?",
+                    "SET customerId = ?, title = ?, description = ?, location = ?, contact = ?, ur l= ?, start = CONVERT_TZ(?, ?, ?),",
+                    "end = CONVERT_TZ(?, ?, ?), createDate = ?, createdBy = ?, lastUpdate = ?, lastUpdateBy = ?",
                     "WHERE appointmentId=? "
                 );
                 pstmt = conn.prepareStatement(sql);
@@ -1512,12 +1572,16 @@ public class DB {
                 pstmt.setString(5, appt.getContact().trim());
                 pstmt.setString(6, appt.getUrl().trim());
                 pstmt.setString(7, appt.getStart().trim());
-                pstmt.setString(8, appt.getEnd().trim());
-                pstmt.setString(9, LocalDateTime.now().toString());
-                pstmt.setString(10, userName.trim());
-                pstmt.setString(11, LocalDateTime.now().toString());
-                pstmt.setString(12, userName.trim());
-                pstmt.setInt(13, appt.getAppointmentId());
+                pstmt.setString(8, localTZ);
+                pstmt.setString(9, "+00:00");
+                pstmt.setString(10, appt.getEnd().trim());
+                pstmt.setString(11, localTZ);
+                pstmt.setString(12, "+00:00");
+                pstmt.setString(13, LocalDateTime.now().toString());
+                pstmt.setString(14, userName.trim());
+                pstmt.setString(15, LocalDateTime.now().toString());
+                pstmt.setString(16, userName.trim());
+                pstmt.setInt(17, appt.getAppointmentId());
                 pstmt.executeUpdate();
             }
             else {  // insert new record
@@ -1525,7 +1589,7 @@ public class DB {
                     "INSERT",
                     "INTO appointment (customerId, title, description, location, contact, url, start, end, createDate,",
                     "   createdBy, lastUpdate, lastUpdateBy)",
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    "VALUES (?, ?, ?, ?, ?, ?, CONVERT_TZ(?, ?, ?), CONVERT_TZ(?, ?, ?), ?, ?, ?, ?)"
                 );
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, appt.getCustomerId());
@@ -1535,11 +1599,15 @@ public class DB {
                 pstmt.setString(5, appt.getContact().trim());
                 pstmt.setString(6, appt.getUrl().trim());
                 pstmt.setString(7, appt.getStart().trim());
-                pstmt.setString(8, appt.getEnd().trim());
-                pstmt.setString(9, LocalDateTime.now().toString());
-                pstmt.setString(10, userName.trim());
-                pstmt.setString(11, LocalDateTime.now().toString());
-                pstmt.setString(12, userName.trim());
+                pstmt.setString(8, localTZ);
+                pstmt.setString(9, "+00:00");
+                pstmt.setString(10, appt.getEnd().trim());
+                pstmt.setString(11, localTZ);
+                pstmt.setString(12, "+00:00");
+                pstmt.setString(13, LocalDateTime.now().toString());
+                pstmt.setString(14, userName.trim());
+                pstmt.setString(15, LocalDateTime.now().toString());
+                pstmt.setString(16, userName.trim());
                 pstmt.executeUpdate();
             }
         }

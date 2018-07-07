@@ -159,6 +159,7 @@ public class AddressController {
         int countryId = 0;
         String rightNow = app.common.rightNow();
         String user = app.userName();
+        int userId = app.userId();
 
         try {
             cityId = app.db.getACityId(cboCity.getValue().toString());

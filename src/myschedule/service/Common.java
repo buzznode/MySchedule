@@ -43,6 +43,8 @@ import javafx.scene.control.ButtonType;
  */
 public class Common  {
     public HashMap<String, String> USERS = new HashMap<>();
+    public HashMap<String, Integer> USER2ID = new HashMap<>();
+    public HashMap<Integer, String> ID2USER = new HashMap<>();
     public Map<String, Integer> MENUS = new HashMap<>();
     public Map<String, Integer> MENUITEMS = new HashMap<>();
 
@@ -153,31 +155,45 @@ public class Common  {
             }));
         }
     }
-    
-    /**
-     * Convert Map (Integer, String) to list
-     * @param map
-     * @return list
-     */
-//    @SuppressWarnings("unchecked")
-//    public List convertISMapToList(Map<Integer, String> map) {
-//        List list = new ArrayList(map.keySet());
-//        Collections.sort(list);
-//        return list;
-//    }
-    
-    /**
-     * Convert Map (String, Integer) to list
-     * @param map
-     * @return list
-     */
-//    @SuppressWarnings("unchecked")
-//    public List convertSIMapToList(Map<String, Integer> map) {
-//        List list = new ArrayList(map.keySet());
-//        Collections.sort(list);
-//        return list;
-//    }
 
+    @SuppressWarnings("unchecked")
+    public void checkForAppointments(String userName) {
+        int rc = 0;
+        String msg = "";
+        String sql;
+        DB db = new DB(log);
+        
+        try {
+            db.connect();
+            
+            sql = "SELECT a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.start, a.end " +
+                      "FROM appointment a " +
+                      "JOIN customer b on b.customerId = a.customerId " +
+                      "WHERE contact = '" + userName + "' " +
+                      "AND NOW() >= a.start - INTERVAL 15 minute " +
+                      "AND a.start >= NOW()";
+            ResultSet rs =  db.execWithResultSet(sql);
+            rs.beforeFirst();
+
+            while (rs.next()) {
+                msg += "\tStart: " + rs.getString("start") + "\n";
+                msg += "\tEnd: " + rs.getString("end") + "\n";
+                msg += "\tCustomer: " + rs.getString("customer") + "\n";
+                msg += "\tTitle: " + rs.getString("title") + "\n";
+                msg += "\tDescription (Type): " + rs.getString("description") + "\n";
+                msg += "\tLocation: " + rs.getString("location") + "\n\n";
+                rc++;
+            }
+            
+            if (rc == 0) {
+                throw new Exception("There were no appointments to be displayed for " + userName);
+            }
+        }
+        catch (Exception ex) {
+            log.write(Level.INFO, ex.getMessage());
+        }
+    }
+    
     /**
      * Create Address list
      * @param map
@@ -250,15 +266,23 @@ public class Common  {
         
         try {
             DB db = new DB(log);
+            String sql;
+            String pwd;
+            String user;
+            int userId;
+            
             db.connect();
-            String sql = "select userName, password from user";
+            sql = "SELECT userId, userName, password FROM user";
             ResultSet results =  db.execWithResultSet( sql );
             int recordCount = 0;
            
             while (results.next()) {
-                String user = results.getString("userName").trim();
-                String pwd = results.getString("password").trim();
+                userId = results.getInt("userId");
+                user = results.getString("userName").trim();
+                pwd = results.getString("password").trim();
                 USERS.put(user, pwd);
+                USER2ID.put(user, userId);
+                ID2USER.put(userId, user);
                 recordCount++;
             }
         }
@@ -275,24 +299,6 @@ public class Common  {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
     }
     
-//    public static void setCursor(boolean busy) {
-//        Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    if (busy) {
-////                        Main.getRoot().sceneProperty().get().setCursor(Cursor.WAIT);
-//                    }
-//                    else {
-////                        Main.getRoot().sceneProperty().get().setCursor(Cursor.DEFAULT);
-//                    }
-//                }
-//                catch (Exception e) {
-//                }
-//            }
-//        });
-//    }
-
     /**
      * Validate passed argument is a non-zero number
      * @param str

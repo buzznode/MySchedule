@@ -186,7 +186,7 @@ public class ReportController {
     @SuppressWarnings("unchecked")
     private void runCSReport() {
         try {
-            csList = app.db.getConsultantScheduleReport();
+            csList = app.db.getConsultantScheduleReport(app.strZoneOffset());
             tableViewATC.getColumns().remove(0, tableViewATC.getColumns().size());
             tableViewCS.getColumns().remove(0, tableViewCS.getColumns().size());
             tableViewTA.getColumns().remove(0, tableViewTA.getColumns().size());

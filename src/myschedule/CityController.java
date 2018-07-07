@@ -145,6 +145,7 @@ public class CityController {
     private void handleAdd() {
         String rightNow = app.common.rightNow();
         String user = app.userName();
+        int userId = app.userId();
 
         if (validateCityRecord()) {
             cityList.add(new CityModel(
@@ -193,6 +194,7 @@ public class CityController {
         int nextCityId = getNextCityId(cityList);
         String rightNow = app.common.rightNow();
         String user = app.userName();
+        int userId = app.userId();
 
         txtCityId.setText(Integer.toString(nextCityId));
         txtCity.setText("");

@@ -28,10 +28,12 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -205,7 +207,8 @@ public class AppointmentController {
         LocalDateTime startDateTime;
         LocalDate yyyymmdd;
 
-        if (validateForm()) {
+        try {
+            validateForm();
             AppointmentModel appt = new AppointmentModel();
             appt.setAppointmentId(this.appointmentId);
             appt.setCustomerId(customerToCustomerIdMap.get(cboCustomer.getSelectionModel().getSelectedItem()));
@@ -215,23 +218,23 @@ public class AppointmentController {
             appt.setLocation(txtLocation.getText());
             appt.setContact(txtContact.getText());
             appt.setUrl(txtURL.getText());
-            
+
             yyyymmdd = dteStartDate.getValue();
             hh = cboStartHour.getValue();
             mm = cboStartMinute.getValue();
             ampm = cboStartAMPM.getValue();
             startDateTime = formatDateTime(yyyymmdd, hh, mm, ampm);
             appt.setStart(startDateTime.toString());
-            
+
             yyyymmdd = dteEndDate.getValue();
             hh = cboEndHour.getValue();
             mm = cboEndMinute.getValue();
             ampm = cboEndAMPM.getValue();
             endDateTime = formatDateTime(yyyymmdd, hh, mm, ampm);
             appt.setEnd(endDateTime.toString());
-            
+
             try {
-                app.db.upsertAppointment(appt, app.userName());
+                app.db.upsertAppointment(appt, app.userName(), app.strZoneOffset());
                 app.common.alertStatus(1);
                 
                 if (this.appointmentId > 0) {
@@ -254,12 +257,12 @@ public class AppointmentController {
                     cboEndAMPM.setValue(null);
                 }
             }
-            catch (SQLException ex) {
-                app.common.alertStatus(0);
+            catch (Exception ex) {
+                app.common.alertStatus(0, "Error Creating Appointment", ex.getMessage());
             }
         }
-        else {
-            app.common.alertStatus(0);
+        catch (Exception ex) {
+            app.log.write(Level.WARNING, ex.getMessage());
         }
     }
     
@@ -271,7 +274,9 @@ public class AppointmentController {
         txtTitle.setText("");
         txtDescription.setText("");
         txtLocation.setText("");
-        txtContact.setText("");
+        txtContact.setDisable(false);
+        txtContact.setText(app.userName());
+        txtContact.setDisable(true);
         txtURL.setText("");
         
         dteStartDate = new DatePicker();
@@ -331,7 +336,7 @@ public class AppointmentController {
         String time;
         
         try {
-            appt = app.db.getAppointment(appointmentId);
+            appt = app.db.getAppointment(appointmentId, app.strZoneOffset());
             cboCustomer.setValue(appt.getCustomerName());
             txtTitle.setText(appt.getTitle());
             txtDescription.setText(appt.getDescription());
@@ -419,20 +424,81 @@ public class AppointmentController {
      * @return 
      */
     @SuppressWarnings("unchecked")
-    private boolean validateForm() {
-        return app.common.isValidString(cboCustomer.getValue(), false)
-              && app.common.isValidString(txtTitle.getText(), false)
-              && app.common.isValidString(txtDescription.getText(), false)
-              && app.common.isValidString(txtLocation.getText(), false)
-              && app.common.isValidString(txtContact.getText(), false)
-              && app.common.isValidString(txtURL.getText(), true)
-              && app.common.isValidString(dteStartDate.getValue().toString(), false)
-              && app.common.isValidString(dteEndDate.getValue().toString(), false)
-              && app.common.isValidString(cboStartHour.getValue(), false)
-              && app.common.isValidString(cboStartMinute.getValue(), false)
-              && app.common.isValidString(cboStartAMPM.getValue(), false)
-              && app.common.isValidString(cboEndHour.getValue(), false)
-              && app.common.isValidString(cboEndMinute.getValue(), false)
-              && app.common.isValidString(cboEndAMPM.getValue(), false);
+    private void validateForm() throws Exception {
+        boolean notValid = false;
+        LocalDate start;
+        LocalDate end;
+        int comp = 0;
+        String hdr;
+        String msg = "";
+        
+        msg += !app.common.isValidString(cboCustomer.getValue(), false) ? "  -  Customer" : "";
+        msg += !app.common.isValidString(txtTitle.getText(), false) ? "  -  Title" : "";
+        msg += !app.common.isValidString(txtDescription.getText(), false) ? "  -  Description" : "";
+        msg += !app.common.isValidString(txtLocation.getText(), false) ? "  -  Location" : "";
+        msg += !app.common.isValidString(txtContact.getText(), false) ? "  -  Contact" : "";
+        msg += !app.common.isValidString(txtURL.getText(), true) ? "  -  URL" : "";
+        msg += !app.common.isValidString(dteStartDate.getValue().toString(), false) ? "  -  Start Date" : "";
+        msg += !app.common.isValidString(dteEndDate.getValue().toString(), false) ? "  -  End Date" : "";
+        msg += !app.common.isValidString(cboStartHour.getValue(), false) ? "  -  Start Hour" : "";
+        msg += !app.common.isValidString(cboStartMinute.getValue(), false) ? "  -  Start Minutes" : "";
+        msg += !app.common.isValidString(cboStartAMPM.getValue(), false) ? "  -  Start AM/PM" : "";
+        msg += !app.common.isValidString(cboEndHour.getValue(), false) ? "  -  End Hour" : "";
+        msg += !app.common.isValidString(cboEndMinute.getValue(), false) ? "  -  End Minutes" : "";
+        msg += !app.common.isValidString(cboEndAMPM.getValue(), false) ? "  -  End AM/PM" : "";
+
+        if (!"".equals(msg)) {
+            hdr = "Invalid Form Value(s)";
+            msg = "The following fields contain invalid values:\n" + msg;
+            app.common.alertStatus(0, hdr, msg);
+            throw new Exception("Appointment creation - Invalid Form Values");
+        }
+        
+        start = LocalDate.parse(dteStartDate.getValue().toString());
+        end = LocalDate.parse(dteEndDate.getValue().toString());
+        Date s = new Date(start.getYear(), start.getMonthValue(), start.getDayOfMonth());
+        Date e = new Date(end.getYear(), end.getMonthValue(), end.getDayOfMonth());
+
+        if (e.before(s)) {
+            hdr = "Invalid Date Range";
+            msg = "The end date cannot be after the start date";
+            app.common.alertStatus(0, hdr, msg);
+            throw new Exception("Appointment creation - Invalid Form Values");
+        }
+        
+        if (cboStartAMPM.getValue().equals("AM")) {
+          if (Integer.parseInt(cboStartHour.getValue()) < 8) {
+              hdr = "Invalid Start Time";
+              msg = "The start time is outside of normal business hours";
+            app.common.alertStatus(0, hdr, msg);
+            throw new Exception("Appointment creation - Invalid Form Values");
+          }
+        }
+        else {
+            if (Integer.parseInt(cboStartHour.getValue()) >= 5)  {
+              hdr = "Invalid Start Time";
+              msg = "The start time is outside of normal business hours";
+            app.common.alertStatus(0, hdr, msg);
+            throw new Exception("Appointment creation - Invalid Form Values");
+            }
+        }
+        
+        if (cboEndAMPM.getValue().equals("AM")) {
+          if (Integer.parseInt(cboEndHour.getValue()) < 8) {
+              hdr = "Invalid End Time";
+              msg = "The end time is outside of normal business hours";
+            app.common.alertStatus(0, hdr, msg);
+            throw new Exception("Appointment creation - Invalid Form Values");
+          }
+            
+        }
+        else {
+            if (Integer.parseInt(cboStartHour.getValue()) >= 5)  {
+              hdr = "Invalid End Time";
+              msg = "The end time is outside of normal business hours";
+            app.common.alertStatus(0, hdr, msg);
+            throw new Exception("Appointment creation - Invalid Form Values");
+            }
+        }
     }
 }
