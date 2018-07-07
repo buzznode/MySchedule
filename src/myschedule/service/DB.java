@@ -66,11 +66,11 @@ public class DB {
      */
     public DB() {
         conn = null;
-        db = "U03MuY";
-        dbPwd = "53688020218";
-        dbUser = "U03MuY";
-        driver = "com.mysql.jdbc.Driver";
-        url = "jdbc:mysql://52.206.157.109/" + db;
+        db = null;
+        dbPwd = null;
+        dbUser = null;
+        driver = null;
+        url = null;
     }
     
     /**
@@ -79,12 +79,12 @@ public class DB {
      */
     public DB(Logging _log) {
         conn = null;
-        db = "U03MuY";
-        dbPwd = "53688020218";
-        dbUser = "U03MuY";
-        driver = "com.mysql.jdbc.Driver";
-        log = _log;
-        url = "jdbc:mysql://52.206.157.109/" + db;
+        db = null;
+        dbPwd = null;
+        dbUser = null;
+        driver = null;
+        log = null;
+        url = null;
     }
     
     /**
