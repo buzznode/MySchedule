@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-07-06T23:17:24</date>
-  <millis>1530937044564</millis>
+  <date>2018-07-07T17:48:33</date>
+  <millis>1531003713693</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
@@ -11,5 +11,49 @@
   <method>write</method>
   <thread>14</thread>
   <message>Starting application...</message>
+</record>
+<record>
+  <date>2018-07-07T17:48:33</date>
+  <millis>1531003713821</millis>
+  <sequence>1</sequence>
+  <logger>myschedule</logger>
+  <level>INFO</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>Attempting login...</message>
+</record>
+<record>
+  <date>2018-07-07T17:48:42</date>
+  <millis>1531003722323</millis>
+  <sequence>2</sequence>
+  <logger>myschedule</logger>
+  <level>INFO</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>Bad login attempt for bradd</message>
+</record>
+<record>
+  <date>2018-07-07T17:48:51</date>
+  <millis>1531003731088</millis>
+  <sequence>3</sequence>
+  <logger>myschedule</logger>
+  <level>INFO</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>bradd has logged in</message>
+</record>
+<record>
+  <date>2018-07-07T17:48:51</date>
+  <millis>1531003731403</millis>
+  <sequence>4</sequence>
+  <logger>myschedule</logger>
+  <level>INFO</level>
+  <class>myschedule.service.Logging</class>
+  <method>write</method>
+  <thread>14</thread>
+  <message>There were no appointments to be displayed for bradd</message>
 </record>
 </log>

@@ -46,7 +46,7 @@ public class Logging {
         try {
             consoleHandler = new ConsoleHandler();
             fileHandler = new FileHandler("./myschedule.log");
-            consoleHandler.setLevel(Level.ALL);
+            consoleHandler.setLevel(Level.SEVERE);
             fileHandler.setLevel(Level.ALL);
             LOGGER.addHandler(consoleHandler);
             LOGGER.addHandler(fileHandler);

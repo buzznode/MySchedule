@@ -175,6 +175,7 @@ public class CustomerController {
         String rightNow;
         ResultSet rs;
         String userName;
+        int userId;
         
         address = cboAddress.getValue().toString().trim();
         
@@ -213,6 +214,7 @@ public class CustomerController {
             
             rightNow = app.common.rightNow();
             userName = app.userName();
+            userId = app.userId();
             addressModel.setAddressId(addressId);
             addressModel.setAddress(address);
             addressModel.setAddress2(address2);
