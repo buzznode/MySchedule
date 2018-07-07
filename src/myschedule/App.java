@@ -23,6 +23,7 @@
  */
 package myschedule;
 
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -47,6 +48,7 @@ public class App extends Application {
     
     private boolean loggedIn = true;
     private String userName = "bradd";
+    private final int zoneOffset = calcZoneOffset();
     
     protected Stage mainStage;
 
@@ -56,6 +58,48 @@ public class App extends Application {
     protected final Common common = new Common(log);
     protected final DB db = new DB(log);
 
+    /**
+     * Calculate the Zone Offset
+     * @return 
+     */
+    @SuppressWarnings("unchecked")
+    private int calcZoneOffset() {
+        Calendar cal = Calendar.getInstance();
+        long milliDiff = cal.get(Calendar.ZONE_OFFSET);
+        return (int) (milliDiff / (1000 * 60 * 60) % 24);
+    }
+    
+    public int intZoneOffset() {
+        return zoneOffset;
+    }
+    
+    public String strZoneOffset() {
+        String zone = Integer.toString(zoneOffset);
+        
+        if (zone.equals("0")) {
+            return "+00:00";
+        }
+        
+        if ("-".equals(zone.substring(0, 1))) {
+            if (zone.length() == 3) {
+                zone += ":00";
+            }
+            else {
+                zone = zone.substring(0, 1) + "0" + zone.substring(1, 2) + ":00";
+            }
+        } 
+        else {
+            if (zone.length() == 2) {
+                zone = "+" + zone + ":00";
+            }
+            else {
+                zone = "+" + "0" + zone + ":00";
+            }
+        }
+        
+        return zone;
+    }
+    
     /**
      * Localize a string
      * @param str

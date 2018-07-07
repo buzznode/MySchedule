@@ -23,6 +23,8 @@
  */
 package myschedule;
 
+import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -470,5 +472,15 @@ public class MainController {
             enableMenu();
             disableLogin();
         }
+        
+//        Calendar cal = Calendar.getInstance();
+//        long milliDiff = cal.get(Calendar.ZONE_OFFSET);
+//        System.out.println("milliDiff: " + milliDiff);
+//        int hoursOffset = (int) (milliDiff / (1000 * 60 * 60)) % 24;
+//        System.out.println("hoursOffset: " + hoursOffset);
+//        TimeZone tz = cal.getTimeZone();
+//        System.out.println("TimeZone: " + tz);
+//        System.out.println("End of logic");
+        System.out.println("zoneOffset: " + app.strZoneOffset());
     }
 }
