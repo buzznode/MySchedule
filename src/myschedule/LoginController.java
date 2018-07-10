@@ -52,6 +52,7 @@ public class LoginController extends AnchorPane {
     /**
      *  Add listeners
      */
+    @SuppressWarnings("unchecked")
     private void addListeners() {
         btnCancel.setOnMouseClicked(e -> {
             handleCancel();
@@ -75,6 +76,7 @@ public class LoginController extends AnchorPane {
     /**
      * Handle cancel action
      */
+    @SuppressWarnings("unchecked")
     private void handleCancel() {
         app.log.write(Level.INFO, "User cancelled login attempt");
         main.endProcess();
@@ -83,6 +85,7 @@ public class LoginController extends AnchorPane {
     /**
      * Process login
      */
+    @SuppressWarnings("unchecked")
     private void handleLogin() {
         if (!app.loggedIn()) {
             String user = txtUsername.getText();
@@ -112,6 +115,7 @@ public class LoginController extends AnchorPane {
      * Inject App object
      * @param _app 
      */
+    @SuppressWarnings("unchecked")
     public void injectApp(App _app) {
         this.app = _app;
     }
@@ -120,6 +124,7 @@ public class LoginController extends AnchorPane {
      * Inject MainController object
      * @param _main 
      */
+    @SuppressWarnings("unchecked")
     public void injectMainController(MainController _main) {
         main = _main;
     }
@@ -128,6 +133,7 @@ public class LoginController extends AnchorPane {
     /**
      * Begin login process
      */
+    @SuppressWarnings("unchecked")
     public void start() {
         app.log.write(Level.INFO, "Attempting login...");
         addListeners();

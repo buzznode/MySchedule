@@ -48,7 +48,7 @@ import myschedule.model.AddressModel;
 
 /**
  * @author bradd
- * @version 0.5.0
+ * @version 1.0.0
  */
 public class AddressController {
     @FXML private Label lblTitle;
@@ -79,11 +79,10 @@ public class AddressController {
     private App app;
     private ObservableList<AddressModel> addressList = FXCollections.observableArrayList();
     private List cityNameList;
-        
     private MainController main;
     private boolean unsavedChanges = false;
 
-        /**
+    /**
      *  Create action event listeners
      */
     @SuppressWarnings("unchecked")
@@ -160,14 +159,8 @@ public class AddressController {
         String rightNow = app.common.rightNow();
         String user = app.userName();
         int userId = app.userId();
-
-        try {
-            cityId = app.db.getACityId(cboCity.getValue().toString());
-            countryId = app.db.getACountryId(txtCountry.getText());
-        }
-        catch (SQLException ex) {
-            
-        }
+        cityId = app.db.getACityId(cboCity.getValue().toString());
+        countryId = app.db.getACountryId(txtCountry.getText());
         
         if (validateAddressRecord()) {
             addressList.add(new AddressModel(
@@ -185,6 +178,7 @@ public class AddressController {
                 rightNow, 
                 user)
             );
+            
             unsavedChanges = true;
             initializeForm();
         }
@@ -207,13 +201,8 @@ public class AddressController {
             return;
         }
         
-        try {
-            country = app.db.getCountryNameViaCity(cboCity.getValue().toString());
-            txtCountry.setText(country);
-        }
-        catch (SQLException ex) {
-            app.common.alertStatus(0);
-        }
+        country = app.db.getCountryNameViaCity(cboCity.getValue().toString());
+        txtCountry.setText(country);
     }
 
     /**
@@ -310,17 +299,12 @@ public class AddressController {
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdate(app.common.rightNow());
                 ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLastUpdateBy(app.userName());
-                try {
                     final int cityId = app.db.getACityId(t.getNewValue());
                     final String country = app.db.getCountryNameViaCity(t.getNewValue());
                     final int countryId = app.db.getCountryIdViaCity(t.getNewValue());
                     ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCityId(cityId);
                     ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(country);
                     ((AddressModel) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountryId(countryId);
-                }
-                catch (SQLException ex) {
-                    System.out.println("Something is hosed: " + ex.getMessage());
-                }
                 table.refresh();
                 unsavedChanges = true;
             }
@@ -379,13 +363,8 @@ public class AddressController {
      */
     @SuppressWarnings("unchecked")
     private void refreshTableView() {
-        try {
-            addressList = app.db.getAddressModelList("address", "asc");
-            table.setItems(addressList);
-        }
-        catch (SQLException ex) {
-            app.log.write(Level.SEVERE, ex.getMessage());
-        }
+        addressList = app.db.getAddressModelList("address", "asc");
+        table.setItems(addressList);
     }
     
     /**
@@ -395,15 +374,9 @@ public class AddressController {
     public void start() {
         addListeners();
         lblTitle.setText(app.localize("addresses"));
-        
-        try {
-            addressList = app.db.getAddressModelList("address", "asc");
-            cityNameList = app.db.getCityNameList();
-            cboCity.getItems().addAll(cityNameList);
-        }
-        catch (SQLException ex) {
-            app.log.write(Level.SEVERE, ex.getMessage());
-        }
+        addressList = app.db.getAddressModelList("address", "asc");
+        cityNameList = app.db.getCityNameList();
+        cboCity.getItems().addAll(cityNameList);
         initializeForm();
         initializeTableColumns();
         table.setEditable(true);

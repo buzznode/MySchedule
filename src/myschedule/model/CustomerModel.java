@@ -68,6 +68,7 @@ public class CustomerModel {
      * Get customerId value
      * @return customerId value
      */
+    @SuppressWarnings("unchecked")
     public int getCustomerId() {
         return customerId.get();
     }
@@ -76,6 +77,7 @@ public class CustomerModel {
      * Set customerId value
      * @param _customerId 
      */
+    @SuppressWarnings("unchecked")
     public void setCustomerId(int _customerId) {
         customerId.set(_customerId);
     }
@@ -84,6 +86,7 @@ public class CustomerModel {
      * Get customerName value
      * @return customerName value
      */
+    @SuppressWarnings("unchecked")
     public String getCustomerName() {
         return customerName.get();
     }
@@ -92,6 +95,7 @@ public class CustomerModel {
      * Set customerName value
      * @param _customerName 
      */
+    @SuppressWarnings("unchecked")
     public void setCustomerName(String _customerName) {
         customerName.set(_customerName);
     }
@@ -100,6 +104,7 @@ public class CustomerModel {
      * Get addressId value
      * @return addressId value
      */
+    @SuppressWarnings("unchecked")
     public int getAddressId() {
         return addressId.get();
     }
@@ -108,6 +113,7 @@ public class CustomerModel {
      * Set addressId value
      * @param _addressId 
      */
+    @SuppressWarnings("unchecked")
     public void setAddressId(int _addressId) {
         addressId.set(_addressId);
     }
@@ -116,6 +122,7 @@ public class CustomerModel {
      * Get active value
      * @return active value
      */
+    @SuppressWarnings("unchecked")
     public boolean getActive() {
         return active.get();
     }
@@ -124,6 +131,7 @@ public class CustomerModel {
      * Set active value
      * @param _active 
      */
+    @SuppressWarnings("unchecked")
     public void setActive(boolean _active) {
         active.set(_active);
     }
@@ -132,6 +140,7 @@ public class CustomerModel {
      * Get createDate value
      * @return createDate value
      */
+    @SuppressWarnings("unchecked")
     public String getCreateDate() {
         return createDate.get();
     }
@@ -140,6 +149,7 @@ public class CustomerModel {
      * Set createDate value
      * @param _createDate 
      */
+    @SuppressWarnings("unchecked")
     public void setCreateDate(String _createDate) {
         createDate.set(_createDate);
     }
@@ -148,6 +158,7 @@ public class CustomerModel {
      * Get createdBy value
      * @return createdBy value
      */
+    @SuppressWarnings("unchecked")
     public String getCreatedBy() {
         return createdBy.get();
     }
@@ -156,6 +167,7 @@ public class CustomerModel {
      * Get createdBy value
      * @param _createdBy 
      */
+    @SuppressWarnings("unchecked")
     public void setCreatedBy(String _createdBy) {
         createdBy.set(_createdBy);
     }
@@ -164,6 +176,7 @@ public class CustomerModel {
      * Get lastUpdate value
      * @return lastUpdate value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdate() {
         return lastUpdate.get();
     }
@@ -172,6 +185,7 @@ public class CustomerModel {
      * Set lastUpdate value
      * @param _lastUpdate 
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdate(String _lastUpdate) {
         lastUpdate.set(_lastUpdate);
     }
@@ -180,6 +194,7 @@ public class CustomerModel {
      * Get lastUpdateBy value
      * @return lastUpdateBy value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdateBy() {
         return lastUpdateBy.get();
     }
@@ -188,6 +203,7 @@ public class CustomerModel {
      * Set lastUpdateBy value
      * @param _lastUpdateBy 
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdateBy(String _lastUpdateBy) {
         lastUpdateBy.set(_lastUpdateBy);
     }

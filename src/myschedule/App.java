@@ -41,17 +41,14 @@ import myschedule.service.Logging;
  * @version 0.5.0
  */
 public class App extends Application {
-    
     private boolean loggedIn = false;
     private String userName = "";
     private int userId = 0;
-    
     
 //    private boolean loggedIn = true;
 //    private String userName = "bradd";
 //    private int userId = 1;
     private final int zoneOffset = calcZoneOffset();
-    
     protected Stage mainStage;
 
     // Classes
@@ -100,7 +97,6 @@ public class App extends Application {
                 zone = "+" + "0" + zone + ":00";
             }
         }
-        
         return zone;
     }
     
@@ -150,9 +146,9 @@ public class App extends Application {
     @Override
     @SuppressWarnings("unchecked")
     public void start(Stage stage) throws Exception {
-//        log.write(Level.INFO, "Starting application...");
+        log.write(Level.INFO, "Starting application...");
         Locale.setDefault(new Locale("en", "EN"));
-        Locale.setDefault(new Locale("de", "DE"));
+//        Locale.setDefault(new Locale("de", "DE"));
         rb = ResourceBundle.getBundle("language_files/rb");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainContainer.fxml"));
         Parent node = loader.load();

@@ -35,24 +35,49 @@ public class Report {
         this.description = _description;
         this.name = _name;
     }
-    
+
+    /**
+    * Get description value
+    * @return 
+    */    
+    @SuppressWarnings("unchecked")
     public String getDescription() {
         return description;
     }
     
+    /**
+     * Set description value
+     * @param _description 
+     */
+    @SuppressWarnings("unchecked")
     public void setDescription(String _description) {
         this.description = _description;
     }
     
+    /**
+     * Get name value
+     * @return 
+     */
+    @SuppressWarnings("unchecked")
     public String getName() {
         return name;
     }
     
+    /**
+     * Set name value
+     * @param _name 
+     */
+    @SuppressWarnings("unchecked")
     public void setName(String _name) {
         this.name = _name;
     }
     
+    /**
+     * Override toString method
+     * @return 
+     */
     @Override
+    @SuppressWarnings("unchecked")
     public String toString() {
         return description;
     }

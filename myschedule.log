@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-07-07T17:48:33</date>
-  <millis>1531003713693</millis>
+  <date>2018-07-07T21:47:59</date>
+  <millis>1531018079982</millis>
   <sequence>0</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
@@ -13,8 +13,8 @@
   <message>Starting application...</message>
 </record>
 <record>
-  <date>2018-07-07T17:48:33</date>
-  <millis>1531003713821</millis>
+  <date>2018-07-07T21:48:00</date>
+  <millis>1531018080114</millis>
   <sequence>1</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
@@ -24,20 +24,9 @@
   <message>Attempting login...</message>
 </record>
 <record>
-  <date>2018-07-07T17:48:42</date>
-  <millis>1531003722323</millis>
+  <date>2018-07-07T21:54:03</date>
+  <millis>1531018443721</millis>
   <sequence>2</sequence>
-  <logger>myschedule</logger>
-  <level>INFO</level>
-  <class>myschedule.service.Logging</class>
-  <method>write</method>
-  <thread>14</thread>
-  <message>Bad login attempt for bradd</message>
-</record>
-<record>
-  <date>2018-07-07T17:48:51</date>
-  <millis>1531003731088</millis>
-  <sequence>3</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
   <class>myschedule.service.Logging</class>
@@ -46,9 +35,9 @@
   <message>bradd has logged in</message>
 </record>
 <record>
-  <date>2018-07-07T17:48:51</date>
-  <millis>1531003731403</millis>
-  <sequence>4</sequence>
+  <date>2018-07-07T21:54:04</date>
+  <millis>1531018444038</millis>
+  <sequence>3</sequence>
   <logger>myschedule</logger>
   <level>INFO</level>
   <class>myschedule.service.Logging</class>

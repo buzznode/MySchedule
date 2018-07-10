@@ -146,38 +146,33 @@ public class ReportController {
      */
     @SuppressWarnings("unchecked")
     private void runATCReport() {
-        try {
-            atcList = app.db.getAppointmentsTypeCountReport();
-            tableViewATC.getColumns().remove(0, tableViewATC.getColumns().size());
-            tableViewCS.getColumns().remove(0, tableViewCS.getColumns().size());
-            tableViewTA.getColumns().remove(0, tableViewTA.getColumns().size());
-            tableViewATC.setEditable(false);
+        atcList = app.db.getAppointmentsTypeCountReport();
+        tableViewATC.getColumns().remove(0, tableViewATC.getColumns().size());
+        tableViewCS.getColumns().remove(0, tableViewCS.getColumns().size());
+        tableViewTA.getColumns().remove(0, tableViewTA.getColumns().size());
+        tableViewATC.setEditable(false);
 
-            TableColumn<AppointmentTypeCountModel, String> monthNameColumn = new TableColumn<>("Month");
-            monthNameColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonthName()));
-            
-            TableColumn<AppointmentTypeCountModel, String> descriptionColumn = new TableColumn<>("Appointment Type");
-            descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
-            
-            TableColumn<AppointmentTypeCountModel, Integer> cntColumn = new TableColumn<>("Count");
-            cntColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCnt()));
-            
-            tableViewATC.setPrefSize(880.0, 590.0);
-            tableViewATC.setItems(atcList);
-            tableViewATC.getColumns().addAll(
-                monthNameColumn, descriptionColumn, cntColumn
-            );
-            
-            if (tableViewContainer.getChildren().size() > 0) {
-                tableViewContainer.getChildren().remove(tableViewATC);
-                tableViewContainer.getChildren().remove(tableViewCS);
-                tableViewContainer.getChildren().remove(tableViewTA);
-            }
-            tableViewContainer.getChildren().add(tableViewATC);
+        TableColumn<AppointmentTypeCountModel, String> monthNameColumn = new TableColumn<>("Month");
+        monthNameColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonthName()));
+
+        TableColumn<AppointmentTypeCountModel, String> descriptionColumn = new TableColumn<>("Appointment Type");
+        descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
+
+        TableColumn<AppointmentTypeCountModel, Integer> cntColumn = new TableColumn<>("Count");
+        cntColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCnt()));
+
+        tableViewATC.setPrefSize(880.0, 590.0);
+        tableViewATC.setItems(atcList);
+        tableViewATC.getColumns().addAll(
+            monthNameColumn, descriptionColumn, cntColumn
+        );
+
+        if (tableViewContainer.getChildren().size() > 0) {
+            tableViewContainer.getChildren().remove(tableViewATC);
+            tableViewContainer.getChildren().remove(tableViewCS);
+            tableViewContainer.getChildren().remove(tableViewTA);
         }
-        catch (SQLException ex) {
-            app.common.alertStatus(0, "Error Generating Report", "There was an error generating the Appointment Type Monthly Count report.");
-        }
+        tableViewContainer.getChildren().add(tableViewATC);
     }
     
     /**
@@ -185,53 +180,48 @@ public class ReportController {
      */
     @SuppressWarnings("unchecked")
     private void runCSReport() {
-        try {
-            csList = app.db.getConsultantScheduleReport(app.strZoneOffset());
-            tableViewATC.getColumns().remove(0, tableViewATC.getColumns().size());
-            tableViewCS.getColumns().remove(0, tableViewCS.getColumns().size());
-            tableViewTA.getColumns().remove(0, tableViewTA.getColumns().size());
-            tableViewCS.setEditable(false);
+        csList = app.db.getConsultantScheduleReport(app.strZoneOffset());
+        tableViewATC.getColumns().remove(0, tableViewATC.getColumns().size());
+        tableViewCS.getColumns().remove(0, tableViewCS.getColumns().size());
+        tableViewTA.getColumns().remove(0, tableViewTA.getColumns().size());
+        tableViewCS.setEditable(false);
 
-            TableColumn<ConsultantScheduleModel, String> contactColumn = new TableColumn<>("Consultant");
-            contactColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getContact()));
+        TableColumn<ConsultantScheduleModel, String> contactColumn = new TableColumn<>("Consultant");
+        contactColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getContact()));
+
+        TableColumn<ConsultantScheduleModel, String> monthNameColumn = new TableColumn<>("Month");
+        monthNameColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonthName()));
+
+        TableColumn<ConsultantScheduleModel, String> startColumn = new TableColumn<>("Start Date");
+        startColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getStart()));
+
+        TableColumn<ConsultantScheduleModel, String> endColumn = new TableColumn<>("End Date");
+        endColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getEnd()));
+
+        TableColumn<ConsultantScheduleModel, String> descriptionColumn = new TableColumn<>("Appointment Type");
+        descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
+
+        TableColumn<ConsultantScheduleModel, String> customerNameColumn = new TableColumn<>("Customer Name");
+        customerNameColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCustomerName()));
+
+        TableColumn<ConsultantScheduleModel, String> titleColumn = new TableColumn<>("Title");
+        titleColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getTitle()));
+
+        TableColumn<ConsultantScheduleModel, String> locationColumn = new TableColumn<>("Location");
+        locationColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLocation()));
             
-            TableColumn<ConsultantScheduleModel, String> monthNameColumn = new TableColumn<>("Month");
-            monthNameColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonthName()));
+        tableViewCS.setPrefSize(880.0, 590.0);
+        tableViewCS.setItems(csList);
+        tableViewCS.getColumns().addAll(
+            contactColumn, monthNameColumn, startColumn, endColumn, descriptionColumn, customerNameColumn, titleColumn, locationColumn 
+        );
             
-            TableColumn<ConsultantScheduleModel, String> startColumn = new TableColumn<>("Start Date");
-            startColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getStart()));
-            
-            TableColumn<ConsultantScheduleModel, String> endColumn = new TableColumn<>("End Date");
-            endColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getEnd()));
-            
-            TableColumn<ConsultantScheduleModel, String> descriptionColumn = new TableColumn<>("Appointment Type");
-            descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
-            
-            TableColumn<ConsultantScheduleModel, String> customerNameColumn = new TableColumn<>("Customer Name");
-            customerNameColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCustomerName()));
-            
-            TableColumn<ConsultantScheduleModel, String> titleColumn = new TableColumn<>("Title");
-            titleColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getTitle()));
-            
-            TableColumn<ConsultantScheduleModel, String> locationColumn = new TableColumn<>("Location");
-            locationColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getLocation()));
-            
-            tableViewCS.setPrefSize(880.0, 590.0);
-            tableViewCS.setItems(csList);
-            tableViewCS.getColumns().addAll(
-                contactColumn, monthNameColumn, startColumn, endColumn, descriptionColumn, customerNameColumn, titleColumn, locationColumn 
-            );
-            
-            if (tableViewContainer.getChildren().size() > 0) {
-                tableViewContainer.getChildren().remove(tableViewATC);
-                tableViewContainer.getChildren().remove(tableViewCS);
-                tableViewContainer.getChildren().remove(tableViewTA);
-            }
-            tableViewContainer.getChildren().add(tableViewCS);
+        if (tableViewContainer.getChildren().size() > 0) {
+            tableViewContainer.getChildren().remove(tableViewATC);
+            tableViewContainer.getChildren().remove(tableViewCS);
+            tableViewContainer.getChildren().remove(tableViewTA);
         }
-        catch (SQLException ex) {
-            app.common.alertStatus(0, "Error Generating Report", "There was an error generating the Consultant Schedule report.");
-        }
+        tableViewContainer.getChildren().add(tableViewCS);
     }
     
     /**
@@ -239,41 +229,36 @@ public class ReportController {
      */
     @SuppressWarnings("unchecked")
     private void runTAReport() {
-        try {
-            taList = app.db.getTotalAppointmentsReport();
-            tableViewATC.getColumns().remove(0, tableViewATC.getColumns().size());
-            tableViewCS.getColumns().remove(0, tableViewCS.getColumns().size());
-            tableViewTA.getColumns().remove(0, tableViewTA.getColumns().size());
-            tableViewTA.setEditable(false);
+        taList = app.db.getTotalAppointmentsReport();
+        tableViewATC.getColumns().remove(0, tableViewATC.getColumns().size());
+        tableViewCS.getColumns().remove(0, tableViewCS.getColumns().size());
+        tableViewTA.getColumns().remove(0, tableViewTA.getColumns().size());
+        tableViewTA.setEditable(false);
 
-            TableColumn<TotalAppointmentsModel, String> monthNameColumn = new TableColumn<>("Month");
-            monthNameColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonthName()));
-            
-            TableColumn<TotalAppointmentsModel, String> descriptionColumn = new TableColumn<>("Appointment Type");
-            descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
-            
-            TableColumn<TotalAppointmentsModel, String> contactColumn = new TableColumn<>("Consultant");
-            contactColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getContact()));
-            
-            TableColumn<TotalAppointmentsModel, Integer> cntColumn = new TableColumn<>("Count");
-            cntColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCnt()));
-            
-            tableViewTA.setPrefSize(880.0, 590.0);
-            tableViewTA.setItems(taList);
-            tableViewTA.getColumns().addAll(
-                monthNameColumn, descriptionColumn, contactColumn, cntColumn
-            );
-            
-            if (tableViewContainer.getChildren().size() > 0) {
-                tableViewContainer.getChildren().remove(tableViewATC);
-                tableViewContainer.getChildren().remove(tableViewCS);
-                tableViewContainer.getChildren().remove(tableViewTA);
-            }
-            tableViewContainer.getChildren().add(tableViewTA);
+        TableColumn<TotalAppointmentsModel, String> monthNameColumn = new TableColumn<>("Month");
+        monthNameColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getMonthName()));
+
+        TableColumn<TotalAppointmentsModel, String> descriptionColumn = new TableColumn<>("Appointment Type");
+        descriptionColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getDescription()));
+
+        TableColumn<TotalAppointmentsModel, String> contactColumn = new TableColumn<>("Consultant");
+        contactColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getContact()));
+
+        TableColumn<TotalAppointmentsModel, Integer> cntColumn = new TableColumn<>("Count");
+        cntColumn.setCellValueFactory(x -> new ReadOnlyObjectWrapper<>(x.getValue().getCnt()));
+
+        tableViewTA.setPrefSize(880.0, 590.0);
+        tableViewTA.setItems(taList);
+        tableViewTA.getColumns().addAll(
+            monthNameColumn, descriptionColumn, contactColumn, cntColumn
+        );
+
+        if (tableViewContainer.getChildren().size() > 0) {
+            tableViewContainer.getChildren().remove(tableViewATC);
+            tableViewContainer.getChildren().remove(tableViewCS);
+            tableViewContainer.getChildren().remove(tableViewTA);
         }
-        catch (SQLException ex) {
-            app.common.alertStatus(0, "Error Generating Report", "There was an error generating the Total Appointments by Month report.");
-        }
+        tableViewContainer.getChildren().add(tableViewTA);
     }
     
     /**

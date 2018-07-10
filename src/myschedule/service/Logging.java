@@ -35,11 +35,9 @@ import java.util.logging.Logger;
  * @version 0.5.0
  */
 public class Logging {
-    
     protected static final Logger LOGGER = Logger.getLogger("myschedule");
     
     public Logging() {
-        
         Handler consoleHandler;
         Handler fileHandler;
 
@@ -60,14 +58,17 @@ public class Logging {
      * @param level
      * @param msg 
      */
+    @SuppressWarnings("unchecked")
     public void write(Level level, String msg) {
         LOGGER.log(level, msg);
     }
     
+    @SuppressWarnings("unchecked")
     public void write(Level level, String msg, Object param) {
         LOGGER.log(level, msg, param);
     }
     
+    @SuppressWarnings("unchecked")
     public void write(Level level, String msg, Object[] params) {
         LOGGER.log(level, msg, params);
     }

@@ -66,33 +66,33 @@ public class DB {
      */
     public DB() {
         conn = null;
-        db = null;
-        dbPwd = null;
-        dbUser = null;
-        driver = null;
-        url = null;
+        db = "U03MuY";
+        dbPwd = "53688020218";
+        dbUser = "U03MuY";
+        driver = "com.mysql.jdbc.Driver";
+        url = "jdbc:mysql://52.206.157.109/" + db;
     }
     
     /**
      * Constructor taking log parameter
      * @param _log 
      */
+    @SuppressWarnings("unchecked")
     public DB(Logging _log) {
         conn = null;
-        db = null;
-        dbPwd = null;
-        dbUser = null;
-        driver = null;
-        log = null;
-        url = null;
+        db = "U03MuY";
+        dbPwd = "53688020218";
+        dbUser = "U03MuY";
+        driver = "com.mysql.jdbc.Driver";
+        log = _log;
+        url = "jdbc:mysql://52.206.157.109/" + db;
     }
     
     /**
      * Connect to database
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    protected void connect() throws SQLException {
+    protected void connect() {
         try {
             try {
                 Class.forName(driver);
@@ -100,14 +100,28 @@ public class DB {
             catch (ClassNotFoundException e) {
                 log.write(Level.SEVERE, "DB driver error: " + e.toString());
             }
+            
             conn = DriverManager.getConnection(url, dbUser, dbPwd);
             stmt = conn.createStatement();
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.connect: " + ex.getMessage());
+                }
+            }));
         }
     }
 
+    /**
+     * Delete Customer
+     * @param customerId 
+     */
+    @SuppressWarnings("unchecked")
     public void deleteCustomer(int customerId) {
         String sql;
         
@@ -122,7 +136,7 @@ public class DB {
             alert.setContentText(ex.getMessage());
             alert.showAndWait().ifPresent((response -> {
                 if (response == ButtonType.OK) {
-                    return;
+                    log.write(Level.SEVERE, "DB.deleteCustomer: " + ex.getMessage());
                 }
             }));
         }
@@ -133,6 +147,7 @@ public class DB {
      * @param str (String)
      * @return String containing escaped tick-marks
      */
+    @SuppressWarnings("unchecked")
     private String escapeTicks(String str) {
         return str.replaceAll("'", "\'");
     }
@@ -142,6 +157,7 @@ public class DB {
      * @param ex (SQLException)
      * @return Exception message
      */
+    @SuppressWarnings("unchecked")
     private String exception(SQLException ex) {
         log.write(Level.SEVERE, ex.toString(), ex);
         log.write(Level.SEVERE, "SQLException: {0}", ex.getMessage());
@@ -158,26 +174,22 @@ public class DB {
      */
     @SuppressWarnings("unchecked")
     protected boolean exec(String sql) {
-        boolean result = false;
-        
         try {
             if (conn == null || conn.isClosed()) {
                 connect();
             }
             stmt.executeQuery(sql);
-            result = true;
+            return true;
         }
         catch (SQLException ex) {
-            result = false;
+            return false;
         }
-        return result;
     }
     
     /**
      * Execute SQL and return result
      * @param sql
      * @return Query ResultSet
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
     protected ResultSet execWithResultSet(String sql) {
@@ -203,6 +215,7 @@ public class DB {
                 @Override
                 public void accept(ButtonType response) {
                     if (response == ButtonType.OK) {
+                        log.write(Level.SEVERE, "DB.deleteCustomer: " + ex.getMessage());
                     }
                 }
             }));
@@ -231,27 +244,33 @@ public class DB {
      * Get Address Data for customer maintenance
      * @param addressId
      * @return ResultSet
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ResultSet getAddressData(int addressId) throws SQLException {
+    public ResultSet getAddressData(int addressId) {
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT a.address, a.address2, b.cityId, b.city, a.postalCode, a.phone, c.countryId, c.country",
-            "FROM address a",
-            "JOIN city b ON b.cityId = a.cityId",
-            "JOIN country c ON c.countryId = b.countryId",
-            "WHERE a.addressId = " + addressId
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT a.address, a.address2, b.cityId, b.city, a.postalCode, a.phone, c.countryId, c.country",
+                "FROM address a",
+                "JOIN city b ON b.cityId = a.cityId",
+                "JOIN country c ON c.countryId = b.countryId",
+                "WHERE a.addressId = " + addressId
+            );
             rs = stmt.executeQuery(sql);
             rs.first();
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getAddressData: " + ex.getMessage());
+                }
+            }));
         }
         return rs;
     }
@@ -261,26 +280,24 @@ public class DB {
      * @param sortColumn
      * @param direction
      * @return ObservableList (AddressModel)
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AddressModel> getAddressModelList(String sortColumn, String direction) throws SQLException {
+    public ObservableList<AddressModel> getAddressModelList(String sortColumn, String direction)  {
         ObservableList<AddressModel> list = FXCollections.observableArrayList();
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT a.addressId, a.address, a.address2, b.city, b.cityId, a.postalCode, a.phone, c.country,",
-            "   c.countryId, a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
-            "FROM address a",
-            "JOIN city b ON b.cityId = a.cityId",
-            "JOIN country c ON c.countryId = b.countryId",
-            "ORDER BY",
-            sortColumn,
-            direction
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT a.addressId, a.address, a.address2, b.city, b.cityId, a.postalCode, a.phone, c.country,",
+                "   c.countryId, a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
+                "FROM address a",
+                "JOIN city b ON b.cityId = a.cityId",
+                "JOIN country c ON c.countryId = b.countryId",
+                "ORDER BY",
+                sortColumn,
+                direction
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             
@@ -303,7 +320,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getAddressModelList: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -313,32 +338,31 @@ public class DB {
      * @param appointmentId
      * @param localTZ
      * @return AppointmentModel
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public AppointmentModel getAppointment(int appointmentId, String localTZ) throws SQLException {
+    public AppointmentModel getAppointment(int appointmentId, String localTZ) {
         AppointmentModel appt = new AppointmentModel();
         int cnt;
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT a.appointmentId, a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.url,",
-            "CONVERT_TZ(a.start, ?, ?) AS startOffset, CONVERT_TZ(a.end, ?, ?) AS endOffset, a.createDate, a.createdBy,",
-            "a.lastUpdate, a.lastUpdateBy",
-            "FROM appointment a",
-            "JOIN customer b ON b.customerId = a.customerId",
-            "WHERE a.appointmentId = ?"
-        );
-        
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, "+00:00");
-        pstmt.setString(2, localTZ);
-        pstmt.setString(3, "+00:00");
-        pstmt.setString(4, localTZ);
-        pstmt.setInt(5, appointmentId);
-        
+
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT a.appointmentId, a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.url,",
+                "CONVERT_TZ(a.start, ?, ?) AS startOffset, CONVERT_TZ(a.end, ?, ?) AS endOffset, a.createDate, a.createdBy,",
+                "a.lastUpdate, a.lastUpdateBy",
+                "FROM appointment a",
+                "JOIN customer b ON b.customerId = a.customerId",
+                "WHERE a.appointmentId = ?"
+            );
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "+00:00");
+            pstmt.setString(2, localTZ);
+            pstmt.setString(3, "+00:00");
+            pstmt.setString(4, localTZ);
+            pstmt.setInt(5, appointmentId);
+        
             rs = pstmt.executeQuery();
             rs.first();
             appt.setAppointmentId(rs.getInt("appointmentId"));
@@ -357,7 +381,15 @@ public class DB {
             appt.setLastUpdateBy(rs.getString("lastUpdateBy").trim());
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getAppointment: " + ex.getMessage());
+                }
+            }));
         }
         return appt;
     }
@@ -366,38 +398,37 @@ public class DB {
      * Get Appointments for a given month / year
      * @param mm
      * @param yyyy
+     * @param localTZ
      * @return List of AppointmentModel
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AppointmentModel> getAppointmentsByMonth(String mm, String yyyy, String localTZ) throws SQLException {
+    public ObservableList<AppointmentModel> getAppointmentsByMonth(String mm, String yyyy, String localTZ) {
         ObservableList<AppointmentModel> list = FXCollections.observableArrayList();
         int cnt;
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT a.appointmentId, a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.url,",
-            "CONVERT_TZ(a.start, ?, ?) AS startOffset, CONVERT_TZ(a.end, ?, ?) AS endOffset, a.createDate, a.createdBy,",
-            "a.lastUpdate, a.lastUpdateBy",
-            "FROM appointment a",
-            "JOIN customer b ON b.customerId = a.customerId",
-            "WHERE (month(a.start) = ? AND year(a.start) = ?)",
-            "OR (month(a.end) = ? AND year(a.end) = ?)",
-            "ORDER BY a.start, a.end"
-        );
-        
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, "+00:00");
-        pstmt.setString(2, localTZ);
-        pstmt.setString(3, "+00:00");
-        pstmt.setString(4, localTZ);
-        pstmt.setString(5, mm.trim());
-        pstmt.setString(6, yyyy.trim());
-        pstmt.setString(7, mm.trim());
-        pstmt.setString(8, yyyy.trim());
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT a.appointmentId, a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.url,",
+                "CONVERT_TZ(a.start, ?, ?) AS startOffset, CONVERT_TZ(a.end, ?, ?) AS endOffset, a.createDate, a.createdBy,",
+                "a.lastUpdate, a.lastUpdateBy",
+                "FROM appointment a",
+                "JOIN customer b ON b.customerId = a.customerId",
+                "WHERE (month(a.start) = ? AND year(a.start) = ?)",
+                "OR (month(a.end) = ? AND year(a.end) = ?)",
+                "ORDER BY a.start, a.end"
+            );
+        
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "+00:00");
+            pstmt.setString(2, localTZ);
+            pstmt.setString(3, "+00:00");
+            pstmt.setString(4, localTZ);
+            pstmt.setString(5, mm.trim());
+            pstmt.setString(6, yyyy.trim());
+            pstmt.setString(7, mm.trim());
+            pstmt.setString(8, yyyy.trim());
             rs = pstmt.executeQuery();
             rs.beforeFirst();
             
@@ -421,7 +452,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getAppointmentsByMonth: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -430,45 +469,44 @@ public class DB {
      * Get Appointments for a given week
      * @param startDate
      * @param endDate
+     * @param LocalTZ
      * @return List AppointmentModel
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AppointmentModel> getAppointmentsByWeek(String startDate, String endDate, String localTZ) throws SQLException {
+    public ObservableList<AppointmentModel> getAppointmentsByWeek(String startDate, String endDate, String localTZ) {
         ObservableList<AppointmentModel> list = FXCollections.observableArrayList();
         int cnt;
         String sql;
-        connect();
-        
-        startDate += " 00:00:00";
-        endDate += " 23:59:59";
-        
-        sql = String.join(" ",
-            "SELECT a.appointmentId, a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.url,",
-            "CONVERT_TZ(a.start, ?, ?) AS startOffset, CONVERT_TZ(a.end, ?, ?) AS endOffset, a.createDate, a.createdBy,",
-            "a.lastUpdate, a.lastUpdateBy",
-            "FROM appointment a",
-            "JOIN customer b ON b.customerId = a.customerId",
-            "WHERE CONVERT_TZ(a.start, ?, ?) BETWEEN ? AND ?",
-            "OR CONVERT_TZ(a.end, ?, ?) BETWEEN ? AND ?",
-            "ORDER BY a.start, a.end"
-        );
-        
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, "+00:00");
-        pstmt.setString(2, localTZ);
-        pstmt.setString(3, "+00:00");
-        pstmt.setString(4, localTZ);
-        pstmt.setString(5, "+00:00");
-        pstmt.setString(6, localTZ);
-        pstmt.setString(7, startDate.trim());
-        pstmt.setString(8, endDate.trim());
-        pstmt.setString(9, "+00:00");
-        pstmt.setString(10, localTZ);
-        pstmt.setString(11, startDate.trim());
-        pstmt.setString(12, endDate.trim());
         
         try {
+            connect();
+            startDate += " 00:00:00";
+            endDate += " 23:59:59";
+
+            sql = String.join(" ",
+                "SELECT a.appointmentId, a.customerId, b.customerName, a.title, a.description, a.location, a.contact, a.url,",
+                "CONVERT_TZ(a.start, ?, ?) AS startOffset, CONVERT_TZ(a.end, ?, ?) AS endOffset, a.createDate, a.createdBy,",
+                "a.lastUpdate, a.lastUpdateBy",
+                "FROM appointment a",
+                "JOIN customer b ON b.customerId = a.customerId",
+                "WHERE CONVERT_TZ(a.start, ?, ?) BETWEEN ? AND ?",
+                "OR CONVERT_TZ(a.end, ?, ?) BETWEEN ? AND ?",
+                "ORDER BY a.start, a.end"
+            );
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "+00:00");
+            pstmt.setString(2, localTZ);
+            pstmt.setString(3, "+00:00");
+            pstmt.setString(4, localTZ);
+            pstmt.setString(5, "+00:00");
+            pstmt.setString(6, localTZ);
+            pstmt.setString(7, startDate.trim());
+            pstmt.setString(8, endDate.trim());
+            pstmt.setString(9, "+00:00");
+            pstmt.setString(10, localTZ);
+            pstmt.setString(11, startDate.trim());
+            pstmt.setString(12, endDate.trim());
             rs = pstmt.executeQuery();
             rs.beforeFirst();
             
@@ -492,7 +530,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getAppointmentsByWeek: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -500,23 +546,21 @@ public class DB {
     /**
      * Get Appointment-Type-Count report
      * @return List of AppointmentTypeCountModel
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<AppointmentTypeCountModel> getAppointmentsTypeCountReport() throws SQLException {
+    public ObservableList<AppointmentTypeCountModel> getAppointmentsTypeCountReport() {
         ObservableList<AppointmentTypeCountModel> list = FXCollections.observableArrayList();
         int cnt;
         String sql;
-        connect();
-        
-        sql = "SELECT description, COUNT(*) AS cnt, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName " +
-                  "FROM appointment " +
-                  "GROUP BY description, MONTH(start) " +
-                  "HAVING cnt > 0 " +
-                  "ORDER BY MONTH(start), description";
-        pstmt = conn.prepareStatement(sql);
         
         try {
+            connect();
+            sql = "SELECT description, COUNT(*) AS cnt, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName " +
+                      "FROM appointment " +
+                      "GROUP BY description, MONTH(start) " +
+                      "HAVING cnt > 0 " +
+                      "ORDER BY MONTH(start), description";
+            pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
             rs.beforeFirst();
             
@@ -530,7 +574,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getAppointmentsTypeCountReport: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -540,24 +592,22 @@ public class DB {
      * @param sortColumn
      * @param direction
      * @return ObservableList (CityModel)
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<CityModel> getCityModelList(String sortColumn, String direction) throws SQLException {
+    public ObservableList<CityModel> getCityModelList(String sortColumn, String direction) {
         ObservableList<CityModel> list = FXCollections.observableArrayList();
         String sql;
-        connect();
 
-        sql = String.join(" ",
-            "SELECT a.cityId, a.city, b.country, a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
-            "FROM city a",
-            "JOIN country b ON a.countryId = b.countryId",
-            "ORDER BY",
-            sortColumn,
-            direction
-        );
-        
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT a.cityId, a.city, b.country, a.createDate, a.createdBy, a.lastUpdate, a.lastUpdateBy",
+                "FROM city a",
+                "JOIN country b ON a.countryId = b.countryId",
+                "ORDER BY",
+                sortColumn,
+                direction
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             
@@ -574,35 +624,42 @@ public class DB {
             }
         }
         catch(SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCityModelList: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
 
     /**
      * Get Consultant-Schedule report
+     * @param localTZ
      * @return List of ConsultantScheduleModel
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<ConsultantScheduleModel> getConsultantScheduleReport(String localTZ) throws SQLException {
+    public ObservableList<ConsultantScheduleModel> getConsultantScheduleReport(String localTZ) {
         ObservableList<ConsultantScheduleModel> list = FXCollections.observableArrayList();
         int cnt;
         String sql;
-        connect();
-        
-        sql = "SELECT a.customerId, b.customerName, a.title, a.description, a.location, a.contact, CONVERT_TZ(a.start, ?, ?) AS startOffset, " +
-                  "MONTH(a.start) AS month, MONTHNAME(STR_TO_DATE(MONTH(a.start), '%m')) as monthName, CONVERT_TZ(a.end, ?, ?) AS endOffset " +
-                  "FROM appointment a " +
-                  "JOIN customer b on b.customerId = a.customerId " +
-                  "ORDER BY a.contact, MONTH(a.start), a.start, a.description";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, "+00:00");
-        pstmt.setString(2, localTZ);
-        pstmt.setString(3, "+00:00");
-        pstmt.setString(4, localTZ);
         
         try {
+            connect();
+            sql = "SELECT a.customerId, b.customerName, a.title, a.description, a.location, a.contact, CONVERT_TZ(a.start, ?, ?) AS startOffset, " +
+                      "MONTH(a.start) AS month, MONTHNAME(STR_TO_DATE(MONTH(a.start), '%m')) as monthName, CONVERT_TZ(a.end, ?, ?) AS endOffset " +
+                      "FROM appointment a " +
+                      "JOIN customer b on b.customerId = a.customerId " +
+                      "ORDER BY a.contact, MONTH(a.start), a.start, a.description";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "+00:00");
+            pstmt.setString(2, localTZ);
+            pstmt.setString(3, "+00:00");
+            pstmt.setString(4, localTZ);
             rs = pstmt.executeQuery();
             rs.beforeFirst();
             
@@ -622,7 +679,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getConsultantScheduleReport: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -632,23 +697,22 @@ public class DB {
      * @param sortColumn
      * @param direction
      * @return OberservableList (CountryModel)
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<CountryModel> getCountryModelList(String sortColumn, String direction) throws SQLException {
+    public ObservableList<CountryModel> getCountryModelList(String sortColumn, String direction) {
         ObservableList<CountryModel> list = FXCollections.observableArrayList();
         String sql;
-        connect();
 
-        sql = String.join(" ",
-            "SELECT countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy",
-            "FROM country",
-            "ORDER BY",
-            sortColumn,
-            direction
-        );
-        
         try {
+            connect();
+
+            sql = String.join(" ",
+                "SELECT countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy",
+                "FROM country",
+                "ORDER BY",
+                sortColumn,
+                direction
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             
@@ -664,7 +728,15 @@ public class DB {
             }
         }
         catch(SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCountryModelList: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -673,25 +745,31 @@ public class DB {
      * Get Customer Data for maintenance
      * @param customerId
      * @return ResultSet
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ResultSet getCustomerData(int customerId) throws SQLException {
+    public ResultSet getCustomerData(int customerId) {
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT customerName, active, addressId",
-            "FROM customer",
-            "WHERE customerId = " + customerId
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT customerName, active, addressId",
+                "FROM customer",
+                "WHERE customerId = " + customerId
+            );
             rs = stmt.executeQuery(sql);
             rs.first();
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCustomerData: " + ex.getMessage());
+                }
+            }));
         }
         return rs;
     }
@@ -701,23 +779,21 @@ public class DB {
      * @param sortColumn
      * @param direction
      * @return OberservableList (CustomerModel)
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<CustomerModel> getCustomerModelList(String sortColumn, String direction) throws SQLException {
+    public ObservableList<CustomerModel> getCustomerModelList(String sortColumn, String direction) {
         ObservableList<CustomerModel> list = FXCollections.observableArrayList();
         String sql;
-        connect();
-
-        sql = String.join(" ",
-            "SELECT customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy",
-            "FROM customer",
-            "ORDER BY",
-            sortColumn,
-            direction
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy",
+                "FROM customer",
+                "ORDER BY",
+                sortColumn,
+                direction
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             
@@ -735,7 +811,15 @@ public class DB {
             }
         }
         catch(SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCustomerModelList: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -743,10 +827,9 @@ public class DB {
     /**
      * Create map of Addresses to Address Id's
      * @return ListMap Address (String) to Address Id (Integer)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public Map<String, Integer> getAddressToAddressIdMap() throws SQLException {
+    public Map<String, Integer> getAddressToAddressIdMap() {
         Map<String, Integer> map = new HashMap<>();
         String address;
         String address1;
@@ -757,17 +840,16 @@ public class DB {
         String phone;
         String postalCode;
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
-            "FROM address a",
-            "JOIN city b ON b.cityId = a.cityId",
-            "JOIN country c ON b.countryId = c.countryId",
-            "ORDER BY a.address, a.address2, c.country, b.city"
-        );
-        
+
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
+                "FROM address a",
+                "JOIN city b ON b.cityId = a.cityId",
+                "JOIN country c ON b.countryId = c.countryId",
+                "ORDER BY a.address, a.address2, c.country, b.city"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
@@ -789,7 +871,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getAddressToAddressIdMap: " + ex.getMessage());
+                }
+            }));
         }
         return map;
     }
@@ -797,10 +887,9 @@ public class DB {
     /**
      * Create map of Address Id's to Addresses
      * @return ListMap Address Id (Integer) to Address (String)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public Map<Integer, String> getAddressIdToAddressMap() throws SQLException {
+    public Map<Integer, String> getAddressIdToAddressMap() {
         Map<Integer, String> map = new HashMap<>();
         String address1;
         String address2;
@@ -810,17 +899,16 @@ public class DB {
         String postalCode;
         String sql;
         String value;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
-            "FROM address a",
-            "JOIN city b ON b.cityId = a.cityId",
-            "JOIN country c ON b.countryId = c.countryId",
-            "ORDER BY a.addressId"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT a.addressId, a.address, a.address2, b.city, c.country, a.postalCode, a.phone, c.country",
+                "FROM address a",
+                "JOIN city b ON b.cityId = a.cityId",
+                "JOIN country c ON b.countryId = c.countryId",
+                "ORDER BY a.addressId"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
@@ -842,7 +930,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getAddressIdToAddressMap: " + ex.getMessage());
+                }
+            }));
         }
         return map;
     }
@@ -850,21 +946,19 @@ public class DB {
     /**
      * Create map of Cities to City Id's
      * @return ListMap City (String) to City Id (Integer)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public Map<String, Integer> getCityToCityIdMap() throws SQLException {
+    public Map<String, Integer> getCityToCityIdMap() {
         Map<String, Integer> map = new HashMap<>();
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT cityId, city",
-            "FROM city",
-            "ORDER BY city"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT cityId, city",
+                "FROM city",
+                "ORDER BY city"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
@@ -874,7 +968,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCityToCityIdMap: " + ex.getMessage());
+                }
+            }));
         }
         return map;
     }
@@ -882,21 +984,19 @@ public class DB {
     /**
      * Create map of City Id's to Cities
      * @return ListMap City Id (Integer) to City (String)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public Map<Integer, String> getCityIdToCityMap() throws SQLException {
+    public Map<Integer, String> getCityIdToCityMap() {
         Map<Integer, String> map = new HashMap<>();
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT cityId, city",
-            "FROM city",
-            "ORDER BY cityId"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT cityId, city",
+                "FROM city",
+                "ORDER BY cityId"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
@@ -906,7 +1006,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCityIdToCityMap: " + ex.getMessage());
+                }
+            }));
         }
         return map;
     }
@@ -914,21 +1022,19 @@ public class DB {
     /**
      * Create map of Countries to Country Id's
      * @return ListMap Country (String) to Country Id (Integer)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public Map<String, Integer> getCountryToCountryIdMap() throws SQLException {
+    public Map<String, Integer> getCountryToCountryIdMap() {
         Map<String, Integer> map = new HashMap<>();
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT countryId, country",
-            "FROM country",
-            "ORDER BY country"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT countryId, country",
+                "FROM country",
+                "ORDER BY country"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
@@ -938,7 +1044,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCountryToCountryIdMap: " + ex.getMessage());
+                }
+            }));
         }
         return map;
     }
@@ -946,21 +1060,19 @@ public class DB {
     /**
      * Create map of Country Id's to Countries
      * @return ListMap Country Id (Integer) to Country (String)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public Map<Integer, String> getCountryIdToCountryMap() throws SQLException {
+    public Map<Integer, String> getCountryIdToCountryMap() {
         Map<Integer, String> map = new HashMap<>();
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT countryId, country",
-            "FROM country",
-            "ORDER BY countryId"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT countryId, country",
+                "FROM country",
+                "ORDER BY countryId"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
@@ -970,7 +1082,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCountryIdToCountryMap: " + ex.getMessage());
+                }
+            }));
         }
         return map;
     }
@@ -978,21 +1098,19 @@ public class DB {
     /**
      * Create map of Customers to Customer Id's
      * @return ListMap Customer Name (String) to Customer Id (Integer)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public Map<String, Integer> getCustomerToCustomerIdMap() throws SQLException {
+    public Map<String, Integer> getCustomerToCustomerIdMap() {
         Map<String, Integer> map = new HashMap<>();
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT customerId, customerName",
-            "FROM customer",
-            "ORDER BY customerName"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT customerId, customerName",
+                "FROM customer",
+                "ORDER BY customerName"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
@@ -1003,7 +1121,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCustomerToCustomerIdMap: " + ex.getMessage());
+                }
+            }));
         }
         return map;
     }
@@ -1012,21 +1138,19 @@ public class DB {
      *  Create map of Customers to Customer Id's
      * @param addCustomer flag
      * @return Map Customer Name (String) to Customer Id (Integer)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public Map<String, Integer> getCustomerToCustomerIdMap(boolean addCustomer) throws SQLException {
+    public Map<String, Integer> getCustomerToCustomerIdMap(boolean addCustomer) {
         Map<String, Integer> map = new HashMap<>();
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT customerId, customerName",
-            "FROM customer",
-            "ORDER BY customerName"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT customerId, customerName",
+                "FROM customer",
+                "ORDER BY customerName"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
@@ -1040,7 +1164,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCustomerToCustomerIdMap: " + ex.getMessage());
+                }
+            }));
         }
         return map;
     }
@@ -1048,21 +1180,19 @@ public class DB {
     /**
      * Create map of Customer Id's to Customers
      * @return ListMap Customer Id (Integer) to Customer Name (String)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public Map<Integer, String> getCustomerIdToCustomerMap() throws SQLException {
+    public Map<Integer, String> getCustomerIdToCustomerMap() {
         Map<Integer, String> map = new HashMap<>();
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT customerId, customerName",
-            "FROM customer",
-            "ORDER BY customerId"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT customerId, customerName",
+                "FROM customer",
+                "ORDER BY customerId"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             map.clear();
@@ -1073,7 +1203,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error Deleting Customer");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCustomerIdToCustomerMap: " + ex.getMessage());
+                }
+            }));
         }
         return map;
     }
@@ -1082,27 +1220,33 @@ public class DB {
      * Get a City Id using a City
      * @param city
      * @return cityId (Integer)
-     * @throws SQLException
      */    
     @SuppressWarnings("unchecked")
-    public int getACityId(String city) throws SQLException {
+    public int getACityId(String city) {
         int cityId = 0;
         String sql;
-        connect();
-
-        sql = String.join(" ",
-            "SELECT cityId",
-            "FROM city",
-            "WHERE city = \"" + escapeTicks(city) + "\""
-        );
-            
+        
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT cityId",
+                "FROM city",
+                "WHERE city = \"" + escapeTicks(city) + "\""
+            );
             rs = stmt.executeQuery(sql);
             rs.first();
             cityId = rs.getInt("cityId");
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getACity: " + ex.getMessage());
+                }
+            }));
         }
         return cityId;
     }
@@ -1111,28 +1255,34 @@ public class DB {
      * Get a City using a City Id
      * @param cityId
      * @return City (String)
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public String getACityName(int cityId) throws SQLException {
+    public String getACityName(int cityId) {
         String city = "";
         String sql;
-        connect();
-
-        sql = String.join(" ",
-            "SELECT city",
-            "FROM city",
-            "WHERE cityId = " + cityId,
-            "ORDER BY city"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT city",
+                "FROM city",
+                "WHERE cityId = " + cityId,
+                "ORDER BY city"
+            );
             rs = stmt.executeQuery(sql);
             rs.first();
             city = rs.getString("city").trim();
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getACityName: " + ex.getMessage());
+                }
+            }));
         }
         return city;
     }
@@ -1141,27 +1291,33 @@ public class DB {
      * Get a Country Id using a Country
      * @param country
      * @return countryId (Integer)
-     * @throws SQLException
      */    
     @SuppressWarnings("unchecked")
-    public int getACountryId(String country) throws SQLException {
+    public int getACountryId(String country) {
         int countryId = 0;
         String sql;
-        connect();
-
-        sql = String.join(" ",
-            "SELECT countryId",
-            "FROM country",
-            "WHERE country = \"" + escapeTicks(country) + "\"" 
-        );
             
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT countryId",
+                "FROM country",
+                "WHERE country = \"" + escapeTicks(country) + "\"" 
+            );
             rs = stmt.executeQuery(sql);
             rs.first();
             countryId = rs.getInt("countryId");
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getACountryId: " + ex.getMessage());
+                }
+            }));
         }
         return countryId;
     }
@@ -1170,27 +1326,33 @@ public class DB {
      * Get a Country using a Country Id
      * @param countryId
      * @return Country (String)
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public String getACountryName(int countryId) throws SQLException {
+    public String getACountryName(int countryId) {
         String country = "";
         String sql;
-        connect();
-
-        sql = String.join(" ",
-            "SELECT country",
-            "FROM country",
-            "WHERE countryId=" + countryId
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT country",
+                "FROM country",
+                "WHERE countryId=" + countryId
+            );
             rs = stmt.executeQuery(sql);
             rs.first();
             country = rs.getString("country").trim();
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getACountryName: " + ex.getMessage());
+                }
+            }));
         }
         return country;
     }
@@ -1198,21 +1360,19 @@ public class DB {
     /**
      * Get a list of Cities
      * @return List City (String)
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public List getCityNameList() throws SQLException {
+    public List getCityNameList() {
         ObservableList<String> list = FXCollections.observableArrayList();
         String sql;
-        connect();
 
-        sql = String.join(" ",
-            "SELECT city",
-            "FROM city",
-            "ORDER BY city"
-        );
-        
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT city",
+                "FROM city",
+                "ORDER BY city"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             list.add("");
@@ -1222,7 +1382,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCityNameList: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -1231,10 +1399,9 @@ public class DB {
      * Get a Country id using a City Name
      * @param city
      * @return CountryId (Integer)
-     * @throws java.sql.SQLException 
      */
     @SuppressWarnings("unchecked")
-    public int getCountryIdViaCity(String city) throws SQLException {
+    public int getCountryIdViaCity(String city) {
         int countryId = 0;
         String sql;
         
@@ -1250,7 +1417,15 @@ public class DB {
             countryId = rs.getInt("countryId");
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCountryIdViaCity: " + ex.getMessage());
+                }
+            }));
         }
         return countryId;
     }
@@ -1260,10 +1435,9 @@ public class DB {
      * Get a Country Name using a City Name
      * @param city
      * @return Country (String)
-     * @throws java.sql.SQLException 
      */
     @SuppressWarnings("unchecked")
-    public String getCountryNameViaCity(String city) throws SQLException {
+    public String getCountryNameViaCity(String city) {
         String country = "";
         String sql;
         
@@ -1280,7 +1454,15 @@ public class DB {
             country = rs.getString("country").trim();
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "Error in DB.getCountryNameViaCity routine: " + ex.getMessage());
+                }
+            }));
         }
         return country;
     }
@@ -1288,21 +1470,19 @@ public class DB {
     /**
      * Get a list of Countries
      * @return List Country (String)
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public List getCountryNameList() throws SQLException {
+    public List getCountryNameList() {
         ObservableList<String> list = FXCollections.observableArrayList();
         String sql;
-        connect();
 
-        sql = String.join(" ",
-            "SELECT country",
-            "FROM country",
-            "ORDER BY country"
-        );
-        
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT country",
+                "FROM country",
+                "ORDER BY country"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             
@@ -1311,7 +1491,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCountryNameList: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -1319,21 +1507,19 @@ public class DB {
     /**
      * Get a list of Customers
      * @return List Customer Name (String)
-     * @throws SQLException
      */
     @SuppressWarnings("unchecked")
-    public List getCustomerNameList() throws SQLException {
+    public List getCustomerNameList() {
         ObservableList<String> list = FXCollections.observableArrayList();
         String sql;
-        connect();
-        
-        sql = String.join(" ",
-            "SELECT customerName",
-            "FROM customer",
-            "ORDER BY customerName"
-        );
         
         try {
+            connect();
+            sql = String.join(" ",
+                "SELECT customerName",
+                "FROM customer",
+                "ORDER BY customerName"
+            );
             rs = stmt.executeQuery(sql);
             rs.beforeFirst();
             
@@ -1342,7 +1528,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getCustomerNameList: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
@@ -1350,22 +1544,20 @@ public class DB {
     /**
      * Get Total-Appointments report
      * @return List of TotalAppointmentsModel
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public ObservableList<TotalAppointmentsModel> getTotalAppointmentsReport() throws SQLException {
+    public ObservableList<TotalAppointmentsModel> getTotalAppointmentsReport() {
         ObservableList<TotalAppointmentsModel> list = FXCollections.observableArrayList();
         int cnt;
         String sql;
-        connect();
-        
-        sql = "SELECT contact, description, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName, COUNT(*) AS cnt " +
-                  "FROM appointment " +
-                  "GROUP BY MONTH(start), description, contact " +
-                  "ORDER BY MONTH(start), description, contact ";
-        pstmt = conn.prepareStatement(sql);
         
         try {
+            connect();
+            sql = "SELECT contact, description, MONTH(start) AS month, MONTHNAME(STR_TO_DATE(MONTH(start), '%m')) AS monthName, COUNT(*) AS cnt " +
+                      "FROM appointment " +
+                      "GROUP BY MONTH(start), description, contact " +
+                      "ORDER BY MONTH(start), description, contact ";
+            pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
             rs.beforeFirst();
             
@@ -1380,11 +1572,18 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.getTotalAppointmentsReport: " + ex.getMessage());
+                }
+            }));
         }
         return list;
     }
-    
     
     /**
      * Execute query without result set
@@ -1399,7 +1598,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.run: " + ex.getMessage());
+                }
+            }));
         }
         stmt.execute(sql);
     }
@@ -1417,9 +1624,10 @@ public class DB {
         int id;
         int rows = 0;
         String sql;
-        connect();
         
         try {
+            connect();
+            
             for (AddressModel a : list) {
                 sql = String.join(" ",
                     "SELECT COUNT(*) AS cnt",
@@ -1466,6 +1674,7 @@ public class DB {
             return rows;
         }
         catch (SQLException ex) {
+            log.write(Level.SEVERE, "DB.upsertAddress: " + ex.getMessage());
             throw new SQLException(exception(ex));
         }
     }
@@ -1475,9 +1684,9 @@ public class DB {
         int cnt;
         int id;
         String sql;
-        connect();
-        
+
         try {
+            connect();
             sql = String.join(" ",
                 "SELECT addressId",
                 "FROM address",
@@ -1512,6 +1721,7 @@ public class DB {
             return 1;
         }
         catch (SQLException ex) {
+            log.write(Level.SEVERE, "DB.upsertAddress: " + ex.getMessage());
             throw new SQLException(exception(ex));
         }
     }
@@ -1530,33 +1740,34 @@ public class DB {
         int id;
         int rows = 0;
         String sql;
-        connect();
-        
-        // Check to ensure this won't create an overlapping appointment
-        sql = String.join(" ",
-            "SELECT COUNT(*) AS cnt",
-            "FROM appointment",
-            "WHERE contact = ?",
-            "AND ((CONVERT_TZ(?, ?, ?) BETWEEN start AND end)",
-            "OR (CONVERT_TZ(?, ?, ?) BETWEEN start AND end))"
-        );
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, userName);
-        pstmt.setString(2, appt.getStart());
-        pstmt.setString(3, localTZ);
-        pstmt.setString(4, "+00:00");
-        pstmt.setString(5, appt.getEnd());
-        pstmt.setString(6, localTZ);
-        pstmt.setString(7, "+00:00");
-        rs = pstmt.executeQuery();
-        rs.first();
-        cnt = rs.getInt("cnt");
-        
-        if (cnt > 0) {
-            throw new Exception("Creating this appointment would create overlapping appointments for " + userName);
-        }
         
         try {
+            connect();
+
+            // Check to ensure this won't create an overlapping appointment
+            sql = String.join(" ",
+                "SELECT COUNT(*) AS cnt",
+                "FROM appointment",
+                "WHERE contact = ?",
+                "AND ((CONVERT_TZ(?, ?, ?) BETWEEN start AND end)",
+                "OR (CONVERT_TZ(?, ?, ?) BETWEEN start AND end))"
+            );
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, userName);
+            pstmt.setString(2, appt.getStart());
+            pstmt.setString(3, localTZ);
+            pstmt.setString(4, "+00:00");
+            pstmt.setString(5, appt.getEnd());
+            pstmt.setString(6, localTZ);
+            pstmt.setString(7, "+00:00");
+            rs = pstmt.executeQuery();
+            rs.first();
+            cnt = rs.getInt("cnt");
+        
+            if (cnt > 0) {
+                throw new Exception("Creating this appointment would create overlapping appointments for " + userName);
+            }
+        
             if (appt.getAppointmentId() > 0) {  // update record
                 sql = String.join(" ",
                     "UPDATE appointment",
@@ -1612,7 +1823,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.upsertAppointment: " + ex.getMessage());
+                }
+            }));
         }
     }
     
@@ -1706,16 +1925,15 @@ public class DB {
      * Insert / Update Customer table
      * @param customer (CustomerModel)
      * @param userName (String)
-     * @throws SQLException 
      */
     @SuppressWarnings("unchecked")
-    public void upsertCustomer(CustomerModel customer, String userName) throws SQLException{
+    public void upsertCustomer(CustomerModel customer, String userName) {
         int id;
         int rows;
         String sql;
-        connect();
         
         try {
+        connect();
             sql = String.join(" ",
                 "SELECT COUNT(*) AS cnt",
                 "FROM customer",
@@ -1758,7 +1976,15 @@ public class DB {
             }
         }
         catch (SQLException ex) {
-            throw new SQLException(exception(ex));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error processing request.");
+            alert.setContentText("There was an error processing your request. Please try again.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    log.write(Level.SEVERE, "DB.upsertCustomer: " + ex.getMessage());
+                }
+            }));
         }
     }
 }  

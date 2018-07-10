@@ -34,6 +34,7 @@ public class IncrementTypesModel {
     /**
      * @return incrementTypeId
      */
+    @SuppressWarnings("unchecked")
     public int incrementTypeId() {
         return incrementTypeId;
     }
@@ -42,6 +43,7 @@ public class IncrementTypesModel {
      * @param _incrementTypeId
      * @return incrementTypeId
      */
+    @SuppressWarnings("unchecked")
     public int incrementTypeId(int _incrementTypeId) {
         return incrementTypeId = _incrementTypeId;
     }
@@ -49,6 +51,7 @@ public class IncrementTypesModel {
     /**
      * @return incrementTypeDescription
      */
+    @SuppressWarnings("unchecked")
     public String incrementTypeDescription() {
         return incrementTypeDescription;
     }
@@ -57,6 +60,7 @@ public class IncrementTypesModel {
      * @param _incrementTypeDescription
      * @return incrementTypeDescription
      */
+    @SuppressWarnings("unchecked")
     public String incrementTypeDescription(String _incrementTypeDescription) {
         return incrementTypeDescription = _incrementTypeDescription;
     }

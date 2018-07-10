@@ -86,6 +86,7 @@ public class AppointmentModel {
      * Get appointmentId value
      * @return appointmentId value
      */
+    @SuppressWarnings("unchecked")
     public int getAppointmentId() {
         return appointmentId.get();
     }
@@ -94,6 +95,7 @@ public class AppointmentModel {
      * Set appointmentId value
      * @param _appointmentId
      */
+    @SuppressWarnings("unchecked")
     public void setAppointmentId(int _appointmentId) {
         appointmentId.set(_appointmentId);
     }
@@ -102,6 +104,7 @@ public class AppointmentModel {
      * Get customerId value
      * @return customerId value
      */
+    @SuppressWarnings("unchecked")
     public int getCustomerId() {
         return customerId.get();
     }
@@ -110,6 +113,7 @@ public class AppointmentModel {
      * Set customerId value
      * @param _customerId
      */
+    @SuppressWarnings("unchecked")
     public void setCustomerId(int _customerId) {
         customerId.set(_customerId);
     }
@@ -118,6 +122,7 @@ public class AppointmentModel {
      * Get customerName value
      * @return custoimerName value
      */
+    @SuppressWarnings("unchecked")
     public String getCustomerName() {
         return customerName.get();
     }
@@ -126,6 +131,7 @@ public class AppointmentModel {
      * Set customerName value
      * @param _customerName
      */
+    @SuppressWarnings("unchecked")
     public void setCustomerName(String _customerName) {
         customerName.set(_customerName);
     }
@@ -134,6 +140,7 @@ public class AppointmentModel {
      * Get title value
      * @return title value
      */
+    @SuppressWarnings("unchecked")
     public String getTitle() {
         return title.get();
     }
@@ -142,6 +149,7 @@ public class AppointmentModel {
      * Set title value
      * @param _title
      */
+    @SuppressWarnings("unchecked")
     public void setTitle(String _title) {
         title.set(_title);
     }
@@ -150,6 +158,7 @@ public class AppointmentModel {
      * Get description value
      * @return description value
      */
+    @SuppressWarnings("unchecked")
     public String getDescription() {
         return description.get();
     }
@@ -158,6 +167,7 @@ public class AppointmentModel {
      * Set description value
      * @param _description
      */
+    @SuppressWarnings("unchecked")
     public void setDescription(String _description) {
         description.set(_description);
     }
@@ -166,6 +176,7 @@ public class AppointmentModel {
      * Get location value
      * @return location value
      */
+    @SuppressWarnings("unchecked")
     public String getLocation() {
         return location.get();
     }
@@ -174,6 +185,7 @@ public class AppointmentModel {
      * Set location value
      * @param _location
      */
+    @SuppressWarnings("unchecked")
     public void setLocation(String _location) {
         location.set(_location);
     }
@@ -182,6 +194,7 @@ public class AppointmentModel {
      * Get contact value
      * @return contact value
      */
+    @SuppressWarnings("unchecked")
     public String getContact() {
         return contact.get();
     }
@@ -190,6 +203,7 @@ public class AppointmentModel {
      * Set contact value
      * @param _contact
      */
+    @SuppressWarnings("unchecked")
     public void setContact(String _contact) {
         contact.set(_contact);
     }
@@ -198,6 +212,7 @@ public class AppointmentModel {
      * Get url value
      * @return url value
      */
+    @SuppressWarnings("unchecked")
     public String getUrl() {
         return url.get();
     }
@@ -206,6 +221,7 @@ public class AppointmentModel {
      * Set url value
      * @param _url
      */
+    @SuppressWarnings("unchecked")
     public void setUrl(String _url) {
         url.set(_url);
     }
@@ -214,6 +230,7 @@ public class AppointmentModel {
      * Get start value
      * @return start value
      */
+    @SuppressWarnings("unchecked")
     public String getStart() {
         return start.get();
     }
@@ -222,6 +239,7 @@ public class AppointmentModel {
      * Set start value
      * @param _start
      */
+    @SuppressWarnings("unchecked")
     public void setStart(String _start) {
         start.set(_start);
     }
@@ -230,6 +248,7 @@ public class AppointmentModel {
      * Get end value
      * @return end value
      */
+    @SuppressWarnings("unchecked")
     public String getEnd() {
         return end.get();
     }
@@ -238,6 +257,7 @@ public class AppointmentModel {
      * Set end value
      * @param _end
      */
+    @SuppressWarnings("unchecked")
     public void setEnd(String _end) {
         end.set(_end);
     }
@@ -246,6 +266,7 @@ public class AppointmentModel {
      * Get createDate value
      * @return createDate value
      */
+    @SuppressWarnings("unchecked")
     public String getCreateDate() {
         return createDate.get();
     }
@@ -254,6 +275,7 @@ public class AppointmentModel {
      * Set createDate value
      * @param _createDate
      */
+    @SuppressWarnings("unchecked")
     public void setCreateDate(String _createDate) {
         createDate.set(_createDate);
     }
@@ -262,6 +284,7 @@ public class AppointmentModel {
      * Get createdBy value
      * @return createdBy value
      */
+    @SuppressWarnings("unchecked")
     public String getCreatedBy() {
         return createdBy.get();
     }
@@ -270,6 +293,7 @@ public class AppointmentModel {
      * Set createdBy value
      * @param _createdBy
      */
+    @SuppressWarnings("unchecked")
     public void setCreatedBy(String _createdBy) {
         createdBy.set(_createdBy);
     }
@@ -278,6 +302,7 @@ public class AppointmentModel {
      * Get lastUpdate value
      * @return lastUpdate value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdate() {
         return lastUpdate.get();
     }
@@ -286,6 +311,7 @@ public class AppointmentModel {
      * Set lastUpdate value
      * @param _lastUpdate
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdate(String _lastUpdate) {
         lastUpdate.set(_lastUpdate);
     }
@@ -294,6 +320,7 @@ public class AppointmentModel {
      * Get lastUpdateBy value
      * @return lastUpdateBy value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdateBy() {
         return lastUpdateBy.get();
     }
@@ -302,6 +329,7 @@ public class AppointmentModel {
      * Set lastUpdateBy value
      * @param _lastUpdateBy
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdateBy(String _lastUpdateBy) {
         lastUpdateBy.set(_lastUpdateBy);
     }

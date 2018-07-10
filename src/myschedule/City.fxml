@@ -11,33 +11,43 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="city" fx:id="city" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="495.0" styleClass="city" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.CityController">
+<VBox id="city" fx:id="city" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+      prefHeight="600.0" prefWidth="495.0" styleClass="city" xmlns="http://javafx.com/javafx/8.0.141" 
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.CityController">
     <children>
-        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="491.0" styleClass="header-bar" />
-        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="495.0">
+        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+              minWidth="-Infinity" prefHeight="50.0" prefWidth="491.0" styleClass="header-bar" />
+        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+              prefHeight="60.0" prefWidth="495.0">
             <children>
-                <Label id="title" fx:id="lblTitle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="950.0" styleClass="title" text="Cities">
+                <Label id="title" fx:id="lblTitle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="950.0" 
+                       styleClass="title" text="Cities">
                     <HBox.margin>
                         <Insets left="10.0" top="10.0" />
                     </HBox.margin>
                 </Label>
             </children>
         </HBox>
-        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="495.0">
+        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" 
+              minWidth="-Infinity" prefWidth="495.0">
             <VBox.margin>
                 <Insets bottom="10.0" />
             </VBox.margin>
             <children>
                 <TableView fx:id="table" editable="true" prefHeight="415.0" prefWidth="450.0">
                     <columns>
-                        <TableColumn fx:id="cityIdColumn" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" resizable="false" text="City Id" />
-                        <TableColumn fx:id="cityColumn" maxWidth="190.0" minWidth="190.0" prefWidth="190.0" resizable="false" text="City" />
-                        <TableColumn fx:id="countryColumn" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" resizable="false" text="Country" />
+                        <TableColumn fx:id="cityIdColumn" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" 
+                                     resizable="false" text="City Id" />
+                        <TableColumn fx:id="cityColumn" maxWidth="190.0" minWidth="190.0" prefWidth="190.0" 
+                                     resizable="false" text="City" />
+                        <TableColumn fx:id="countryColumn" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" 
+                                     resizable="false" text="Country" />
                     </columns>
                 </TableView>
             </children>
         </HBox>
-        <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="450.0" styleClass="controlsContainer">
+        <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" 
+              minWidth="-Infinity" prefWidth="450.0" styleClass="controlsContainer">
             <VBox.margin>
                 <Insets bottom="10.0" left="25.0" />
             </VBox.margin>
@@ -51,30 +61,36 @@
                         <Insets right="5.0" />
                     </HBox.margin>
                 </TextField>
-            <ComboBox fx:id="cboCountry" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="195.0" promptText="-- Select --">
+            <ComboBox fx:id="cboCountry" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="195.0" 
+                      promptText="-- Select --">
                <HBox.margin>
                   <Insets right="5.0" />
                </HBox.margin>
             </ComboBox>
             </children>
         </HBox>
-        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="470.0" styleClass="buttonsContainer">
+        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" 
+              minWidth="-Infinity" prefWidth="470.0" styleClass="buttonsContainer">
             <VBox.margin>
                 <Insets right="20.0" top="5.0" />
             </VBox.margin>
             <children>
-                <Button fx:id="btnAdd" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Add" />
-                <Button fx:id="btnRemove" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Remove">
+                <Button fx:id="btnAdd" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Add" />
+                <Button fx:id="btnRemove" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Remove">
                     <HBox.margin>
                         <Insets left="5.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="btnCommit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Commit">
+                <Button fx:id="btnCommit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Commit">
                     <HBox.margin>
                         <Insets left="5.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="btnClose" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Close">
+                <Button fx:id="btnClose" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Close">
                     <HBox.margin>
                         <Insets left="5.0" />
                     </HBox.margin>

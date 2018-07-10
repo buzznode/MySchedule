@@ -54,6 +54,7 @@ public class AppointmentTypeCountModel {
      * Get description value
      * @return description value
      */
+    @SuppressWarnings("unchecked")
     public String getDescription() {
         return description.get();
     }
@@ -62,6 +63,7 @@ public class AppointmentTypeCountModel {
      * Set description value
      * @param _description
      */
+    @SuppressWarnings("unchecked")
     public void setDescription(String _description) {
         description.set(_description);
     }
@@ -70,6 +72,7 @@ public class AppointmentTypeCountModel {
      * Get cnt value
      * @return cnt value
      */
+    @SuppressWarnings("unchecked")
     public int getCnt() {
         return cnt.get();
     }
@@ -78,6 +81,7 @@ public class AppointmentTypeCountModel {
      * Set cnt value
      * @param _cnt
      */
+    @SuppressWarnings("unchecked")
     public void setCnt(int _cnt) {
         cnt.set(_cnt);
     }
@@ -86,6 +90,7 @@ public class AppointmentTypeCountModel {
      * Get month value
      * @return month value
      */
+    @SuppressWarnings("unchecked")
     public int getMonth() {
         return month.get();
     }
@@ -94,6 +99,7 @@ public class AppointmentTypeCountModel {
      * Set month value
      * @param _month
      */
+    @SuppressWarnings("unchecked")
     public void setMonth(int _month) {
         month.set(_month);
     }
@@ -102,6 +108,7 @@ public class AppointmentTypeCountModel {
      * Get monthName value
      * @return monthName value
      */
+    @SuppressWarnings("unchecked")
     public String getMonthName() {
         return monthName.get();
     }
@@ -110,6 +117,7 @@ public class AppointmentTypeCountModel {
      * Set monthName value
      * @param _monthName
      */
+    @SuppressWarnings("unchecked")
     public void setMonthName(String _monthName) {
         monthName.set(_monthName);
     }

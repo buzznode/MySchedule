@@ -57,6 +57,7 @@ public class TotalAppointmentsModel {
      * Get contact value
      * @return contact value
      */
+    @SuppressWarnings("unchecked")
     public String getContact() {
         return contact.get();
     }
@@ -65,6 +66,7 @@ public class TotalAppointmentsModel {
      * Set contact value
      * @param _contact
      */
+    @SuppressWarnings("unchecked")
     public void setContact(String _contact) {
         contact.set(_contact);
     }
@@ -73,6 +75,7 @@ public class TotalAppointmentsModel {
      * Get description value
      * @return description value
      */
+    @SuppressWarnings("unchecked")
     public String getDescription() {
         return description.get();
     }
@@ -81,6 +84,7 @@ public class TotalAppointmentsModel {
      * Set description value
      * @param _description
      */
+    @SuppressWarnings("unchecked")
     public void setDescription(String _description) {
         description.set(_description);
     }
@@ -89,6 +93,7 @@ public class TotalAppointmentsModel {
      * Get month value
      * @return month value
      */
+    @SuppressWarnings("unchecked")
     public int getMonth() {
         return month.get();
     }
@@ -97,6 +102,7 @@ public class TotalAppointmentsModel {
      * Set month value
      * @param _month
      */
+    @SuppressWarnings("unchecked")
     public void setMonth(int _month) {
         month.set(_month);
     }
@@ -105,6 +111,7 @@ public class TotalAppointmentsModel {
      * Get monthName value
      * @return monthName value
      */
+    @SuppressWarnings("unchecked")
     public String getMonthName() {
         return monthName.get();
     }
@@ -113,6 +120,7 @@ public class TotalAppointmentsModel {
      * Set monthName value
      * @param _monthName
      */
+    @SuppressWarnings("unchecked")
     public void setMonthName(String _monthName) {
         monthName.set(_monthName);
     }
@@ -121,6 +129,7 @@ public class TotalAppointmentsModel {
      * Get cnt value
      * @return cnt value
      */
+    @SuppressWarnings("unchecked")
     public int getCnt() {
         return cnt.get();
     }
@@ -129,6 +138,7 @@ public class TotalAppointmentsModel {
      * Set cnt value
      * @param _cnt
      */
+    @SuppressWarnings("unchecked")
     public void setCnt(int _cnt) {
         cnt.set(_cnt);
     }

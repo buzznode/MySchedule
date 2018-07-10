@@ -12,19 +12,25 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="report" fx:id="report" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="900.0" styleClass="report" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.ReportController">
+<VBox id="report" fx:id="report" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" 
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="900.0" styleClass="report" 
+      xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.ReportController">
    <children>
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="896.0" styleClass="header-bar" />
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="900.0">
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+            prefHeight="100.0" prefWidth="896.0" styleClass="header-bar" />
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+            prefHeight="60.0" prefWidth="900.0">
          <children>
-            <Label fx:id="lblTitle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="400.0" styleClass="title" text="Reports">
+            <Label fx:id="lblTitle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="400.0" styleClass="title" 
+                   text="Reports">
                <HBox.margin>
                   <Insets left="10.0" top="10.0" />
                </HBox.margin>
             </Label>
          </children>
       </HBox>
-      <BorderPane fx:id="reportContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="750.0">
+      <BorderPane fx:id="reportContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                  minWidth="-Infinity" prefHeight="50.0" prefWidth="750.0">
          <center>
             <GridPane BorderPane.alignment="CENTER">
               <columnConstraints>
@@ -41,17 +47,22 @@
                      <GridPane.margin>
                         <Insets right="10.0" />
                      </GridPane.margin></Label>
-                  <ComboBox fx:id="cboReport" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="450.0" GridPane.columnIndex="1" />
-                  <Button fx:id="btnRun" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Run" GridPane.columnIndex="2" />
+                  <ComboBox fx:id="cboReport" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" 
+                            prefWidth="450.0" GridPane.columnIndex="1" />
+                  <Button fx:id="btnRun" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                          minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Run" 
+                          GridPane.columnIndex="2" />
                </children>
             </GridPane>
          </center></BorderPane>
-      <HBox fx:id="tableViewContainer" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="880.0">
+      <HBox fx:id="tableViewContainer" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" 
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="880.0">
          <VBox.margin>
             <Insets top="15.0" />
          </VBox.margin>
       </HBox>
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="880.0">
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+            prefHeight="50.0" prefWidth="880.0">
          <children>
             <GridPane prefHeight="50.0" prefWidth="880.0">
               <columnConstraints>
@@ -64,7 +75,9 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="btnClose" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Close" GridPane.columnIndex="3" />
+                  <Button fx:id="btnClose" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                          minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Close" 
+                          GridPane.columnIndex="3" />
                </children>
             </GridPane>
          </children>

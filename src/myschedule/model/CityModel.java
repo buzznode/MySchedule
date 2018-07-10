@@ -63,6 +63,7 @@ public class CityModel {
      * Get cityId value
      * @return cityId value
      */
+    @SuppressWarnings("unchecked")
     public int getCityId() {
         return cityId.get();
     }
@@ -71,6 +72,7 @@ public class CityModel {
      * Set cityId value
      * @param _cityId 
      */
+    @SuppressWarnings("unchecked")
     public void setCityId(int _cityId) {
         cityId.set(_cityId);
     }
@@ -79,6 +81,7 @@ public class CityModel {
      * Get city value
      * @return city value
      */
+    @SuppressWarnings("unchecked")
     public String getCity() {
         return city.get();
     }
@@ -87,6 +90,7 @@ public class CityModel {
      * Set city value
      * @param _city 
      */
+    @SuppressWarnings("unchecked")
     public void setCity(String _city) {
         city.set(_city);
     }
@@ -95,6 +99,7 @@ public class CityModel {
      * Get country value
      * @return country value
      */
+    @SuppressWarnings("unchecked")
     public String getCountry() {
         return country.get();
     }
@@ -103,6 +108,7 @@ public class CityModel {
      * Set country value
      * @param _country 
      */
+    @SuppressWarnings("unchecked")
     public void setCountry(String _country) {
         country.set(_country);
     }
@@ -119,6 +125,7 @@ public class CityModel {
      * Get createDate value
      * @return createDate value
      */
+    @SuppressWarnings("unchecked")
     public String getCreateDate() {
         return createDate.get();
     }
@@ -127,6 +134,7 @@ public class CityModel {
      * Set createDate value
      * @param _createDate 
      */
+    @SuppressWarnings("unchecked")
     public void setCreateDate(String _createDate) {
         createDate.set(_createDate);
     }
@@ -135,6 +143,7 @@ public class CityModel {
      * Get createdBy value
      * @return createdBy value
      */
+    @SuppressWarnings("unchecked")
     public String getCreatedBy() {
         return createdBy.get();
     }
@@ -143,6 +152,7 @@ public class CityModel {
      * Get createdBy value
      * @param _createdBy 
      */
+    @SuppressWarnings("unchecked")
     public void setCreatedBy(String _createdBy) {
         createdBy.set(_createdBy);
     }
@@ -151,6 +161,7 @@ public class CityModel {
      * Get lastUpdate value
      * @return lastUpdate value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdate() {
         return lastUpdate.get();
     }
@@ -159,6 +170,7 @@ public class CityModel {
      * Set lastUpdate value
      * @param _lastUpdate 
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdate(String _lastUpdate) {
         lastUpdate.set(_lastUpdate);
     }
@@ -167,6 +179,7 @@ public class CityModel {
      * Get lastUpdateBy value
      * @return lastUpdateBy value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdateBy() {
         return lastUpdateBy.get();
     }
@@ -175,6 +188,7 @@ public class CityModel {
      * Set lastUpdateBy value
      * @param _lastUpdateBy 
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdateBy(String _lastUpdateBy) {
         lastUpdateBy.set(_lastUpdateBy);
     }

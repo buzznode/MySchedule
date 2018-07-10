@@ -55,7 +55,6 @@ public class MainController {
     protected MenuItem miReportRun;
     protected MenuItem miUserLogin;
     protected MenuItem miUserLogout;
-    protected MenuItem miHelpAbout;
 
     /**
      * Add listeners
@@ -71,6 +70,7 @@ public class MainController {
         miMaintCustomer.setOnAction(e -> { handleCustomerMaintenance(); } );
         miReportRun.setOnAction(e -> { handleReportRun(); } );
         miUserLogin.setOnAction(e -> { handleLogin(); } );
+        miUserLogout.setOnAction(e -> { handleLogout(); } );
     }
 
     /**
@@ -101,14 +101,6 @@ public class MainController {
         });
     }
 
-    /**
-     * Enable Help.About
-     */
-    @SuppressWarnings("unchecked")
-    public void enableAbout() {
-        menuBar.getMenus().get(5).getItems().get(0).setDisable(false);
-    }
-    
     /**
      * Enable Menu.Exit
      */
@@ -381,6 +373,20 @@ public class MainController {
         }
     }
     
+    /**
+     * Handle Logout
+     */
+    @SuppressWarnings("unchecked")
+    private void handleLogout() {
+        app.userId(0);
+        app.userName("");
+        app.loggedIn(false);
+        start();
+    }
+    
+    /**
+     * Handle Report Run
+     */
     @SuppressWarnings("unchecked")
     private void handleReportRun() {
         try {
@@ -443,18 +449,14 @@ public class MainController {
         miUserLogout = new MenuItem(app.localize("logout")); // [4.1]
         menuUser.getItems().addAll(miUserLogin, miUserLogout);
 
-        // Help menu [5]
-        Menu menuHelp = new Menu(app.localize("help"));
-        miHelpAbout = new MenuItem(app.localize("about")); // [5.0]
-        menuHelp.getItems().addAll(miHelpAbout);
-
         addListeners();
-        menuBar.getMenus().addAll(menuFile, menuAppointment, menuMaint, menuReport, menuUser, menuHelp);
+
+        menuBar.getMenus().clear();
+        menuBar.getMenus().addAll(menuFile, menuAppointment, menuMaint, menuReport, menuUser);
         mainContainer.setTop(menuBar);
         
         if (!app.loggedIn()) {
             disableMenu();
-            enableAbout();
             enableExit();
             enableLogin();
             handleLogin();

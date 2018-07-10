@@ -286,6 +286,8 @@ public class CustomerController {
         customerToCustomerIdMap.remove(customerName);
         customerIdToCustomerMap.remove(customerId);
         cboCustomer.getItems().remove(cboCustomer.getSelectionModel().getSelectedIndex());
+        app.common.alertStatus(1, "Customer Deleted", customerName + " has been removed.");
+        app.log.write(Level.INFO, customerName + " has been removed");
     }
     
     /**
@@ -355,14 +357,10 @@ public class CustomerController {
             customerRecord.setCustomerName(customerName);
             customerRecord.setAddressId(addressId);
 
-            try {
-                app.db.upsertCustomer(customerRecord, app.userName());
-            }
-            catch (SQLException ex) {
-                app.common.alertStatus(0);
-            }
+            app.db.upsertCustomer(customerRecord, app.userName());
 
             app.common.alertStatus(1);
+            app.log.write(Level.INFO, customerName + " with ID of " + id + " has been added");
             customerToCustomerIdMap.put(customerName, id);
             customerIdToCustomerMap.put(id, customerName);
 
@@ -440,18 +438,13 @@ public class CustomerController {
      */
     @SuppressWarnings("unchecked")
     private void loadMapsAndLists() {
-        try {
-            addressToAddressIdMap = app.db.getAddressToAddressIdMap();
-            addressIdToAddressMap = app.db.getAddressIdToAddressMap();
-            customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
-            customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
-            
-            addressList = app.common.createAddressList(addressToAddressIdMap);
-            customerList = app.common.createCustomerList(customerToCustomerIdMap);
-        }
-        catch (SQLException ex) {
-            app.common.alertStatus(0);
-        }
+        addressToAddressIdMap = app.db.getAddressToAddressIdMap();
+        addressIdToAddressMap = app.db.getAddressIdToAddressMap();
+        customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap();
+        customerIdToCustomerMap = app.db.getCustomerIdToCustomerMap();
+
+        addressList = app.common.createAddressList(addressToAddressIdMap);
+        customerList = app.common.createCustomerList(customerToCustomerIdMap);
 
         cboAddress.getItems().addAll(addressList);
         cboCustomer.getItems().addAll(customerList);

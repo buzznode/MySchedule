@@ -73,6 +73,7 @@ public class ConsultantScheduleModel {
      * Get customerId value
      * @return description value
      */
+    @SuppressWarnings("unchecked")
     public int getCustomerId() {
         return customerId.get();
     }
@@ -81,6 +82,7 @@ public class ConsultantScheduleModel {
      * Set customerId value
      * @param _customerId
      */
+    @SuppressWarnings("unchecked")
     public void setCustomerId(int _customerId) {
         customerId.set(_customerId);
     }
@@ -89,6 +91,7 @@ public class ConsultantScheduleModel {
      * Get customerName value
      * @return customerName value
      */
+    @SuppressWarnings("unchecked")
     public String getCustomerName() {
         return customerName.get();
     }
@@ -97,6 +100,7 @@ public class ConsultantScheduleModel {
      * Set customerName value
      * @param _customerName
      */
+    @SuppressWarnings("unchecked")
     public void setCustomerName(String _customerName) {
         customerName.set(_customerName);
     }
@@ -105,6 +109,7 @@ public class ConsultantScheduleModel {
      * Get title value
      * @return title value
      */
+    @SuppressWarnings("unchecked")
     public String getTitle() {
         return title.get();
     }
@@ -113,6 +118,7 @@ public class ConsultantScheduleModel {
      * Set title value
      * @param _title
      */
+    @SuppressWarnings("unchecked")
     public void setTitle(String _title) {
         title.set(_title);
     }
@@ -121,6 +127,7 @@ public class ConsultantScheduleModel {
      * Get description value
      * @return description value
      */
+    @SuppressWarnings("unchecked")
     public String getDescription() {
         return description.get();
     }
@@ -129,6 +136,7 @@ public class ConsultantScheduleModel {
      * Set description value
      * @param _description
      */
+    @SuppressWarnings("unchecked")
     public void setDescription(String _description) {
         description.set(_description);
     }
@@ -137,6 +145,7 @@ public class ConsultantScheduleModel {
      * Get location value
      * @return location value
      */
+    @SuppressWarnings("unchecked")
     public String getLocation() {
         return location.get();
     }
@@ -145,6 +154,7 @@ public class ConsultantScheduleModel {
      * Set location value
      * @param _location
      */
+    @SuppressWarnings("unchecked")
     public void setLocation(String _location) {
         location.set(_location);
     }
@@ -153,6 +163,7 @@ public class ConsultantScheduleModel {
      * Get contact value
      * @return contact value
      */
+    @SuppressWarnings("unchecked")
     public String getContact() {
         return contact.get();
     }
@@ -161,6 +172,7 @@ public class ConsultantScheduleModel {
      * Set contact value
      * @param _contact
      */
+    @SuppressWarnings("unchecked")
     public void setContact(String _contact) {
         contact.set(_contact);
     }
@@ -169,6 +181,7 @@ public class ConsultantScheduleModel {
      * Get start value
      * @return start value
      */
+    @SuppressWarnings("unchecked")
     public String getStart() {
         return start.get();
     }
@@ -177,6 +190,7 @@ public class ConsultantScheduleModel {
      * Set start value
      * @param _start
      */
+    @SuppressWarnings("unchecked")
     public void setStart(String _start) {
         start.set(_start);
     }
@@ -185,6 +199,7 @@ public class ConsultantScheduleModel {
      * Get month value
      * @return month value
      */
+    @SuppressWarnings("unchecked")
     public int getMonth() {
         return month.get();
     }
@@ -193,6 +208,7 @@ public class ConsultantScheduleModel {
      * Set month value
      * @param _month
      */
+    @SuppressWarnings("unchecked")
     public void setMonth(int _month) {
         month.set(_month);
     }
@@ -201,6 +217,7 @@ public class ConsultantScheduleModel {
      * Get monthName value
      * @return monthName value
      */
+    @SuppressWarnings("unchecked")
     public String getMonthName() {
         return monthName.get();
     }
@@ -209,6 +226,7 @@ public class ConsultantScheduleModel {
      * Set monthName value
      * @param _monthName
      */
+    @SuppressWarnings("unchecked")
     public void setMonthName(String _monthName) {
         monthName.set(_monthName);
     }
@@ -217,6 +235,7 @@ public class ConsultantScheduleModel {
      * Get end value
      * @return end value
      */
+    @SuppressWarnings("unchecked")
     public String getEnd() {
         return end.get();
     }
@@ -225,6 +244,7 @@ public class ConsultantScheduleModel {
      * Set end value
      * @param _end
      */
+    @SuppressWarnings("unchecked")
     public void setEnd(String _end) {
         end.set(_end);
     }

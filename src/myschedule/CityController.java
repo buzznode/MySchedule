@@ -142,6 +142,7 @@ public class CityController {
     /**
      * Handle add action
      */
+    @SuppressWarnings("unchecked")
     private void handleAdd() {
         String rightNow = app.common.rightNow();
         String user = app.userName();
@@ -163,6 +164,7 @@ public class CityController {
     /**
      * Handle commit action
      */
+    @SuppressWarnings("unchecked")
     private void handleCommit() {
         try {
             app.db.updateCityTable(cityList);
@@ -178,6 +180,7 @@ public class CityController {
     /**
      * Handle remove action
      */
+    @SuppressWarnings("unchecked")
     private void handleRemove() {
         ObservableList<CityModel> citySelected, allCities;
         allCities = table.getItems();
@@ -263,13 +266,8 @@ public class CityController {
      */
     @SuppressWarnings("unchecked")
     private void refreshTableView() {
-        try {
-            cityList = app.db.getCityModelList("city", "asc");
-            table.setItems(cityList);
-        }
-        catch (SQLException ex) {
-            app.log.write(Level.SEVERE, ex.getMessage());
-        }
+        cityList = app.db.getCityModelList("city", "asc");
+        table.setItems(cityList);
     }
     
     /**
@@ -279,15 +277,8 @@ public class CityController {
     public void start() {
         addListeners();
         lblTitle.setText(app.localize("cities"));
-        
-        try {
-            cityList = app.db.getCityModelList("city", "asc");
-            countryNameList = app.db.getCountryNameList();
-        }
-        catch (SQLException ex) {
-            app.log.write(Level.SEVERE, ex.getMessage());
-        }
-        
+        cityList = app.db.getCityModelList("city", "asc");
+        countryNameList = app.db.getCountryNameList();
         initializeForm();
         initializeTableColumns();
         table.setEditable(true);

@@ -13,31 +13,40 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="customer" fx:id="customer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="720.0" styleClass="customer" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myschedule.CustomerController">
+<VBox id="customer" fx:id="customer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+      minWidth="-Infinity" prefHeight="415.0" prefWidth="720.0" styleClass="customer" 
+      xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="myschedule.CustomerController">
     <children>
-        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="716.0" styleClass="header-bar" />
-        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="720.0">
+        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+              minWidth="-Infinity" prefHeight="50.0" prefWidth="716.0" styleClass="header-bar" />
+        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+              prefHeight="60.0" prefWidth="720.0">
             <children>
-                <Label id="title" fx:id="lblTitle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="850.0" styleClass="title" text="Customers">
+                <Label id="title" fx:id="lblTitle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="850.0" 
+                       styleClass="title" text="Customers">
                     <HBox.margin>
                         <Insets left="10.0" top="10.0" />
                     </HBox.margin>
                 </Label>
             </children>
         </HBox>
-        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="720.0">
+        <HBox fx:id="tableContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" 
+              minWidth="-Infinity" prefWidth="720.0">
             <VBox.margin>
                 <Insets bottom="10.0" />
             </VBox.margin>
         </HBox>
-        <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="720.0" styleClass="controlsContainer">
+        <HBox fx:id="controlsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" 
+              minWidth="-Infinity" prefWidth="720.0" styleClass="controlsContainer">
             <VBox.margin>
                 <Insets bottom="10.0" left="25.0" />
             </VBox.margin>
             <children>
             <GridPane>
               <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="100.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="100.0" 
+                                   prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
@@ -61,8 +70,11 @@
                   </Label>
                   <ComboBox fx:id="cboCustomer" prefWidth="250.0" GridPane.columnIndex="1" />
                   <CheckBox fx:id="chkActive" mnemonicParsing="false" text="Active" GridPane.columnIndex="3" />
-                  <TextField id="customerName" fx:id="txtCustomer" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" promptText="Customer Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="cboAddress" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="500.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2" />
+                  <TextField id="customerName" fx:id="txtCustomer" maxWidth="-Infinity" minWidth="-Infinity" 
+                             prefWidth="250.0" promptText="Customer Name" GridPane.columnIndex="1" 
+                             GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cboAddress" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="500.0" 
+                            GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2" />
                   <Label fx:id="lblAddress" text="Address" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets right="15.0" />
@@ -78,55 +90,69 @@
                         <Insets right="15.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField fx:id="txtPostalCode" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="txtPostalCode" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" 
+                             GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Label fx:id="lblPhone" text="Phone" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField fx:id="txtPhone" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="txtPhone" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" 
+                             GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <Label fx:id="lblCountry" text="Country" GridPane.rowIndex="6">
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button fx:id="btnAddAddress" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Add" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                  <Button fx:id="btnAddAddress" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                          minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Add" 
+                          GridPane.columnIndex="5" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="btnAddCity" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Add" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                  <Button fx:id="btnAddCity" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                          minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Add" 
+                          GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="btnAddCountry" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Add" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                  <Button fx:id="btnAddCountry" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                          minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Add" 
+                          GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <TextField fx:id="txtCity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField fx:id="txtCountry" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="txtCity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" 
+                             GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="txtCountry" maxWidth="250.0" minWidth="250.0" prefWidth="250.0"
+                             GridPane.columnIndex="1" GridPane.rowIndex="6" />
                </children>
             </GridPane>
             </children>
         </HBox>
-        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="670.0" styleClass="buttonsContainer">
+        <HBox fx:id="buttonsContainer" alignment="CENTER" fillHeight="false" maxWidth="-Infinity" 
+              minWidth="-Infinity" prefWidth="670.0" styleClass="buttonsContainer">
             <VBox.margin>
                 <Insets left="25.0" right="20.0" top="10.0" />
             </VBox.margin>
             <children>
-                <Button fx:id="btnSave" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Save">
+                <Button fx:id="btnSave" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Save">
                     <HBox.margin>
                         <Insets left="5.0" />
                     </HBox.margin>
                 </Button>
-            <Button fx:id="btnDelete" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Delete">
+            <Button fx:id="btnDelete" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                    minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Delete">
                <HBox.margin>
                   <Insets left="5.0" />
                </HBox.margin>
             </Button>
-                <Button fx:id="btnCancel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Cancel">
+                <Button fx:id="btnCancel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" text="Cancel">
                     <HBox.margin>
                         <Insets left="5.0" />
                     </HBox.margin>

@@ -335,38 +335,33 @@ public class AppointmentController {
         String mm;
         String time;
         
-        try {
-            appt = app.db.getAppointment(appointmentId, app.strZoneOffset());
-            cboCustomer.setValue(appt.getCustomerName());
-            txtTitle.setText(appt.getTitle());
-            txtDescription.setText(appt.getDescription());
-            txtLocation.setText(appt.getLocation());
-            txtContact.setText(appt.getContact());
-            txtURL.setText(appt.getUrl());
-            dteStartDate.setValue(LocalDate.parse(appt.getStart().substring(0, 10), dateFormatter));
-            dteEndDate.setValue(LocalDate.parse(appt.getEnd().substring(0, 10), dateFormatter));
-            // Process Start time
-            time = appt.getStart().substring(11);
-            hh = Integer.parseInt(time.substring(0, 2));
-            mm = time.substring(3, 5);
-            ampm = hh > 12 ? "PM" : "AM";
-            hh = hh > 12 ? hh - 12 : hh;
-            cboStartHour.setValue(Integer.toString(hh));
-            cboStartMinute.setValue(mm);
-            cboStartAMPM.setValue(ampm);
-            //Process End time
-            time = appt.getEnd().substring(11);
-            hh = Integer.parseInt(time.substring(0, 2));
-            mm = time.substring(3, 5);
-            ampm = hh > 12 ? "PM" : "AM";
-            hh = hh > 12 ? hh - 12 : hh;
-            cboEndHour.setValue(Integer.toString(hh));
-            cboEndMinute.setValue(mm);
-            cboEndAMPM.setValue(ampm);
-        }
-        catch (SQLException ex) {
-            app.common.alertStatus(0);
-        }
+        appt = app.db.getAppointment(appointmentId, app.strZoneOffset());
+        cboCustomer.setValue(appt.getCustomerName());
+        txtTitle.setText(appt.getTitle());
+        txtDescription.setText(appt.getDescription());
+        txtLocation.setText(appt.getLocation());
+        txtContact.setText(appt.getContact());
+        txtURL.setText(appt.getUrl());
+        dteStartDate.setValue(LocalDate.parse(appt.getStart().substring(0, 10), dateFormatter));
+        dteEndDate.setValue(LocalDate.parse(appt.getEnd().substring(0, 10), dateFormatter));
+        // Process Start time
+        time = appt.getStart().substring(11);
+        hh = Integer.parseInt(time.substring(0, 2));
+        mm = time.substring(3, 5);
+        ampm = hh > 12 ? "PM" : "AM";
+        hh = hh > 12 ? hh - 12 : hh;
+        cboStartHour.setValue(Integer.toString(hh));
+        cboStartMinute.setValue(mm);
+        cboStartAMPM.setValue(ampm);
+        //Process End time
+        time = appt.getEnd().substring(11);
+        hh = Integer.parseInt(time.substring(0, 2));
+        mm = time.substring(3, 5);
+        ampm = hh > 12 ? "PM" : "AM";
+        hh = hh > 12 ? hh - 12 : hh;
+        cboEndHour.setValue(Integer.toString(hh));
+        cboEndMinute.setValue(mm);
+        cboEndAMPM.setValue(ampm);
     }
     
     /**
@@ -384,15 +379,9 @@ public class AppointmentController {
         cboEndMinute.getItems().addAll(minutes);
         cboStartAMPM.getItems().addAll(ampm);
         cboEndAMPM.getItems().addAll(ampm);
-        
-        try {
-            customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap(false);
-            customerList = app.common.createCustomerList(customerToCustomerIdMap);
-            cboCustomer.getItems().addAll(customerList);
-        }
-        catch (SQLException ex) {
-            app.common.alertStatus(0);
-        }
+        customerToCustomerIdMap = app.db.getCustomerToCustomerIdMap(false);
+        customerList = app.common.createCustomerList(customerToCustomerIdMap);
+        cboCustomer.getItems().addAll(customerList);
     }
     
     /**

@@ -43,6 +43,7 @@ public class UserModel {
     /**
      * @return userId
      */
+    @SuppressWarnings("unchecked")
     public int userId() {
         return userId;
     }
@@ -51,6 +52,7 @@ public class UserModel {
      * @param _userId
      * @return userId
      */
+    @SuppressWarnings("unchecked")
     public int userId(int _userId) {
         return userId = _userId;
     }
@@ -58,6 +60,7 @@ public class UserModel {
     /**
      * @return userName
      */
+    @SuppressWarnings("unchecked")
     public String userName() {
         return userName;
     }
@@ -66,6 +69,7 @@ public class UserModel {
      * @param _userName
      * @return userName
      */
+    @SuppressWarnings("unchecked")
     public String userName(String _userName) {
         return userName = _userName;
     }
@@ -73,6 +77,7 @@ public class UserModel {
     /**
      * @return password
      */
+    @SuppressWarnings("unchecked")
     public String password() {
         return password;
     }
@@ -81,6 +86,7 @@ public class UserModel {
      * @param _password
      * @return password
      */
+    @SuppressWarnings("unchecked")
     public String password(String _password) {
         return password = _password;
     }
@@ -88,6 +94,7 @@ public class UserModel {
     /**
      * @return active
      */
+    @SuppressWarnings("unchecked")
     public boolean active() {
         return active;
     }
@@ -96,6 +103,7 @@ public class UserModel {
      * @param _active
      * @return active
      */
+    @SuppressWarnings("unchecked")
     public boolean active(boolean _active) {
         return active = _active;
     }
@@ -103,6 +111,7 @@ public class UserModel {
     /**
      * @return createBy
      */
+    @SuppressWarnings("unchecked")
     public String createBy() {
         return createBy;
     }
@@ -111,6 +120,7 @@ public class UserModel {
      * @param _createBy
      * @return createBy
      */
+    @SuppressWarnings("unchecked")
     public String createBy(String _createBy) {
         return createBy = _createBy;
     }
@@ -118,6 +128,7 @@ public class UserModel {
     /**
      * @return createDate
      */
+    @SuppressWarnings("unchecked")
     public LocalDateTime createDate() {
         return createDate;
     }
@@ -126,6 +137,7 @@ public class UserModel {
      * @param _createDate
      * @return createDate
      */
+    @SuppressWarnings("unchecked")
     public LocalDateTime createDate(LocalDateTime _createDate) {
         return createDate = _createDate;
     }
@@ -133,6 +145,7 @@ public class UserModel {
     /**
      * @return lastUpdate
      */
+    @SuppressWarnings("unchecked")
     public LocalDateTime lastUpdate() {
         return lastUpdate;
     }
@@ -141,6 +154,7 @@ public class UserModel {
  * @param _lastUpdate
  * @return lastUpdate
  */    
+    @SuppressWarnings("unchecked")
     public LocalDateTime lastUpdate(LocalDateTime _lastUpdate) {
         return lastUpdate = _lastUpdate;
     }
@@ -148,6 +162,7 @@ public class UserModel {
     /**
      * @return lastUpdatedBy
      */
+    @SuppressWarnings("unchecked")
     public String lastUpdatedBy() {
         return lastUpdatedBy;
     }
@@ -156,6 +171,7 @@ public class UserModel {
      * @param _lastUpdatedBy
      * @return lastUpdatedBy
      */
+    @SuppressWarnings("unchecked")
     public String lastUpdatedBy(String _lastUpdatedBy) {
         return lastUpdatedBy = _lastUpdatedBy;
     }

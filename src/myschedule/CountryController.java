@@ -143,6 +143,7 @@ public class CountryController {
     /**
      * Handle add action
      */
+    @SuppressWarnings("unchecked")
     private void handleAdd() {
         String rightNow = app.common.rightNow();
         String user = app.userName();
@@ -160,6 +161,10 @@ public class CountryController {
         }
     }
 
+    /**
+     * Handle Commit
+     */
+    @SuppressWarnings("unchecked")
     private void handleCommit() {
         try {
             app.db.updateCountryTable(countryList);
@@ -175,6 +180,7 @@ public class CountryController {
     /**
      * Handle remove action
      */
+    @SuppressWarnings("unchecked")
     private void handleRemove() {
         ObservableList<CountryModel> countrySelected, allCountries;
         allCountries = table.getItems();
@@ -240,13 +246,8 @@ public class CountryController {
      */
     @SuppressWarnings("unchecked")
     private void refreshTableView() {
-        try {
-            countryList = app.db.getCountryModelList("country", "asc");
-            table.setItems(countryList);
-        }
-        catch (SQLException ex) {
-            app.log.write(Level.SEVERE, ex.getMessage());
-        }
+        countryList = app.db.getCountryModelList("country", "asc");
+        table.setItems(countryList);
     }
     
     /**
@@ -256,14 +257,7 @@ public class CountryController {
     public void start() {
         addListeners();
         lblTitle.setText(app.localize("countries"));
-        
-        try {
-            countryList = app.db.getCountryModelList("country", "asc");
-        }
-        catch (SQLException ex) {
-            app.log.write(Level.SEVERE, ex.getMessage());
-        }
-        
+        countryList = app.db.getCountryModelList("country", "asc");
         initializeForm();
         initializeTableColumns();
         table.setEditable(true);

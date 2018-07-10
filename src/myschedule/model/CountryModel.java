@@ -60,6 +60,7 @@ public class CountryModel {
      * Get countryId value
      * @return countryId value
      */
+    @SuppressWarnings("unchecked")
     public int getCountryId() {
         return countryId.get();
     }
@@ -68,6 +69,7 @@ public class CountryModel {
      * Set countryId value
      * @param _countryId 
      */
+    @SuppressWarnings("unchecked")
     public void setCountryId(int _countryId) {
         countryId.set(_countryId);
     }
@@ -76,6 +78,7 @@ public class CountryModel {
      * Get country value
      * @return country value
      */
+    @SuppressWarnings("unchecked")
     public String getCountry() {
         return country.get();
     }
@@ -84,6 +87,7 @@ public class CountryModel {
      * Set country value
      * @param _country 
      */
+    @SuppressWarnings("unchecked")
     public void setCountry(String _country) {
         country.set(_country);
     }
@@ -92,6 +96,7 @@ public class CountryModel {
      * Get createDate value
      * @return createDate value
      */
+    @SuppressWarnings("unchecked")
     public String getCreateDate() {
         return createDate.get();
     }
@@ -100,6 +105,7 @@ public class CountryModel {
      * Set createDate value
      * @param _createDate 
      */
+    @SuppressWarnings("unchecked")
     public void setCreateDate(String _createDate) {
         createDate.set(_createDate);
     }
@@ -108,6 +114,7 @@ public class CountryModel {
      * Get createdBy value
      * @return createdBy value
      */
+    @SuppressWarnings("unchecked")
     public String getCreatedBy() {
         return createdBy.get();
     }
@@ -116,6 +123,7 @@ public class CountryModel {
      * Get createdBy value
      * @param _createdBy 
      */
+    @SuppressWarnings("unchecked")
     public void setCreatedBy(String _createdBy) {
         createdBy.set(_createdBy);
     }
@@ -124,6 +132,7 @@ public class CountryModel {
      * Get lastUpdate value
      * @return lastUpdate value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdate() {
         return lastUpdate.get();
     }
@@ -132,6 +141,7 @@ public class CountryModel {
      * Set lastUpdate value
      * @param _lastUpdate 
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdate(String _lastUpdate) {
         lastUpdate.set(_lastUpdate);
     }
@@ -140,6 +150,7 @@ public class CountryModel {
      * Get lastUpdateBy value
      * @return lastUpdateBy value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdateBy() {
         return lastUpdateBy.get();
     }
@@ -148,6 +159,7 @@ public class CountryModel {
      * Set lastUpdateBy value
      * @param _lastUpdateBy 
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdateBy(String _lastUpdateBy) {
         lastUpdateBy.set(_lastUpdateBy);
     }

@@ -42,6 +42,7 @@ public class ReminderModel {
     /**
      * @return reminderId
      */
+    @SuppressWarnings("unchecked")
     public int reminderId() {
         return reminderId;
     }
@@ -50,6 +51,7 @@ public class ReminderModel {
      * @param _reminderId
      * @return reminderId
      */
+    @SuppressWarnings("unchecked")
     public int reminderId(int _reminderId) {
         return reminderId = _reminderId;
     }
@@ -57,6 +59,7 @@ public class ReminderModel {
     /**
      * @return reminderDate
      */
+    @SuppressWarnings("unchecked")
     public LocalDateTime reminderDate() {
         return reminderDate;
     }
@@ -65,6 +68,7 @@ public class ReminderModel {
      * @param _reminderDate
      * @return reminderDate
      */
+    @SuppressWarnings("unchecked")
     public LocalDateTime reminderDate(LocalDateTime _reminderDate) {
         return reminderDate = _reminderDate;
     }
@@ -72,6 +76,7 @@ public class ReminderModel {
     /**
      * @return snoozeIncrement
      */
+    @SuppressWarnings("unchecked")
     public int snoozeIncrement() {
         return snoozeIncrement;
     }
@@ -80,6 +85,7 @@ public class ReminderModel {
      * @param _snoozeIncrement
      * @return snoozeIncrement
      */
+    @SuppressWarnings("unchecked")
     public int snoozeIncrement(int _snoozeIncrement) {
         return snoozeIncrement = _snoozeIncrement;
     }
@@ -87,6 +93,7 @@ public class ReminderModel {
     /**
      * @return snoozeIncrementTypeId
      */
+    @SuppressWarnings("unchecked")
     public int snoozeIncrementTypeId() {
         return snoozeIncrementTypeId;
     }
@@ -95,6 +102,7 @@ public class ReminderModel {
      * @param _snoozeIncrementTypeId
      * @return snoozeIncrementTypeId
      */
+    @SuppressWarnings("unchecked")
     public int snoozeIncrementTypeId(int _snoozeIncrementTypeId) {
         return snoozeIncrementTypeId = _snoozeIncrementTypeId;
     }
@@ -102,6 +110,7 @@ public class ReminderModel {
     /**
      * @return appointmentId
      */
+    @SuppressWarnings("unchecked")
     public int appointmentId() {
         return appointmentId;
     }
@@ -110,6 +119,7 @@ public class ReminderModel {
      * @param _appointmentId
      * @return appointmentId
      */
+    @SuppressWarnings("unchecked")
     public int appointmentId(int _appointmentId) {
         return appointmentId = _appointmentId;
     }
@@ -117,6 +127,7 @@ public class ReminderModel {
     /**
      * @return createdBy
      */
+    @SuppressWarnings("unchecked")
     public String createdBy() {
         return createdBy;
     }
@@ -125,6 +136,7 @@ public class ReminderModel {
      * @param _createdBy
      * @return createdBy
      */
+    @SuppressWarnings("unchecked")
     public String createdBy(String _createdBy) {
         return createdBy = _createdBy;
     }
@@ -132,6 +144,7 @@ public class ReminderModel {
     /**
      * @return createdDate
      */
+    @SuppressWarnings("unchecked")
     public LocalDateTime createdDate() {
         return createdDate;
     }
@@ -140,6 +153,7 @@ public class ReminderModel {
      * @param _createdDate
      * @return createdDate
      */
+    @SuppressWarnings("unchecked")
     public LocalDateTime createdDate(LocalDateTime _createdDate) {
         return createdDate = _createdDate;
     }
@@ -147,6 +161,7 @@ public class ReminderModel {
     /**
      * @return remindercol
      */
+    @SuppressWarnings("unchecked")
     public String remindercol() {
         return remindercol;
     }
@@ -156,6 +171,7 @@ public class ReminderModel {
      * @param _remindercol
      * @return remindercol
      */
+    @SuppressWarnings("unchecked")
     public String remindercol(String _remindercol) {
         return remindercol = _remindercol;
     }

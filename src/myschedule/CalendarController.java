@@ -220,12 +220,14 @@ public class CalendarController {
     
 class IntegerTableCell extends TableCell<AppointmentModel, Integer> {
     @Override
+    @SuppressWarnings("unchecked")
     public void updateItem(Integer item, boolean empty) {
         super.updateItem(item, empty);
         setText(empty ? null : getString());
         setGraphic(null);
     }
 
+    @SuppressWarnings("unchecked")
     private String getString() {
         return getItem() == null ? "" : getItem().toString();
     }
@@ -239,13 +241,15 @@ class StringTableCell extends TableCell<AppointmentModel, String> {
         setGraphic(null);
     }
 
-    private String getString() {
+@SuppressWarnings("unchecked")
+private String getString() {
         return getItem() == null ? "" : getItem();
     }
 }
  
 class MouseClickEventHandler implements EventHandler<MouseEvent> {
     @Override
+    @SuppressWarnings("unchecked")
     public void handle(MouseEvent t) {
         TableCell c = (TableCell) t.getSource();
         int index = c.getIndex();
@@ -270,6 +274,7 @@ class MouseClickEventHandler implements EventHandler<MouseEvent> {
          * Create a calendar view
          * @param yearMonth year month to create the calendar of
          */
+        @SuppressWarnings("unchecked")
         public CalendarView(YearMonth yearMonth) {
             currentYearMonth = yearMonth;
         }
@@ -378,15 +383,10 @@ class MouseClickEventHandler implements EventHandler<MouseEvent> {
             mm = yearMonth.getMonthValue() < 10 ? "0" + Integer.toString(yearMonth.getMonthValue()) : Integer.toString(yearMonth.getMonthValue());
 
             // Query database to get appointments for the given month
-            try {
-                cc = CalendarController.this;
-                cc.appointmentList = app.db.getAppointmentsByMonth(mm, yyyy, app.strZoneOffset());
-                cc.lblAppointments.setText("Appointments: " + Integer.toString(cc.appointmentList.size()));
-                cc.populateTable();
-            }
-            catch (SQLException ex) {
-                app.common.alertStatus(0);
-            }
+            cc = CalendarController.this;
+            cc.appointmentList = app.db.getAppointmentsByMonth(mm, yyyy, app.strZoneOffset());
+            cc.lblAppointments.setText("Appointments: " + Integer.toString(cc.appointmentList.size()));
+            cc.populateTable();
 
             // Dial back the day until it is SUNDAY (unless the month starts on a sunday)
             while (!calendarDate.getDayOfWeek().toString().equals("SUNDAY") ) {
@@ -425,7 +425,6 @@ class MouseClickEventHandler implements EventHandler<MouseEvent> {
             String startDate;
             int sunday;
             
-            
             cal.setWeekDate(weekYear, weekOfYear, 1);
             sunday = cal.get(Calendar.DATE);
             cal.add(Calendar.DATE, 6);
@@ -451,15 +450,10 @@ class MouseClickEventHandler implements EventHandler<MouseEvent> {
             );
             
             // Query database to get appointments for the given month
-            try {
-                cc = CalendarController.this;
-                cc.appointmentList = app.db.getAppointmentsByWeek(startDate, endDate, app.strZoneOffset());
-                cc.lblAppointments.setText("Appointments: " + Integer.toString(cc.appointmentList.size()));
-                cc.populateTable();
-            }
-            catch (SQLException ex) {
-                app.common.alertStatus(0);
-            }
+            cc = CalendarController.this;
+            cc.appointmentList = app.db.getAppointmentsByWeek(startDate, endDate, app.strZoneOffset());
+            cc.lblAppointments.setText("Appointments: " + Integer.toString(cc.appointmentList.size()));
+            cc.populateTable();
 
             // Loop through calendar anchor panes, removing children
             idx = 0;

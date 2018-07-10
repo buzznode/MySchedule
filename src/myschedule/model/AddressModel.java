@@ -84,6 +84,7 @@ public class AddressModel {
      * Get addressId value
      * @return addressId value
      */
+    @SuppressWarnings("unchecked")
     public int getAddressId() {
         return addressId.get();
     }
@@ -92,6 +93,7 @@ public class AddressModel {
      * Set addressId value
      * @param _addressId 
      */
+    @SuppressWarnings("unchecked")
     public void setAddressId(int _addressId) {
         addressId.set(_addressId);
     }
@@ -100,6 +102,7 @@ public class AddressModel {
      * Get address value
      * @return address value
      */
+    @SuppressWarnings("unchecked")
     public String getAddress() {
         return address.get();
     }
@@ -108,6 +111,7 @@ public class AddressModel {
      * Set address value
      * @param _address 
      */
+    @SuppressWarnings("unchecked")
     public void setAddress(String _address) {
         address.set(_address);
     }
@@ -116,6 +120,7 @@ public class AddressModel {
      * Get address2 value
      * @return address2 value
      */
+    @SuppressWarnings("unchecked")
     public String getAddress2() {
         return address2.get();
     }
@@ -124,6 +129,7 @@ public class AddressModel {
      * Set address2 value
      * @param _address2 
      */
+    @SuppressWarnings("unchecked")
     public void setAddress2(String _address2) {
         address2.set(_address2);
     }
@@ -132,6 +138,7 @@ public class AddressModel {
      * Get city value
      * @return city value
      */
+    @SuppressWarnings("unchecked")
     public String getCity() {
         return city.get();
     }
@@ -140,6 +147,7 @@ public class AddressModel {
      * Set city value
      * @param _city 
      */
+    @SuppressWarnings("unchecked")
     public void setCity(String _city) {
         city.set(_city);
     }
@@ -148,6 +156,7 @@ public class AddressModel {
      * Get cityId value
      * @return cityId value
      */
+    @SuppressWarnings("unchecked")
     public int getCityId() {
         return cityId.get();
     }
@@ -156,6 +165,7 @@ public class AddressModel {
      * Set cityId value
      * @param _cityId 
      */
+    @SuppressWarnings("unchecked")
     public void setCityId(int _cityId) {
         cityId.set(_cityId);
     }
@@ -164,6 +174,7 @@ public class AddressModel {
      * Get postal code value
      * @return postal code value
      */
+    @SuppressWarnings("unchecked")
     public String getPostalCode() {
         return postalCode.get();
     }
@@ -172,6 +183,7 @@ public class AddressModel {
      * Set postal code value
      * @param _postalCode 
      */
+    @SuppressWarnings("unchecked")
     public void setPostalCode(String _postalCode) {
         postalCode.set(_postalCode);
     }
@@ -180,6 +192,7 @@ public class AddressModel {
      * Get phone value
      * @return phone value
      */
+    @SuppressWarnings("unchecked")
     public String getPhone() {
         return phone.get();
     }
@@ -188,6 +201,7 @@ public class AddressModel {
      * Set phone value
      * @param _phone 
      */
+    @SuppressWarnings("unchecked")
     public void setPhone(String _phone) {
         phone.set(_phone);
     }
@@ -196,6 +210,7 @@ public class AddressModel {
      * Get country value
      * @return country value
      */
+    @SuppressWarnings("unchecked")
     public String getCountry() {
         return country.get();
     }
@@ -204,6 +219,7 @@ public class AddressModel {
      * Set country value
      * @param _country 
      */
+    @SuppressWarnings("unchecked")
     public void setCountry(String _country) {
         country.set(_country);
     }
@@ -212,6 +228,7 @@ public class AddressModel {
      * Get countryId value
      * @return countryId value
      */
+    @SuppressWarnings("unchecked")
     public int getCountryId() {
         return countryId.get();
     }
@@ -220,6 +237,7 @@ public class AddressModel {
      * Set countryId value
      * @param _countryId 
      */
+    @SuppressWarnings("unchecked")
     public void setCountryId(int _countryId) {
         countryId.set(_countryId);
     }
@@ -228,6 +246,7 @@ public class AddressModel {
      * Get createDate value
      * @return createDate value
      */
+    @SuppressWarnings("unchecked")
     public String getCreateDate() {
         return createDate.get();
     }
@@ -236,6 +255,7 @@ public class AddressModel {
      * Set createDate value
      * @param _createDate 
      */
+    @SuppressWarnings("unchecked")
     public void setCreateDate(String _createDate) {
         createDate.set(_createDate);
     }
@@ -244,6 +264,7 @@ public class AddressModel {
      * Get createdBy value
      * @return createdBy value
      */
+    @SuppressWarnings("unchecked")
     public String getCreatedBy() {
         return createdBy.get();
     }
@@ -252,6 +273,7 @@ public class AddressModel {
      * Get createdBy value
      * @param _createdBy 
      */
+    @SuppressWarnings("unchecked")
     public void setCreatedBy(String _createdBy) {
         createdBy.set(_createdBy);
     }
@@ -260,6 +282,7 @@ public class AddressModel {
      * Get lastUpdate value
      * @return lastUpdate value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdate() {
         return lastUpdate.get();
     }
@@ -268,6 +291,7 @@ public class AddressModel {
      * Set lastUpdate value
      * @param _lastUpdate 
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdate(String _lastUpdate) {
         lastUpdate.set(_lastUpdate);
     }
@@ -276,6 +300,7 @@ public class AddressModel {
      * Get lastUpdateBy value
      * @return lastUpdateBy value
      */
+    @SuppressWarnings("unchecked")
     public String getLastUpdateBy() {
         return lastUpdateBy.get();
     }
@@ -284,6 +309,7 @@ public class AddressModel {
      * Set lastUpdateBy value
      * @param _lastUpdateBy 
      */
+    @SuppressWarnings("unchecked")
     public void setLastUpdateBy(String _lastUpdateBy) {
         lastUpdateBy.set(_lastUpdateBy);
     }
